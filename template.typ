@@ -157,8 +157,9 @@
   title_page_image_width_cm: [# if options.title_page_image_width_cm is defined and options.title_page_image_width_cm != none #][-options.title_page_image_width_cm-]cm[# else #]none[# endif #],
   title_page_image_height_cm: [# if options.title_page_image_height_cm is defined and options.title_page_image_height_cm != none #][-options.title_page_image_height_cm-]cm[# else #]none[# endif #],
   title_page_image_dx_cm: [# if options.title_page_image_dx_cm is defined and options.title_page_image_dx_cm != none #][-options.title_page_image_dx_cm-]cm[# else #]none[# endif #],
-  title_page_image_dy_cm: [# if options.title_page_image_dy_cm is defined and options.title_page_image_dy_cm != none #][-options.title_page_image_dy_cm-]cm[# else #]none[# endif #],
+  title_page_image_dy_cm: [# if options.title_page_image_dy_cm is defined and options.title_page_image_dy_cm != none #][-options.title_page_image_dy_cm-]cm[# else #]none[# endif #]
 )
+
 
 [-IMPORTS-]
 

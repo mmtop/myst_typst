@@ -5,8 +5,8 @@ project:
   exports:
     - id: thesis-pdf
       format: typst
-      template: templates/thesis-typst
-      output: ./exports/plain_typst_book.pdf
+      template: ../
+      output: ./exports/thesis_typst.pdf
       show_cover_full: true
       show_title_page: true
       show_title_page_image: false
@@ -16,6 +16,8 @@ project:
       show_list_of_tables: false
       frontmatter_numbering: roman
       mainmatter_numbering: arabic
+
+# page layout and styling      
       paper_size: a4
       margin_top_cm: 2.5
       margin_bottom_cm: 2.5
@@ -24,13 +26,16 @@ project:
       font_body: Libertinus Serif
       font_mono: Consolas
       font_size_pt: 11
-      line_spacing_em: 1.35
+      line_spacing_em: 1
+      
       toc_depth: 3
       logo: config/assets/brand/logo.svg
+
       # Cover variant: simple | graphical | custom
       cover_page_variant: graphical
       cover_background_image: config/assets/figures/cover.jpg
       cover_title_box_opacity_pct: 55
+      
       # Title-page variant: simple | formal | custom
       title_page_variant: "formal"
       title_page_image: config/assets/figures/cover.jpg

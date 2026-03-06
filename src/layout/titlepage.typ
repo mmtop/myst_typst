@@ -77,6 +77,7 @@
           rows += ([
             #name
             #linebreak()
+            #v(-1pt)
             #text(size: 9pt, style: "italic", fill: rgb("#555555"), str(affiliation))
           ],)
         } else {

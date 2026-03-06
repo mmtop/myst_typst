@@ -19,6 +19,8 @@ project:
   #   - thesis
   license: CC-BY-4.0
   doi: null
+  bibliography:
+    - reference.bib
 
   toc:
     - file: content/index.md

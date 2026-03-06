@@ -1,7 +1,7 @@
 # Build outputs
 _build/
 exports/*.pdf
-
+*.pdf
 # MyST cache/state
 .myst/
 
