@@ -50,14 +50,17 @@
     none
   } else if type(path) != str {
     path
-  } else if path.starts-with("/") or path.starts-with("./") or path.starts-with("../") or path.contains(":/") {
-    path
-  } else if levels_up == 2 {
-    "../../" + path
-  } else if levels_up == 1 {
-    "../" + path
   } else {
-    path
+    let normalized = str(path).replace("\\", "/")
+    if normalized.starts-with("/") or normalized.starts-with("./") or normalized.starts-with("../") or normalized.contains(":/") {
+      normalized
+    } else if levels_up == 2 {
+      "../../" + normalized
+    } else if levels_up == 1 {
+      "../" + normalized
+    } else {
+      normalized
+    }
   }
 }
 
