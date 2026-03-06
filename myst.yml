@@ -4,8 +4,8 @@ extends:
   - config/options.yml
   - config/exports/typst_config.yml
 project:
-  title: Master Thesis
-  subtitle: Shared Template for MyST and Typst
+  title: Master Thesis Template
+  subtitle: Typst Template with TU Delft customizations
   date: 2026-02-22
   parts:
     abstract: content/parts/abstract.md

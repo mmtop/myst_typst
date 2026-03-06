@@ -29,7 +29,7 @@ project:
       logo: config/assets/brand/logo.svg
       # Cover variant: simple | graphical | custom
       cover_page_variant: graphical
-      cover_background_image: config/assets/figures/cover.jpg
+      cover_background_image: config/assets/figures/tudlib.jpg
       cover_title_box_opacity_pct: 55
       # Title-page variant: simple | formal | custom
       title_page_variant: "formal"
