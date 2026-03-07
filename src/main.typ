@@ -1,6 +1,6 @@
 #import "layout/cover.typ": cover_page
 #import "layout/titlepage.typ": title_page
-#import "layout/frontmatter.typ": frontmatter_section
+#import "layout/frontmatter.typ": frontmatter_section, frontmatter_other
 #import "layout/toc.typ": render_table_of_contents, render_list_of_figures, render_list_of_tables
 #import "components/headings.typ": configure_headings
 #import "components/figures.typ": configure_figures
@@ -302,12 +302,15 @@
     )
   }
 
+  pagebreak()
   frontmatter_section("Abstract", abstract)
+  frontmatter_other("Keywords", render_comma_list(keywords))
+  pagebreak()
   frontmatter_section("Preface", preface)
   frontmatter_section("Acknowledgements", acknowledgements)
   frontmatter_section("Dedication", dedication)
   frontmatter_section("Colophon", colophon)
-  frontmatter_section("Keywords", render_comma_list(keywords))
+  
 
   if show_toc {
     render_table_of_contents(depth: toc_depth)

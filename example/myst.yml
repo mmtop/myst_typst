@@ -13,7 +13,7 @@ project:
     # acknowledgements: content/parts/acknowledgements.md
     # dedication: content/parts/dedication.md
     # colophon: content/parts/colophon.md
-  # keywords:
+  keywords: [myst, typst, thesis]
   #   - myst
   #   - typst
   #   - thesis
