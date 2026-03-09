@@ -26,7 +26,7 @@ project:
       font_body: Libertinus Serif
       font_mono: DejaVu Sans Mono
       font_size_pt: 11
-      line_spacing_em: 1
+      line_spacing_em: .55
       
       toc_depth: 3
       logo: config/assets/brand/logo.svg

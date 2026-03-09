@@ -243,6 +243,7 @@
     leading: line_spacing_em,
     spacing: default_par_spacing,
     justify: true,
+    first-line-indent: 1.2em,
   )
 
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
