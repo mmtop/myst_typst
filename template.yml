@@ -1,6 +1,6 @@
 jtex: v1
 kind: typst
-title: Master Thesis Typst Template for MyST
+title: Thesis Typst Template for MyST
 description: A modular Typst template that consumes shared MyST metadata and parts.
 template: template.typ
 version: 0.1.0
@@ -21,6 +21,7 @@ files:
   - src/components/figures.typ
   - src/components/tables.typ
   - src/components/bibliography.typ
+  - src/components/equations.typ
   - src/theme/page.typ
   - src/theme/typography.typ
   - src/theme/colors.typ
@@ -50,7 +51,7 @@ parts:
   - id: dedication
   - id: colophon
 
-options:
+options: # cover.type
   - id: show_cover_full
     type: boolean
   - id: show_title_page
@@ -67,6 +68,8 @@ options:
     type: string
   - id: mainmatter_numbering
     type: string
+
+  # paper and layout options  
   - id: paper_size
     type: string
   - id: margin_top_cm
@@ -77,6 +80,8 @@ options:
     type: number
   - id: margin_right_cm
     type: number
+
+
   - id: font_body
     type: string
   - id: font_mono
@@ -89,15 +94,22 @@ options:
     type: number
   - id: logo
     type: file
+  
   - id: cover_page_variant
     type: string
   - id: cover_background_image
     type: file
   - id: cover_title_box_opacity_pct
     type: number
-  # Backward compatibility alias. Prefer cover_background_image.
+    description: "Set the opacity of the title box on the cover page. Provide a percentage value (0-100). default: 55 (fully opaque)."
+  - id: cover_title_box_color #new
+    type: string
+    description: "Set the background color of the title box on the cover page. Provide a color name or hex code. default: '#FFFFFF' (white)."
+  
+  # title page options
   - id: cover_image
     type: file
+    description: "Set a cover image for the title page. Provide a file path to the image. default: none."
   - id: title_page_variant
     type: string
   - id: show_title_page_image
@@ -114,6 +126,8 @@ options:
     type: number
   - id: title_page_image_dy_cm
     type: number
+  
+  # Thesis-specific metadata options
   - id: thesis_degree
     type: string
   - id: thesis_program
@@ -125,3 +139,18 @@ options:
   - id: thesis_defense_date
     type: string
 
+
+  - id: set_page_logo #new
+    type: string 
+    description: "Set a logo on the page header. default: none. Provide a file path to the logo image. "
+  - id: set_page_logo_position #new
+    type: string
+    description: "Specify the position of the page header logo. Accepted values are 'left', 'center', or 'right'. default: 'center'."
+    
+  - id: set_logo_cover_position #new
+    type: string
+    description: "Specify the position of the logo on the cover page. Accepted values are 'top-left', 'top-right', 'bottom-left', 'bottom-right', or 'center'. default: 'top-right'."
+
+  - id: language #new
+    type: string
+    description: "Set the language for the document. This can affect elements like date formatting and predefined text (e.g., 'Abstract', 'Table of Contents'). default: 'en' (English)."

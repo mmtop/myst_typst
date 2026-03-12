@@ -293,8 +293,10 @@
     align(center, text(12pt, subtitle))
   }
 
-  v(1.2em)
-  align(center, "Master Thesis")
+  // if thesis_degree != none and thesis_degree != "" {
+  //   v(1.2em)
+  //   align(center, thesis_degree)
+  // }
 
   if degree != none and degree != "" {
     v(0.4em)

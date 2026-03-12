@@ -5,6 +5,7 @@
 #import "components/headings.typ": configure_headings
 #import "components/figures.typ": configure_figures
 #import "components/tables.typ": configure_tables
+
 #import "theme/page.typ": (
   default_paper_size,
   default_margin_top,
@@ -246,11 +247,41 @@
     first-line-indent: 1.2em,
   )
 
+// numbering of headings
+  set heading(numbering: (..args) => {
+    let nums = args.pos()
+    let level = nums.len()
+    if level == 1 {[#numbering("1.", ..nums)]} else {[#numbering("1.1.1", ..nums)]}
+    },
+  )   
+    
+  //RESETING NUMBERING
+show heading.where(level: 1): it => {
+  pagebreak()
+  // Reset all counters with a new chapter
+  counter(figure).update(0)                // all figures (irrespective of kind)
+  counter(figure.where(kind: table)).update(0) // specific for tables
+  counter(math.equation).update(0)
+  
+  it
+}
+
+
+// end numbering of headings
+
+
+
+
+
+
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
 
   configure_headings(default_heading_color)
   configure_figures()
   configure_tables()
+  // configure_equations()
+  include "components/equations.typ"
+  
 
   if show_cover_full {
     cover_page(

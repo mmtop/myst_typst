@@ -10,3 +10,6 @@ In recent years, there has been a growing interest in [insert research topic]. T
 ## Research Problem
 The main research problem addressed in this thesis is [insert research problem]. This problem is significant because [insert reasons for significance]. Addressing this problem will contribute to a better understanding of [insert related field or topic].
 
+Here is an equation:
+
+$$ F = m \cdot a $$
