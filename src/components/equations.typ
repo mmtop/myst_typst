@@ -28,4 +28,3 @@
 
 #show math.equation: set block(spacing: 1em)
 
-#body
