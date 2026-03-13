@@ -1,11 +1,13 @@
 #let render_comma_list(items) = {
-  if items == none {
+  if items == none or items.len() == 0 {
     ""
   } else if type(items) == str {
     items
-  } else if items.len() == 0 {
-    ""
-  } else {
+  } 
+  // else if items.len() == 0 {
+  //   ""
+  // } 
+  else {
     let output = ""
     for (index, item) in items.enumerate() {
       if index > 0 {

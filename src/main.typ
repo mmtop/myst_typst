@@ -300,32 +300,32 @@
     )
   }
 
-  // if show_title_page {
-  //   title_page(
-  //     resolved_title,
-  //     subtitle: subtitle,
-  //     authors: authors,
-  //     affiliations: affiliations,
-  //     date: date,
-  //     degree: thesis_degree,
-  //     program: thesis_program,
-  //     faculty: thesis_faculty,
-  //     institution: thesis_institution,
-  //     defense_date: thesis_defense_date,
-  //     supervisors: resolved_supervisors,
-  //     committee: resolved_committee,
-  //     show_contributor_affiliations: show_contributor_affiliations,
-  //     logo: resolved_logo_for_layout,
-  //     variant: title_page_variant,
-  //     start_on_new_page: show_cover_full,
-  //     page_image: resolved_title_page_image,
-  //     page_image_anchor: title_page_image_anchor,
-  //     page_image_width: title_page_image_width_cm,
-  //     page_image_height: title_page_image_height_cm,
-  //     page_image_dx: title_page_image_dx_cm,
-  //     page_image_dy: title_page_image_dy_cm,
-  //   )
-  // }
+  if show_title_page {
+    title_page(
+      resolved_title,
+      subtitle: subtitle,
+      authors: authors,
+      affiliations: affiliations,
+      date: date,
+      degree: thesis_degree,
+      program: thesis_program,
+      faculty: thesis_faculty,
+      institution: thesis_institution,
+      defense_date: thesis_defense_date,
+      supervisors: resolved_supervisors,
+      committee: resolved_committee,
+      show_contributor_affiliations: show_contributor_affiliations,
+      logo: resolved_logo_for_layout,
+      variant: title_page_variant,
+      start_on_new_page: show_cover_full,
+      page_image: resolved_title_page_image,
+      page_image_anchor: title_page_image_anchor,
+      page_image_width: title_page_image_width_cm,
+      page_image_height: title_page_image_height_cm,
+      page_image_dx: title_page_image_dx_cm,
+      page_image_dy: title_page_image_dy_cm,
+    )
+  }
 
   pagebreak()
   frontmatter_section("Abstract", abstract)
