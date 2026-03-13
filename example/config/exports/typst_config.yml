@@ -18,7 +18,7 @@ project:
       mainmatter_numbering: arabic
 
 # page layout and styling      
-      paper_size: a4
+      # paper_size: a5
       margin_top_cm: 2.5
       margin_bottom_cm: 2.5
       margin_left_cm: 3.0

@@ -133,8 +133,9 @@
 
   frontmatter_numbering: "[# if options.frontmatter_numbering #][-options.frontmatter_numbering-][# else #]roman[# endif #]",
   mainmatter_numbering: "[# if options.mainmatter_numbering #][-options.mainmatter_numbering-][# else #]arabic[# endif #]",
+  [# if options.paper_size #] paper_size: "[-options.paper_size-]", [# endif #]
 
-  paper_size: "[# if options.paper_size #][-options.paper_size-][# else #]a4[# endif #]",
+  // paper_size: "[# if options.paper_size #][-options.paper_size-][# endif #]",
   margin_top_cm: [# if options.margin_top_cm #][-options.margin_top_cm-]cm[# else #]2.5cm[# endif #],
   margin_bottom_cm: [# if options.margin_bottom_cm #][-options.margin_bottom_cm-]cm[# else #]2.5cm[# endif #],
   margin_left_cm: [# if options.margin_left_cm #][-options.margin_left_cm-]cm[# else #]3.0cm[# endif #],

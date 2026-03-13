@@ -5,20 +5,11 @@
 #import "components/headings.typ": configure_headings
 #import "components/figures.typ": configure_figures
 #import "components/tables.typ": configure_tables
-
-#import "theme/page.typ": (
-  default_paper_size,
-  default_margin_top,
-  default_margin_bottom,
-  default_margin_left,
-  default_margin_right,
-  default_toc_depth,
-  default_frontmatter_numbering,
-  default_mainmatter_numbering,
-)
-#import "theme/typography.typ": default_font_body, default_font_mono, default_font_size
-#import "theme/colors.typ": default_text_color, default_heading_color
-#import "theme/spacing.typ": default_line_spacing, default_par_spacing
+// #import "components/equations.typ": configure_equations
+#import "theme/page.typ": * 
+#import "theme/typography.typ": *
+#import "theme/colors.typ": * 
+#import "theme/spacing.typ": * 
 
 #let require_non_empty(value, field_name, fallback: none) = {
   if value == none or value == "" {
@@ -186,7 +177,7 @@
   show_list_of_tables: false,
   frontmatter_numbering: default_frontmatter_numbering,
   mainmatter_numbering: default_mainmatter_numbering,
-  paper_size: default_paper_size,
+  paper_size: "a4",
   margin_top_cm: default_margin_top,
   margin_bottom_cm: default_margin_bottom,
   margin_left_cm: default_margin_left,
@@ -247,7 +238,10 @@
     first-line-indent: 1.2em,
   )
 
-// numbering of headings
+//--All about numbering--//
+
+  // numbering of headings
+
   set heading(numbering: (..args) => {
     let nums = args.pos()
     let level = nums.len()
@@ -255,33 +249,32 @@
     },
   )   
     
-  //RESETING NUMBERING
-show heading.where(level: 1): it => {
-  pagebreak()
-  // Reset all counters with a new chapter
-  counter(figure).update(0)                // all figures (irrespective of kind)
-  counter(figure.where(kind: table)).update(0) // specific for tables
-  counter(math.equation).update(0)
-  
-  it
-}
+  // resetting numbering at chapter level
+  show heading.where(level: 1): it => {  
+    // Reset all counters with a new chapter
+    counter(figure).update(0)                // all figures (irrespective of kind)
+    counter(figure.where(kind: table)).update(0) // specific for tables
+    counter(math.equation).update(0)
+    
+    it
+  }
 
 
-// end numbering of headings
+  // numbering of equations with chapter number as prefix
+  set math.equation(numbering: (..args) => {
+    let chapter = counter(heading).display((..nums) => nums.pos().at(0))
+    [(#chapter.#numbering("1)", ..args.pos())]
+  })
 
+  show math.equation: set block(spacing: 1em)
 
-
-
-
+//----//
 
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
-
-  configure_headings(default_heading_color)
-  configure_figures()
+  // configure_equations(body)
+  configure_headings(red)
+  configure_figures(body)
   configure_tables()
-  // configure_equations()
-  include "components/equations.typ"
-  
 
   if show_cover_full {
     cover_page(
@@ -307,32 +300,32 @@ show heading.where(level: 1): it => {
     )
   }
 
-  if show_title_page {
-    title_page(
-      resolved_title,
-      subtitle: subtitle,
-      authors: authors,
-      affiliations: affiliations,
-      date: date,
-      degree: thesis_degree,
-      program: thesis_program,
-      faculty: thesis_faculty,
-      institution: thesis_institution,
-      defense_date: thesis_defense_date,
-      supervisors: resolved_supervisors,
-      committee: resolved_committee,
-      show_contributor_affiliations: show_contributor_affiliations,
-      logo: resolved_logo_for_layout,
-      variant: title_page_variant,
-      start_on_new_page: show_cover_full,
-      page_image: resolved_title_page_image,
-      page_image_anchor: title_page_image_anchor,
-      page_image_width: title_page_image_width_cm,
-      page_image_height: title_page_image_height_cm,
-      page_image_dx: title_page_image_dx_cm,
-      page_image_dy: title_page_image_dy_cm,
-    )
-  }
+  // if show_title_page {
+  //   title_page(
+  //     resolved_title,
+  //     subtitle: subtitle,
+  //     authors: authors,
+  //     affiliations: affiliations,
+  //     date: date,
+  //     degree: thesis_degree,
+  //     program: thesis_program,
+  //     faculty: thesis_faculty,
+  //     institution: thesis_institution,
+  //     defense_date: thesis_defense_date,
+  //     supervisors: resolved_supervisors,
+  //     committee: resolved_committee,
+  //     show_contributor_affiliations: show_contributor_affiliations,
+  //     logo: resolved_logo_for_layout,
+  //     variant: title_page_variant,
+  //     start_on_new_page: show_cover_full,
+  //     page_image: resolved_title_page_image,
+  //     page_image_anchor: title_page_image_anchor,
+  //     page_image_width: title_page_image_width_cm,
+  //     page_image_height: title_page_image_height_cm,
+  //     page_image_dx: title_page_image_dx_cm,
+  //     page_image_dy: title_page_image_dy_cm,
+  //   )
+  // }
 
   pagebreak()
   frontmatter_section("Abstract", abstract)
@@ -344,17 +337,9 @@ show heading.where(level: 1): it => {
   frontmatter_section("Colophon", colophon)
   
 
-  if show_toc {
-    render_table_of_contents(depth: toc_depth)
-  }
-
-  if show_list_of_figures {
-    render_list_of_figures()
-  }
-
-  if show_list_of_tables {
-    render_list_of_tables()
-  }
+  if show_toc { render_table_of_contents(depth: toc_depth)  }
+  if show_list_of_figures { render_list_of_figures() }
+  if show_list_of_tables { render_list_of_tables()  }
 
   pagebreak()
 

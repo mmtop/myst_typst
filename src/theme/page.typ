@@ -1,4 +1,4 @@
-#let default_paper_size = "a4"
+// #let default_paper_size = "a4"
 #let default_margin_top = 2.5cm
 #let default_margin_bottom = 2.5cm
 #let default_margin_left = 3.0cm
