@@ -3,11 +3,8 @@
 #import "layout/frontmatter.typ": frontmatter_section, frontmatter_other
 #import "layout/toc.typ": render_table_of_contents, render_list_of_figures, render_list_of_tables
 #import "components/headings.typ": configure_headings
-
-#import "theme/page.typ": * 
-#import "theme/typography.typ": *
 #import "theme/colors.typ": * 
-#import "theme/spacing.typ": * 
+
 
 #let require_non_empty(value, field_name, fallback: none) = {
   if value == none or value == "" {
@@ -164,18 +161,18 @@
   show_toc: true,
   show_list_of_figures: false,
   show_list_of_tables: false,
-  frontmatter_numbering: default_frontmatter_numbering,
-  mainmatter_numbering: default_mainmatter_numbering,
+  frontmatter_numbering: "roman",
+  mainmatter_numbering: "arabic",
   paper_size: "a4",
-  margin_top_cm: default_margin_top,
-  margin_bottom_cm: default_margin_bottom,
-  margin_left_cm: default_margin_left,
-  margin_right_cm: default_margin_right,
-  font_body: default_font_body,
-  font_mono: default_font_mono,
-  font_size_pt: default_font_size,
-  line_spacing_em: default_line_spacing,
-  toc_depth: default_toc_depth,
+  margin_top_cm: 2.5cm,
+  margin_bottom_cm: 2.5cm,
+  margin_left_cm: 3.0cm,
+  margin_right_cm: 2.0cm,
+  font_body: "Libertinus Serif",
+  font_mono: "DejaVu Sans Mono",
+  font_size_pt: 11pt,
+  line_spacing_em: 1.35em,
+  toc_depth: 3,
   logo: none,
   cover_page_variant: "simple",
   cover_background_image: none,
@@ -222,7 +219,7 @@
 
   set par(
     leading: line_spacing_em,
-    spacing: default_par_spacing,
+    spacing: 0.7em,
     justify: true,
     first-line-indent: 1.2em,
   )
