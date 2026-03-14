@@ -54,51 +54,72 @@ parts:
 options: # cover.type
   - id: show_cover_full
     type: boolean
+    description: "Render a cover page"
   - id: show_title_page
     type: boolean
+    description: "Render a title page"
   - id: show_contributor_affiliations
     type: boolean
+    description: "Show contributor affiliations"
   - id: show_toc
     type: boolean
+    description: "Show table of contents, default: true"
   - id: show_list_of_figures
     type: boolean
+    description: "Show list of figures, default: false"
   - id: show_list_of_tables
     type: boolean
+    description: "Show list of tables, default: false"
   - id: frontmatter_numbering
     type: string
+    description: "Set the numbering style for the front matter"
   - id: mainmatter_numbering
     type: string
+    description: "Set the numbering style for the main matter"
 
-  # paper and layout options  
+  # paper and layout options  //check default settings below
   - id: paper_size
     type: string
+    description: "sets the paper size, default = A4"
   - id: margin_top_cm
     type: number
+    description: "sets the top margin in centimeters, default = 2.5"
   - id: margin_bottom_cm
     type: number
+    description: "sets the bottom margin in centimeters, default = 2.5"
   - id: margin_left_cm
     type: number
+    description: "sets the left margin in centimeters, default = 2.5"
   - id: margin_right_cm
     type: number
+    description: "sets the right margin in centimeters, default = 2.5"
 
 
   - id: font_body
     type: string
+    description: "Set the main font for the document. Provide a font name or file path. default: 'Times New Roman'."
   - id: font_mono
     type: string
+    description: "Set the monospace font for the document. Provide a font name or file path. default: 'Courier New'."
   - id: font_size_pt
     type: number
+    description: "Set the font size in points. default: 12."
   - id: line_spacing_em
     type: number
+    description: "Set the line spacing in em units. default: 1.5."
   - id: toc_depth
     type: number
+    description: "Set the depth of the table of contents. default: 3 (includes sections, subsections, and subsubsections)."
   - id: logo
     type: file
+    description: "Set a logo for the page header. Provide a file path to the logo image. default: none."
   
   - id: cover_page_variant
     type: string
+    description: "Choose a variant for the cover page design. Accepted values are 'simple', 'modern', or 'classic'. default: 'simple'."
   - id: cover_background_image
     type: file
+    description: "Set a background image for the cover page. Provide a file path to the image. default: none."
   - id: cover_title_box_opacity_pct
     type: number
     description: "Set the opacity of the title box on the cover page. Provide a percentage value (0-100). default: 55 (fully opaque)."
@@ -112,32 +133,45 @@ options: # cover.type
     description: "Set a cover image for the title page. Provide a file path to the image. default: none."
   - id: title_page_variant
     type: string
+    description: "Choose a variant for the title page design. Accepted values are 'simple', 'modern', or 'classic'. default: 'simple'."
   - id: show_title_page_image
     type: boolean
+    description: "Show an image on the title page. default: false. If true, provide additional details about the image using the following options."
   - id: title_page_image
     type: file
+    description: "Set an image for the title page. Provide a file path to the image. default: none."
   - id: title_page_image_anchor
     type: string
+    description: "Specify the anchor point for the title page image. Accepted values are 'top-left', 'top-right', 'bottom-left', 'bottom-right', or 'center'. default: 'center'."
   - id: title_page_image_width_cm
     type: number
+    description: "Set the width of the title page image in centimeters. default: 10."
   - id: title_page_image_height_cm
     type: number
+    description: "Set the height of the title page image in centimeters. default: 10."
   - id: title_page_image_dx_cm
     type: number
+    description: "Set the horizontal offset of the title page image in centimeters. default: 0."
   - id: title_page_image_dy_cm
     type: number
+    description: "Set the vertical offset of the title page image in centimeters. default: 0."
   
   # Thesis-specific metadata options
   - id: thesis_degree
     type: string
+    description: "Set the degree for the thesis. default: none."
   - id: thesis_program
     type: string
+    description: "Set the academic program for the thesis. default: none."
   - id: thesis_faculty
     type: string
+    description: "Set the faculty for the thesis. default: none."
   - id: thesis_institution
     type: string
+    description: "Set the institution for the thesis. default: none."
   - id: thesis_defense_date
     type: string
+    description: "Set the defense date for the thesis. default: none. Provide a date in a standard format (e.g., 'YYYY-MM-DD')."
 
 
   - id: set_page_logo #new

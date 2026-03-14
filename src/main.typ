@@ -3,9 +3,7 @@
 #import "layout/frontmatter.typ": frontmatter_section, frontmatter_other
 #import "layout/toc.typ": render_table_of_contents, render_list_of_figures, render_list_of_tables
 #import "components/headings.typ": configure_headings
-#import "components/figures.typ": configure_figures
-#import "components/tables.typ": configure_tables
-// #import "components/equations.typ": configure_equations
+
 #import "theme/page.typ": * 
 #import "theme/typography.typ": *
 #import "theme/colors.typ": * 
@@ -24,17 +22,11 @@
 }
 
 #let resolve_numbering(mode, default: "1") = {
-  if mode == none {
-    default
-  } else if mode == "none" {
-    none
-  } else if mode == "roman" {
-    "i"
-  } else if mode == "arabic" {
-    "1"
-  } else {
-    default
-  }
+       if mode == none {    default  } 
+  else if mode == "none" {  none   } 
+  else if mode == "roman" {  "i"   } 
+  else if mode == "arabic" {  "1"  } 
+  else { default }
 }
 
 #let resolve_asset_path(path, levels_up: 1) = {
@@ -54,13 +46,10 @@
 }
 
 #let render_comma_list(items) = {
-  if items == none {
-    ""
-  } else if type(items) == str {
-    items
-  } else if items.len() == 0 {
-    ""
-  } else {
+       if items == none {   ""   } 
+  else if type(items) == str {    items   } 
+  else if items.len() == 0 {     ""  } 
+  else {
     let output = ""
     for (index, item) in items.enumerate() {
       if index > 0 {
@@ -249,7 +238,7 @@
     },
   )   
     
-  // resetting numbering at chapter level
+  // resetting numbering of table, equations, and figures with new chapter
   show heading.where(level: 1): it => {  
     // Reset all counters with a new chapter
     counter(figure).update(0)                // all figures (irrespective of kind)
@@ -268,14 +257,23 @@
 
   show math.equation: set block(spacing: 1em)
 
-//----//
+//--all about figures--//
+
+  // set figure.caption(supplement: [Figuur]) ideally language option!
+    
+  show figure.caption: set text(size: 10pt, justify: true) 
+
+
+
+
+
 
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
-  // configure_equations(body)
-  configure_headings(red)
-  configure_figures(body)
-  configure_tables()
+  
+  configure_headings(red) // should be checked, ideally, in its current state, just include it above.
 
+
+// deserves its own component file. //
   if show_cover_full {
     cover_page(
       resolved_title,
@@ -300,6 +298,7 @@
     )
   }
 
+// deserves its own component file. like below //
   if show_title_page {
     title_page(
       resolved_title,
@@ -343,6 +342,8 @@
 
   pagebreak()
 
+
+//--------- layout main content ---------//
   set page(
     paper: paper_size,
     margin: (
@@ -353,7 +354,7 @@
     ),
     numbering: main_numbering,
     header: if resolved_logo_for_main != none {
-      align(right, image(resolved_logo_for_main, width: 1.4cm))
+      align(right, image(resolved_logo_for_main, width: 1.4cm)) //align should be adaptable.
     } else {
       none
     },
