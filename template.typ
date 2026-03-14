@@ -1,5 +1,4 @@
 #import "src/main.typ": thesis_template
-#import "src/components/bibliography.typ": render_bibliography
 
 #show: thesis_template.with(
 [# if project.title #]
@@ -167,5 +166,8 @@
 [-CONTENT-]
 
 [# if doc.bibtex #]
-#render_bibliography(path: "[-doc.bibtex-]")
+#{
+  show bibliography: set text(8pt)
+  bibliography("[-doc.bibtex-]", title: text(10pt, "References"), style: "apa")
+}
 [# endif #]

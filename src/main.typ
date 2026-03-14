@@ -27,19 +27,12 @@
 }
 
 #let resolve_asset_path(path, levels_up: 1) = {
-  if path == none {
-    none
-  } else if type(path) != str {
-    path
-  } else if path.starts-with("/") or path.starts-with("./") or path.starts-with("../") or path.contains(":/") {
-    path
-  } else if levels_up == 2 {
-    "../../" + path
-  } else if levels_up == 1 {
-    "../" + path
-  } else {
-    path
-  }
+       if path == none {  none   } 
+  else if type(path) != str {     path  } 
+  else if path.starts-with("/") or path.starts-with("./") or path.starts-with("../") or path.contains(":/") {     path   } 
+  else if levels_up == 2 {    "../../" + path  } 
+  else if levels_up == 1 {     "../" + path   } 
+  else {     path  }
 }
 
 #let render_comma_list(items) = {
@@ -60,13 +53,9 @@
 
 #let contributor_group_matches(contributor_id, group) = {
   let normalized = if contributor_id == none { "" } else { str(contributor_id) }
-  if group == "supervisor" {
-    normalized == "supervisor" or normalized.starts-with("supervisor") or normalized == "advisor" or normalized.starts-with("advisor")
-  } else if group == "committee" {
-    normalized == "committee" or normalized.starts-with("committee") or normalized == "examiner" or normalized.starts-with("examiner")
-  } else {
-    false
-  }
+       if group == "supervisor" {normalized == "supervisor" or normalized. starts-with("supervisor") or normalized == "advisor" or normalized.starts-with("advisor") } 
+  else if group == "committee" { normalized == "committee" or normalized.starts-with("committee") or normalized == "examiner" or normalized.starts-with("examiner") } 
+  else {  false  }
 }
 
 #let resolve_affiliation_name(affiliation_id, affiliation_catalog) = {
@@ -194,11 +183,7 @@
   let resolved_logo_for_main = resolve_asset_path(logo, levels_up: 1)
   let resolved_logo_for_layout = resolve_asset_path(logo, levels_up: 2)
   let resolved_cover_background_image = resolve_asset_path(cover_background_image, levels_up: 2)
-  let resolved_title_page_image = if show_title_page_image {
-    resolve_asset_path(title_page_image, levels_up: 2)
-  } else {
-    none
-  }
+  let resolved_title_page_image = if show_title_page_image { resolve_asset_path(title_page_image, levels_up: 2)  } else {    none  }
 
   set page(
     paper: paper_size,
@@ -257,12 +242,13 @@
 //--all about figures--//
 
   // set figure.caption(supplement: [Figuur]) ideally language option!
-    
-  show figure.caption: set text(size: 10pt, justify: true) 
-
-
-
-
+//set figure(  supplement: [#emph[Supplement]] )
+ show figure.caption: it => {
+  set align(left)
+  set par(justify: true)
+  set text(size: 10pt)
+  it
+}
 
 
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
@@ -359,5 +345,6 @@
 
   counter(page).update(1)
 
+//---------include main content-------//
   [#body]
 }

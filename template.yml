@@ -18,14 +18,7 @@ files:
   - src/layout/frontmatter.typ
   - src/layout/toc.typ
   - src/components/headings.typ
-  - src/components/figures.typ
-  - src/components/tables.typ
-  - src/components/bibliography.typ
-  - src/components/equations.typ
-  - src/theme/page.typ
-  - src/theme/typography.typ
   - src/theme/colors.typ
-  - src/theme/spacing.typ
   - docs/options.md
   - docs/metadata-mapping.md
   - LICENSE
@@ -33,15 +26,22 @@ files:
 doc:
   - id: title
     required: true
+    description: "title, specified in myst.yml"
   - id: subtitle
+    description: "subtitle, specified in myst.yml"
   - id: authors
     required: true
+    description: "authors, specified in myst.yml or authors.yml"
   - id: contributors
+    description: "contributors, specified in myst.yml"
   - id: affiliations
     required: true
+    description: "affiliations, specified in myst.yml"
   - id: date
     required: true
+    description: "date, specified in myst.yml"
   - id: keywords
+    description: "keywords, specified in myst.yml"
 
 parts:
   - id: abstract
