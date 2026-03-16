@@ -11,7 +11,7 @@
   pagebreak()
   outline(
     title: strong("List of Figures"),
-    target: figure.where(kind: "figure"),
+    target: figure.where(kind: "figure"), // kind set to figure due to mystmd conversion (rather than image)
     indent: auto,
   )
 }

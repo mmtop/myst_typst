@@ -60,6 +60,7 @@
   title_page_image_height_cm: none,
   title_page_image_dx_cm: none,
   title_page_image_dy_cm: none,
+  heading_color: rgb("#0F172A"),
   body,
 ) = {
   let resolved_title = require_non_empty(title, "project.title", fallback: "Untitled Thesis")
@@ -86,7 +87,7 @@
   set text(
     font: font_body,
     size: font_size_pt,
-    fill: default_text_color,
+    fill: rgb("#1E293B"),
   )
 
   set par(
@@ -103,7 +104,7 @@
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
   
   show: body => setup-numbering(body)
-  show: body => configure_headings(black,body)
+  show: body => configure_headings(heading_color,body)
   show: body => configure_figures(body)
 
   if show_cover_full {
@@ -160,6 +161,7 @@
 
   pagebreak()
   frontmatter_section("Abstract", abstract)
+  v(2em)
   frontmatter_other("Keywords", render_comma_list(keywords))
   pagebreak()
   frontmatter_section("Preface", preface)
