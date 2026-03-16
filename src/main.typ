@@ -103,7 +103,7 @@
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
   
   show: body => setup-numbering(body)
-  show: body => configure_headings(red,body)
+  show: body => configure_headings(black,body)
   show: body => configure_figures(body)
 
   if show_cover_full {

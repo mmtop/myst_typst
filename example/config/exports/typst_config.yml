@@ -12,7 +12,7 @@ project:
       show_title_page_image: false
       show_contributor_affiliations: true
       show_toc: true
-      show_list_of_figures: false
+      show_list_of_figures: true
       show_list_of_tables: false
       frontmatter_numbering: roman
       mainmatter_numbering: arabic

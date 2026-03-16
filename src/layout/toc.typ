@@ -1,4 +1,4 @@
-#let render_table_of_contents(depth: 3) = {
+#let render_table_of_contents(depth: 1) = {
   pagebreak()
   outline(
     title: strong("Contents"),
@@ -11,7 +11,7 @@
   pagebreak()
   outline(
     title: strong("List of Figures"),
-    target: figure.where(kind: image),
+    target: figure.where(kind: "figure"),
     indent: auto,
   )
 }
