@@ -3,8 +3,9 @@
 #import "layout/frontmatter.typ": frontmatter_section, frontmatter_other
 #import "layout/toc.typ": render_table_of_contents, render_list_of_figures, render_list_of_tables
 #import "components/headings.typ": configure_headings
+#import "components/figures.typ": configure_figures
 #import "theme/colors.typ": * 
-
+#import "theme/numbering.typ": setup-numbering
 
 #let require_non_empty(value, field_name, fallback: none) = {
   if value == none or value == "" {
@@ -42,9 +43,7 @@
   else {
     let output = ""
     for (index, item) in items.enumerate() {
-      if index > 0 {
-        output += ", "
-      }
+      if index > 0 { output += ", "  }
       output += str(item)
     }
     output
@@ -123,6 +122,9 @@
     output
   }
 }
+
+
+
 
 #let thesis_template(
   title: "Untitled Thesis",
@@ -209,54 +211,20 @@
     first-line-indent: 1.2em,
   )
 
-//--All about numbering--//
-
-  // numbering of headings
-
-  set heading(numbering: (..args) => {
-    let nums = args.pos()
-    let level = nums.len()
-    if level == 1 {[#numbering("1.", ..nums)]} else {[#numbering("1.1.1", ..nums)]}
-    },
-  )   
-    
-  // resetting numbering of table, equations, and figures with new chapter
-  show heading.where(level: 1): it => {  
-    // Reset all counters with a new chapter
-    counter(figure).update(0)                // all figures (irrespective of kind)
-    counter(figure.where(kind: table)).update(0) // specific for tables
-    counter(math.equation).update(0)
-    
-    it
-  }
-
-
-  // numbering of equations with chapter number as prefix
-  set math.equation(numbering: (..args) => {
-    let chapter = counter(heading).display((..nums) => nums.pos().at(0))
-    [(#chapter.#numbering("1)", ..args.pos())]
-  })
-
+  
+  show: body => setup-numbering(body)
   show math.equation: set block(spacing: 1em)
 
-//--all about figures--//
 
   // set figure.caption(supplement: [Figuur]) ideally language option!
 //set figure(  supplement: [#emph[Supplement]] )
- show figure.caption: it => {
-  set align(left)
-  set par(justify: true)
-  set text(size: 10pt)
-  it
-}
 
 
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
   
-  configure_headings(red) // should be checked, ideally, in its current state, just include it above.
+  show: body => configure_headings(red,body)
+  show: body => configure_figures(body)
 
-
-// deserves its own component file. //
   if show_cover_full {
     cover_page(
       resolved_title,

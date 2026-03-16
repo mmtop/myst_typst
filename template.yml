@@ -14,10 +14,12 @@ files:
   - template.typ
   - src/main.typ
   - src/layout/cover.typ
+  - src/theme/numbering.typ
   - src/layout/titlepage.typ
   - src/layout/frontmatter.typ
   - src/layout/toc.typ
   - src/components/headings.typ
+  - src/components/figures.typ
   - src/theme/colors.typ
   - docs/options.md
   - docs/metadata-mapping.md
