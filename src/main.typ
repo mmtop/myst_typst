@@ -102,6 +102,7 @@
   show math.equation: set block(spacing: 1em)
 
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
+  show link: set text( fill: blue.darken(30%))
   
   show: body => setup-numbering(body)
   show: body => configure_headings(heading_color,body)
