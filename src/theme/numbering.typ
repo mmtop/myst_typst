@@ -23,5 +23,10 @@
     [(#chapter.#numbering("1)", ..args.pos())]
   })
 
+  set figure(numbering: (..args) => {
+    let chapter = counter(heading).display((..nums) => nums.pos().at(0))
+    [#chapter.#numbering("1", ..args.pos())]
+  })
+
   body
 }
