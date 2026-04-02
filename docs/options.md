@@ -19,6 +19,7 @@
 - `margin_right_cm` (number): Right margin in cm.
 - `font_body` (string): Body font family.
 - `font_mono` (string): Monospace font family.
+- `font_math` (string): Math font family for equations. Use a real math font.
 - `font_size_pt` (number): Base font size in points.
 - `line_spacing_em` (number): Paragraph leading in em.
 - `toc_depth` (number): Depth for table of contents.

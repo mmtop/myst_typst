@@ -138,8 +138,9 @@
   margin_left_cm: [# if options.margin_left_cm #][-options.margin_left_cm-]cm[# else #]3.0cm[# endif #],
   margin_right_cm: [# if options.margin_right_cm #][-options.margin_right_cm-]cm[# else #]2.0cm[# endif #],
 
-  font_body: "[# if options.font_body #][-options.font_body-][# else #]Roboto Slab[# endif #]",
-  font_mono: "[# if options.font_mono #][-options.font_mono-][# else #]DejaVu Sans Mono[# endif #]",
+  [# if options.font_body #]font_body: "[-options.font_body-]",[# endif #]
+  [# if options.font_mono #]font_mono: "[-options.font_mono-]",[# endif #]
+  [# if options.font_math #]font_math: "[-options.font_math-]",[# endif #]
   font_size_pt: [# if options.font_size_pt #][-options.font_size_pt-]pt[# else #]11pt[# endif #],
   line_spacing_em: [# if options.line_spacing_em #][-options.line_spacing_em-]em[# else #].55em[# endif #],
 

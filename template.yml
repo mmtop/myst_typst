@@ -16,8 +16,6 @@ files:
   - src/helperfunctions.typ
   - src/assets/brand_assets/logo.svg
   - src/assets/template_figures/defaultcover.jpg
-  - src/assets/fonts/Lora/Lora-Italic-VariableFont_wght.ttf
-  - src/assets/fonts/Lora/Lora-VariableFont_wght.ttf
   - src/assets/fonts/Lora/OFL.txt
   - src/assets/fonts/Lora/README.txt
   - src/assets/fonts/Lora/static/Lora-Bold.ttf
@@ -30,7 +28,6 @@ files:
   - src/assets/fonts/Lora/static/Lora-SemiBoldItalic.ttf
   - src/assets/fonts/Roboto_Slab/LICENSE.txt
   - src/assets/fonts/Roboto_Slab/README.txt
-  - src/assets/fonts/Roboto_Slab/RobotoSlab-VariableFont_wght.ttf
   - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Black.ttf
   - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Bold.ttf
   - src/assets/fonts/Roboto_Slab/static/RobotoSlab-ExtraBold.ttf
@@ -42,8 +39,6 @@ files:
   - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Thin.ttf
   - src/assets/fonts/STIX_Two_Text/OFL.txt
   - src/assets/fonts/STIX_Two_Text/README.txt
-  - src/assets/fonts/STIX_Two_Text/STIXTwoText-Italic-VariableFont_wght.ttf
-  - src/assets/fonts/STIX_Two_Text/STIXTwoText-VariableFont_wght.ttf
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Bold.ttf
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-BoldItalic.ttf
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Italic.ttf
@@ -138,10 +133,13 @@ options: # cover.type
 
   - id: font_body
     type: string
-    description: "Set the main font for the document. Provide a font name or file path. default: 'Times New Roman'."
+    description: "Set the main font for the document. Provide a font name. default: built-in Typst fallback."
   - id: font_mono
     type: string
-    description: "Set the monospace font for the document. Provide a font name or file path. default: 'Courier New'."
+    description: "Set the monospace font for the document. Provide a font name. default: built-in Typst fallback."
+  - id: font_math
+    type: string
+    description: "Set the math font for equations. Use a real math font. default: built-in Typst fallback."
   - id: font_size_pt
     type: number
     description: "Set the font size in points. default: 12."

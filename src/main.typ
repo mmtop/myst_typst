@@ -44,8 +44,9 @@
   margin_bottom_cm: 2.5cm,
   margin_left_cm: 3.0cm,
   margin_right_cm: 2.0cm,
-  font_body: "Roboto Slab",
+  font_body: "Libertinus Serif",
   font_mono: "DejaVu Sans Mono",
+  font_math: "New Computer Modern Math",
   font_size_pt: 11pt,
   line_spacing_em: 0.55em,
   toc_depth: 2,
@@ -99,6 +100,7 @@
 
   
 
+  show math.equation: set text(font: font_math)
   show math.equation: set block(spacing: 1em)
 
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
