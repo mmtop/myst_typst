@@ -6,13 +6,13 @@ project:
     - id: thesis-pdf
       format: typst
       template: ../
-      output: ./exports/thesis_typst.pdf
+      output: ./exports/typst_template_example.pdf
       show_cover_full: true
       show_title_page: true
       show_title_page_image: false
       show_contributor_affiliations: true
       show_toc: true
-      show_list_of_figures: true
+      show_list_of_figures: false
       show_list_of_tables: false
       frontmatter_numbering: roman
       mainmatter_numbering: arabic
@@ -28,18 +28,19 @@ project:
       font_size_pt: 11
       line_spacing_em: .55
       
-      toc_depth: 3
-      logo: config/assets/brand/logo.svg
+      toc_depth: 2
+      logo: config/template_assets/brand_assets/logo.svg
 
       # Cover variant: simple | graphical | custom
       cover_page_variant: graphical
-      cover_background_image: config/assets/figures/cover.jpg
+      cover_background_image: config/template_assets/figures/defaultcover.jpg
       cover_title_box_opacity_pct: 55
       
       # Title-page variant: simple | formal | custom
       title_page_variant: "formal"
-      title_page_image: config/assets/figures/cover.jpg
-      title_page_image_anchor: bottom
-      title_page_image_width_cm: 3
-      title_page_image_dx_cm: 0
-      title_page_image_dy_cm: -3.0
+      ## Title-page image settings (only for formal variant):
+      # title_page_image: config/template_assets/figures/defaultcover.jpg
+      # title_page_image_anchor: bottom
+      # title_page_image_width_cm: 3
+      # title_page_image_dx_cm: 0
+      # title_page_image_dy_cm: 0

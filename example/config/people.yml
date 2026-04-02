@@ -2,13 +2,13 @@ version: 1
 project:
   authors:
     - id: student
-      name: Maciej Topyla
+      name: Student Name
       affiliations:
         - tud
 
   contributors:
     - id: supervisor-1
-      name: Freek Pols
+      name: Supervisor Name
       affiliations:
         - tud
     - id: committee-1
