@@ -109,11 +109,11 @@
 
 #let resolve_title_page_image_anchor(anchor) = {
   if anchor == none {
-    top + right
+    bottom + center
   } else {
     let normalized = str(anchor)
     if normalized == "" or normalized == "none" {
-      top + right
+      bottom + center
     } else if normalized == "top-right" {
       top + right
     } else if normalized == "top" {
@@ -315,7 +315,7 @@
     align(center, faculty)
   }
 
-  v(1.5em)
+  v(2.3em)
 
   table(
     columns: (auto, 1fr),

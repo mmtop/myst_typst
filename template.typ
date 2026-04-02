@@ -132,9 +132,7 @@
 
   frontmatter_numbering: "[# if options.frontmatter_numbering #][-options.frontmatter_numbering-][# else #]roman[# endif #]",
   mainmatter_numbering: "[# if options.mainmatter_numbering #][-options.mainmatter_numbering-][# else #]arabic[# endif #]",
-  [# if options.paper_size #] paper_size: "[-options.paper_size-]", [# endif #]
-
-  // paper_size: "[# if options.paper_size #][-options.paper_size-][# endif #]",
+  paper_size: "[# if options.paper_size #][-options.paper_size-][# else #]a4[# endif #]",
   margin_top_cm: [# if options.margin_top_cm #][-options.margin_top_cm-]cm[# else #]2.5cm[# endif #],
   margin_bottom_cm: [# if options.margin_bottom_cm #][-options.margin_bottom_cm-]cm[# else #]2.5cm[# endif #],
   margin_left_cm: [# if options.margin_left_cm #][-options.margin_left_cm-]cm[# else #]3.0cm[# endif #],
@@ -143,9 +141,9 @@
   font_body: "[# if options.font_body #][-options.font_body-][# else #]Libertinus Serif[# endif #]",
   font_mono: "[# if options.font_mono #][-options.font_mono-][# else #]DejaVu Sans Mono[# endif #]",
   font_size_pt: [# if options.font_size_pt #][-options.font_size_pt-]pt[# else #]11pt[# endif #],
-  line_spacing_em: [# if options.line_spacing_em #][-options.line_spacing_em-]em[# else #]1.35em[# endif #],
+  line_spacing_em: [# if options.line_spacing_em #][-options.line_spacing_em-]em[# else #].55em[# endif #],
 
-  toc_depth: [# if options.toc_depth #][-options.toc_depth-][# else #]3[# endif #],
+  toc_depth: [# if options.toc_depth #][-options.toc_depth-][# else #]2[# endif #],
   logo: [# if options.logo #]"[-options.logo-]"[# else #]"src/assets/brand_assets/logo.svg"[# endif #],
   cover_page_variant: "[# if options.cover_page_variant #][-options.cover_page_variant-][# else #]simple[# endif #]",
   cover_background_image: [# if options.cover_background_image #]"[-options.cover_background_image-]"[# elif options.cover_image #]"[-options.cover_image-]"[# else #]"src/assets/template_figures/defaultcover.jpg"[# endif #],
@@ -153,7 +151,7 @@
   title_page_variant: "[# if options.title_page_variant #][-options.title_page_variant-][# else #]1[# endif #]",
   show_title_page_image: [# if options.show_title_page_image is defined #][-options.show_title_page_image-][# else #]true[# endif #],
   title_page_image: [# if options.title_page_image #]"[-options.title_page_image-]"[# else #]"src/assets/template_figures/defaultcover.jpg"[# endif #],
-  title_page_image_anchor: [# if options.title_page_image_anchor is defined and options.title_page_image_anchor != none and options.title_page_image_anchor != "" #]"[-options.title_page_image_anchor-]"[# else #]none[# endif #],
+  title_page_image_anchor: [# if options.title_page_image_anchor is defined and options.title_page_image_anchor != none and options.title_page_image_anchor != "" #]"[-options.title_page_image_anchor-]"[# else #]"bottom"[# endif #],
   title_page_image_width_cm: [# if options.title_page_image_width_cm is defined and options.title_page_image_width_cm != none #][-options.title_page_image_width_cm-]cm[# else #]none[# endif #],
   title_page_image_height_cm: [# if options.title_page_image_height_cm is defined and options.title_page_image_height_cm != none #][-options.title_page_image_height_cm-]cm[# else #]none[# endif #],
   title_page_image_dx_cm: [# if options.title_page_image_dx_cm is defined and options.title_page_image_dx_cm != none #][-options.title_page_image_dx_cm-]cm[# else #]none[# endif #],
