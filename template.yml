@@ -16,6 +16,42 @@ files:
   - src/helperfunctions.typ
   - src/assets/brand_assets/logo.svg
   - src/assets/template_figures/defaultcover.jpg
+  - src/assets/fonts/Lora/Lora-Italic-VariableFont_wght.ttf
+  - src/assets/fonts/Lora/Lora-VariableFont_wght.ttf
+  - src/assets/fonts/Lora/OFL.txt
+  - src/assets/fonts/Lora/README.txt
+  - src/assets/fonts/Lora/static/Lora-Bold.ttf
+  - src/assets/fonts/Lora/static/Lora-BoldItalic.ttf
+  - src/assets/fonts/Lora/static/Lora-Italic.ttf
+  - src/assets/fonts/Lora/static/Lora-Medium.ttf
+  - src/assets/fonts/Lora/static/Lora-MediumItalic.ttf
+  - src/assets/fonts/Lora/static/Lora-Regular.ttf
+  - src/assets/fonts/Lora/static/Lora-SemiBold.ttf
+  - src/assets/fonts/Lora/static/Lora-SemiBoldItalic.ttf
+  - src/assets/fonts/Roboto_Slab/LICENSE.txt
+  - src/assets/fonts/Roboto_Slab/README.txt
+  - src/assets/fonts/Roboto_Slab/RobotoSlab-VariableFont_wght.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Black.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Bold.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-ExtraBold.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-ExtraLight.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Light.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Medium.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Regular.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-SemiBold.ttf
+  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Thin.ttf
+  - src/assets/fonts/STIX_Two_Text/OFL.txt
+  - src/assets/fonts/STIX_Two_Text/README.txt
+  - src/assets/fonts/STIX_Two_Text/STIXTwoText-Italic-VariableFont_wght.ttf
+  - src/assets/fonts/STIX_Two_Text/STIXTwoText-VariableFont_wght.ttf
+  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Bold.ttf
+  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-BoldItalic.ttf
+  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Italic.ttf
+  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Medium.ttf
+  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-MediumItalic.ttf
+  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Regular.ttf
+  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-SemiBold.ttf
+  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-SemiBoldItalic.ttf
   - src/layout/cover.typ
   - src/layout/titlepage.typ
   - src/layout/frontmatter.typ

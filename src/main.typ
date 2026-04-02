@@ -44,7 +44,7 @@
   margin_bottom_cm: 2.5cm,
   margin_left_cm: 3.0cm,
   margin_right_cm: 2.0cm,
-  font_body: "Libertinus Serif",
+  font_body: "STIX Two Text",
   font_mono: "DejaVu Sans Mono",
   font_size_pt: 11pt,
   line_spacing_em: 0.55em,
