@@ -7,6 +7,7 @@ project:
       format: typst
       template: ../
       output: ./exports/typst_template_example.pdf
+      
       show_cover_full: true
       show_title_page: true
       show_title_page_image: false
