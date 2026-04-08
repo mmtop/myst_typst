@@ -1,8 +1,8 @@
 version: 1
 extends:
-  - config/people.yml
-  - config/options.yml
-  - config/typst_export_config.yml
+  - people.yml
+  - options.yml
+  - typst_export_config.yml
 project:
   title: Master Thesis
   subtitle: Shared Template for MyST and Typst

@@ -40,6 +40,11 @@
 - `title_page_image_dy_cm` (number, optional): Vertical offset in cm for placed title-page image. Default is `0`.
 - `logo` (file): Header and title-page logo path.
 
+## Path handling
+- File paths are normalized to forward slashes before Typst loads them, which keeps Windows, macOS, Linux, and CI builds aligned.
+- Prefer forward slashes in config values even on Windows, for example `files/logo.svg` or `config/assets/logo.svg`.
+- Bare relative paths are rebased internally because some assets are loaded from `src/main.typ` and others from `src/layout/*.typ`.
+
 ## Shared thesis metadata (not PDF layout options)
 These fields are semantic metadata and should stay in shared config:
 - `project.options.thesis_degree`
