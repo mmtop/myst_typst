@@ -1,5 +1,5 @@
 #import "layout/cover.typ": cover_page
-#import "layout/titlepage.typ": title_page
+#import "layout/titlepage.typ": title_page, contributors_by_group
 #import "layout/frontmatter.typ": frontmatter_section, frontmatter_other
 #import "layout/toc.typ": render_table_of_contents, render_list_of_figures, render_list_of_tables
 #import "components/headings.typ": configure_headings
