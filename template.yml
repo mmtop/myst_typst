@@ -106,12 +106,6 @@ options: # cover.type
   - id: show_list_of_tables
     type: boolean
     description: "Show list of tables, default: false"
-  - id: frontmatter_numbering
-    type: string
-    description: "Set the numbering style for the front matter"
-  - id: mainmatter_numbering
-    type: string
-    description: "Set the numbering style for the main matter"
 
   # paper and layout options  //check default settings below
   - id: paper_size

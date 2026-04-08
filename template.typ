@@ -129,9 +129,6 @@
   show_toc: [# if options.show_toc is defined #][-options.show_toc-][# else #]true[# endif #],
   show_list_of_figures: [# if options.show_list_of_figures is defined #][-options.show_list_of_figures-][# else #]false[# endif #],
   show_list_of_tables: [# if options.show_list_of_tables is defined #][-options.show_list_of_tables-][# else #]false[# endif #],
-
-  frontmatter_numbering: "[# if options.frontmatter_numbering #][-options.frontmatter_numbering-][# else #]roman[# endif #]",
-  mainmatter_numbering: "[# if options.mainmatter_numbering #][-options.mainmatter_numbering-][# else #]arabic[# endif #]",
   paper_size: "[# if options.paper_size #][-options.paper_size-][# else #]a4[# endif #]",
   margin_top_cm: [# if options.margin_top_cm #][-options.margin_top_cm-]cm[# else #]2.5cm[# endif #],
   margin_bottom_cm: [# if options.margin_bottom_cm #][-options.margin_bottom_cm-]cm[# else #]2.5cm[# endif #],

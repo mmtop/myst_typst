@@ -8,8 +8,9 @@
 - `show_toc` (boolean): Render the table of contents.
 - `show_list_of_figures` (boolean): Render list of figures.
 - `show_list_of_tables` (boolean): Render list of tables.
-- `frontmatter_numbering` (`roman|none`): Numbering mode for front matter.
-- `mainmatter_numbering` (`arabic|none`): Numbering mode for main matter.
+
+Front matter uses roman page numbers and the main matter uses arabic page numbers by default.
+Users who want to change this can edit the `numbering:` lines in `src/main.typ`.
 
 ## Page and typography options
 - `paper_size` (string): Typst paper size, for example `a4`.

@@ -7,14 +7,6 @@
   } else { value }
 }
 
-#let resolve_numbering(mode, default: "1") = {
-       if mode == none {    default  } 
-  else if mode == "none" {  none   } 
-  else if mode == "roman" {  "i"   } 
-  else if mode == "arabic" {  "1"  } 
-  else { default }
-}
-
 // Keeps logo and image paths working when this template is built on different systems.
 #let resolve_asset_path(path, levels_up: 1) = {
        if path == none {  none   }

@@ -37,8 +37,6 @@
   show_toc: true,
   show_list_of_figures: false,
   show_list_of_tables: false,
-  frontmatter_numbering: "roman",
-  mainmatter_numbering: "arabic",
   paper_size: "a4",
   margin_top_cm: 2.5cm,
   margin_bottom_cm: 2.5cm,
@@ -67,8 +65,6 @@
   let resolved_title = require_non_empty(title, "project.title", fallback: "Untitled Thesis")
   let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
   let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
-  let front_numbering = resolve_numbering(frontmatter_numbering, default: "i")
-  let main_numbering = resolve_numbering(mainmatter_numbering, default: "1")
   let resolved_logo_for_main = resolve_asset_path(logo, levels_up: 1)
   let resolved_logo_for_layout = resolve_asset_path(logo, levels_up: 2)
   let resolved_cover_background_image = resolve_asset_path(cover_background_image, levels_up: 2)
@@ -82,7 +78,9 @@
       left: margin_left_cm,
       right: margin_right_cm,
     ),
-    numbering: front_numbering,
+    // Page numbering defaults live here for users who want to tweak them:
+    // use "i" for roman numerals, "1" for arabic numerals, or none to hide them.
+    numbering: "i",
   )
 
   set text(
@@ -129,7 +127,7 @@
         left: margin_left_cm,
         right: margin_right_cm,
       ),
-      numbering: front_numbering,
+      numbering: "i",
       background: none,
     )
   }
@@ -189,7 +187,7 @@
       left: margin_left_cm,
       right: margin_right_cm,
     ),
-    numbering: main_numbering,
+    numbering: "1",
     header: if resolved_logo_for_main != none {
       align(right, image(resolved_logo_for_main, width: 1.4cm)) //align should be adaptable.
     } else {

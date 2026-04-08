@@ -15,8 +15,6 @@ project:
       show_toc: true
       show_list_of_figures: false
       show_list_of_tables: false
-      frontmatter_numbering: roman
-      mainmatter_numbering: arabic
 
 # page layout and styling      
       # paper_size: a5
