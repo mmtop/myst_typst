@@ -22,6 +22,7 @@
   }
 }
 
+// Turns a list like several author names or keywords into one comma-separated line.
 #let render_comma_list(items) = {
        if items == none {   ""   } 
   else if type(items) == str {    items   } 
