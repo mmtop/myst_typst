@@ -12,7 +12,7 @@
 
 
 #let thesis_template(
-  title: "Untitled Thesis",
+  title: "Untitled Report",
   subtitle: none,
   authors: (),
   contributors: (),
@@ -62,7 +62,7 @@
   heading_color: rgb("#0F172A"),
   body,
 ) = {
-  let resolved_title = require_non_empty(title, "project.title", fallback: "Untitled Thesis")
+  let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
   let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
   let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
   let resolved_logo_for_main = resolve_asset_path(logo, levels_up: 1)

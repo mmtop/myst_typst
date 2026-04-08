@@ -6,7 +6,7 @@
 [# elif doc.title #]
   title: "[-doc.title-]",
 [# else #]
-  title: "Untitled Thesis",
+  title: "Untitled Report",
 [# endif #]
 
 [# if project.subtitle #]

@@ -1,12 +1,4 @@
 
-#let require_non_empty(value, field_name, fallback: none) = {
-  if value == none or value == "" {
-    if fallback != none { fallback } else {
-      panic("Missing required metadata: " + field_name)
-    }
-  } else { value }
-}
-
 // Keeps logo and image paths working when this template is built on different systems.
 #let resolve_asset_path(path, levels_up: 1) = {
        if path == none {  none   }
