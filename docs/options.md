@@ -8,6 +8,11 @@
 - `show_toc` (boolean): Render the table of contents.
 - `show_list_of_figures` (boolean): Render list of figures.
 - `show_list_of_tables` (boolean): Render list of tables.
+- `show_bibliography` (boolean): Render the bibliography chapter.
+- `bibliography_title` (string): Title for the bibliography chapter. Default is `Bibliography`.
+- `bibliography_style` (string): Typst bibliography style. Default is `ieee`.
+  Common built-in styles include `ieee`, `apa`, `mla`, `chicago-author-date`, and `chicago-notes`.
+- `bibliography_numbered_heading` (boolean): Number the bibliography chapter heading. Default is `false`.
 
 Front matter uses roman page numbers and the main matter uses arabic page numbers by default.
 Users who want to change this can edit the `numbering:` lines in `src/main.typ`.
@@ -57,6 +62,19 @@ These fields are semantic metadata and should stay in shared config:
 - `project.contributors` (supervisors/committee keyed by contributor `id` prefix, recommended: `supervisor-1`, `committee-1`, ...)
 
 At render time, MyST injects `project.options.*` into template `options.*`.
+
+## Bibliography placement
+The bibliography is currently rendered after the MyST content stream. In the current template structure, that means it appears after appendices.
+
+## Appendix note
+Appendices are currently ordinary top-level MyST content files, so the template does not yet receive a separate "appendix mode" signal.
+
+If you want a cleaner appendix system later, the most reliable redesign is:
+1. keep main chapters and appendices as two separate content lists in MyST
+2. pass those lists into the Typst template separately
+3. let `src/main.typ` render main matter first, then switch to appendix-specific heading and figure numbering, and only then render the bibliography
+
+That future structure would make it easy to produce headings like `Appendix A`, `Appendix B`, and to place the bibliography before or after appendices in a controlled way.
 
 ## Custom variant entry points
 For cover-page customization:

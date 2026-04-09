@@ -7,31 +7,43 @@ project:
       format: typst
       template: ../
       output: ./exports/typst_template_example.pdf
-      
+
+# Template options for Typst export      
       show_cover_full: true
       show_title_page: true
       show_title_page_image: false
       show_contributor_affiliations: true
+
+# Table of contents and lists of figures/tables options
       show_toc: true
+      toc_depth: 2
+      
       show_list_of_figures: false
       show_list_of_tables: false
 
-# page layout and styling      
+
+# Bibliography options 
+      show_bibliography: true     
+      bibliography_title: Bibliography
+      # Common built-in Typst styles include:
+      # ieee | apa | mla | chicago-author-date | chicago-notes
+      bibliography_style: ieee
+      bibliography_numbered_heading: false
+
+# Page layout and styling      
       # paper_size: a5
       margin_top_cm: 2.5
       margin_bottom_cm: 2.5
-      margin_left_cm: 3.0
+      margin_left_cm: 2.0
       margin_right_cm: 2.0
       font_body: Libertinus Serif
       font_mono: DejaVu Sans Mono
       font_size_pt: 11
       line_spacing_em: .55
       
-      toc_depth: 2
+
       
-      # Optional: override the default template logo with your own file path.
-      # If omitted, the template's built-in logo is used.
-      # logo: content/assets/logo.svg
+
 
       # Cover variant: simple | graphical | custom
       cover_page_variant: graphical
@@ -48,3 +60,9 @@ project:
       # title_page_image_width_cm: 3
       # title_page_image_dx_cm: 0
       # title_page_image_dy_cm: 0
+
+
+# Options:
+      # Optional: override the default template logo with your own file path.
+      # If omitted, the template's built-in logo is used.
+      # logo: content/assets/logo.svg

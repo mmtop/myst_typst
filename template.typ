@@ -142,6 +142,11 @@
   line_spacing_em: [# if options.line_spacing_em #][-options.line_spacing_em-]em[# else #].55em[# endif #],
 
   toc_depth: [# if options.toc_depth #][-options.toc_depth-][# else #]2[# endif #],
+  bibliography_file: [# if doc.bibtex #]"[-doc.bibtex-]"[# else #]none[# endif #],
+  show_bibliography: [# if options.show_bibliography is defined #][-options.show_bibliography-][# else #]true[# endif #],
+  bibliography_title: [# if options.bibliography_title #]"[-options.bibliography_title-]"[# else #]"Bibliography"[# endif #],
+  bibliography_style: [# if options.bibliography_style #]"[-options.bibliography_style-]"[# else #]"ieee"[# endif #],
+  bibliography_numbered_heading: [# if options.bibliography_numbered_heading is defined #][-options.bibliography_numbered_heading-][# else #]false[# endif #],
   logo: [# if options.logo #]"[-options.logo-]"[# else #]"src/assets/brand_assets/logo.svg"[# endif #],
   cover_page_variant: "[# if options.cover_page_variant #][-options.cover_page_variant-][# else #]simple[# endif #]",
   cover_background_image: [# if options.cover_background_image #]"[-options.cover_background_image-]"[# elif options.cover_image #]"[-options.cover_image-]"[# else #]"src/assets/template_figures/defaultcover.jpg"[# endif #],
@@ -160,10 +165,3 @@
 [-IMPORTS-]
 
 [-CONTENT-]
-
-[# if doc.bibtex #]
-#{
-  show bibliography: set text(8pt)
-  bibliography("[-doc.bibtex-]", title: text(10pt, "References"), style: "apa")
-}
-[# endif #]

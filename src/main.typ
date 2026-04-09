@@ -1,6 +1,7 @@
 #import "layout/cover.typ": cover_page
 #import "layout/titlepage.typ": title_page, contributors_by_group
 #import "layout/frontmatter.typ": render_frontmatter
+#import "layout/bibliography.typ": render_bibliography
 #import "components/headings.typ": configure_headings
 #import "components/figures.typ": configure_figures
 #import "theme/colors.typ": * 
@@ -46,6 +47,11 @@
   font_size_pt: 11pt,
   line_spacing_em: 0.55em,
   toc_depth: 2,
+  bibliography_file: none,
+  show_bibliography: true,
+  bibliography_title: "Bibliography",
+  bibliography_style: "ieee",
+  bibliography_numbered_heading: false,
   logo: none,
   cover_page_variant: "simple",
   cover_background_image: none,
@@ -208,4 +214,12 @@
 
 //---------include main content-------//
   [#body]
+
+  render_bibliography(
+    bibliography_file: bibliography_file,
+    show_bibliography: show_bibliography,
+    bibliography_title: bibliography_title,
+    bibliography_style: bibliography_style,
+    bibliography_numbered_heading: bibliography_numbered_heading,
+  )
 }

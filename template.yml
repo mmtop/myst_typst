@@ -49,6 +49,7 @@ files:
   - src/layout/cover.typ
   - src/layout/titlepage.typ
   - src/layout/frontmatter.typ
+  - src/layout/bibliography.typ
   - src/components/headings.typ
   - src/components/figures.typ
   - src/theme/colors.typ
@@ -103,6 +104,18 @@ options: # cover.type
   - id: show_list_of_tables
     type: boolean
     description: "Show list of tables, default: false"
+  - id: show_bibliography
+    type: boolean
+    description: "Show the bibliography chapter, default: true"
+  - id: bibliography_title
+    type: string
+    description: "Set the bibliography chapter title, default: Bibliography"
+  - id: bibliography_style
+    type: string
+    description: "Set the bibliography style, default: ieee"
+  - id: bibliography_numbered_heading
+    type: boolean
+    description: "Number the bibliography chapter heading, default: false"
 
   # paper and layout options  //check default settings below
   - id: paper_size
