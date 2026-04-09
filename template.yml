@@ -13,7 +13,6 @@ tags:
 files:
   - template.typ
   - src/main.typ
-  - src/helperfunctions.typ
   - src/assets/brand_assets/logo.svg
   - src/assets/template_figures/defaultcover.jpg
   - src/assets/fonts/Lora/OFL.txt
@@ -50,7 +49,6 @@ files:
   - src/layout/cover.typ
   - src/layout/titlepage.typ
   - src/layout/frontmatter.typ
-  - src/layout/toc.typ
   - src/components/headings.typ
   - src/components/figures.typ
   - src/theme/colors.typ
@@ -81,7 +79,6 @@ doc:
 
 parts:
   - id: abstract
-    required: true
   - id: preface
   - id: acknowledgements
   - id: dedication

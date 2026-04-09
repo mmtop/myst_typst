@@ -1,12 +1,10 @@
 #import "layout/cover.typ": cover_page
 #import "layout/titlepage.typ": title_page, contributors_by_group
-#import "layout/frontmatter.typ": frontmatter_section, frontmatter_other
-#import "layout/toc.typ": render_table_of_contents, render_list_of_figures, render_list_of_tables
+#import "layout/frontmatter.typ": render_frontmatter
 #import "components/headings.typ": configure_headings
 #import "components/figures.typ": configure_figures
 #import "theme/colors.typ": * 
 #import "theme/numbering.typ": setup-numbering
-#import "helperfunctions.typ": *
 
 
 
@@ -62,6 +60,21 @@
   heading_color: rgb("#0F172A"),
   body,
 ) = {
+  // Keeps logo and image paths working when this template is built on different systems.
+  let resolve_asset_path = (path, levels_up: 1) => {
+         if path == none {  none   }
+    else if type(path) != str {     path  }
+    else {
+      // MyST can emit Windows-style separators such as `files\logo.svg`.
+      // Normalize first, then rebase bare relative paths for nested layout files.
+      let normalized = str(path).replace("\\", "/")
+           if normalized.starts-with("/") or normalized.starts-with("./") or normalized.starts-with("../") or normalized.contains(":/") { normalized }
+      else if levels_up == 2 {    "../../" + normalized  }
+      else if levels_up == 1 {     "../" + normalized   }
+      else {     normalized  }
+    }
+  }
+
   let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
   let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
   let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
@@ -160,22 +173,18 @@
     )
   }
 
-  pagebreak()
-  frontmatter_section("Abstract", abstract)
-  v(2em)
-  frontmatter_other("Keywords", render_comma_list(keywords))
-  pagebreak()
-  frontmatter_section("Preface", preface)
-  frontmatter_section("Acknowledgements", acknowledgements)
-  frontmatter_section("Dedication", dedication)
-  frontmatter_section("Colophon", colophon)
-  
-
-  if show_toc { render_table_of_contents(depth: toc_depth)  }
-  if show_list_of_figures { render_list_of_figures() }
-  if show_list_of_tables { render_list_of_tables()  }
-
-  pagebreak()
+  render_frontmatter(
+    abstract: abstract,
+    keywords: keywords,
+    preface: preface,
+    acknowledgements: acknowledgements,
+    dedication: dedication,
+    colophon: colophon,
+    show_toc: show_toc,
+    show_list_of_figures: show_list_of_figures,
+    show_list_of_tables: show_list_of_tables,
+    toc_depth: toc_depth,
+  )
 
 
 //--------- layout main content ---------//

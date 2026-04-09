@@ -1,4 +1,21 @@
-#import "../helperfunctions.typ": render_comma_list
+#let render_comma_list(items) = {
+  if items == none {
+    ""
+  } else if type(items) == str {
+    items
+  } else if items.len() == 0 {
+    ""
+  } else {
+    let output = ""
+    for (index, item) in items.enumerate() {
+      if index > 0 {
+        output += ", "
+      }
+      output += str(item)
+    }
+    output
+  }
+}
 
 #let resolve_cover_page_variant(variant) = {
   let normalized = str(variant)
