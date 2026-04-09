@@ -29,6 +29,8 @@ project:
     - file: content/chapters/03-methods.md
     - file: content/chapters/04-results.md
     - file: content/chapters/05-conclusion.md
+    # Appendices are currently handled like regular late chapters,
+    # so they stay in the same table-of-contents list.
     - file: content/appendices/a-extra-data.md
     - file: content/appendices/b-supplement.md
 

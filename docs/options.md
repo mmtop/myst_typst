@@ -64,17 +64,17 @@ These fields are semantic metadata and should stay in shared config:
 At render time, MyST injects `project.options.*` into template `options.*`.
 
 ## Bibliography placement
-The bibliography is currently rendered after the MyST content stream. In the current template structure, that means it appears after appendices.
+The bibliography is currently rendered after the MyST content stream. In the current template structure, appendices are part of that same stream, so the bibliography appears after them.
 
 ## Appendix note
-Appendices are currently ordinary top-level MyST content files, so the template does not yet receive a separate "appendix mode" signal.
+Appendices are currently treated like regular late chapters.
 
-If you want a cleaner appendix system later, the most reliable redesign is:
-1. keep main chapters and appendices as two separate content lists in MyST
-2. pass those lists into the Typst template separately
-3. let `src/main.typ` render main matter first, then switch to appendix-specific heading and figure numbering, and only then render the bibliography
+That means:
+- they stay in the same MyST `toc` list as the rest of the document
+- their headings use the same chapter numbering system as the main matter
+- figures and equations in appendices also keep using the current chapter-based numbering
 
-That future structure would make it easy to produce headings like `Appendix A`, `Appendix B`, and to place the bibliography before or after appendices in a controlled way.
+For clarity, appendix files should keep their titles written out explicitly, for example `# Appendix A: Extra Data`.
 
 ## Custom variant entry points
 For cover-page customization:
