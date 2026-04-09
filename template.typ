@@ -1,15 +1,15 @@
 #import "src/main.typ": thesis_template
 
-// This file is the bridge between MyST data and the Typst layout.
+// Use this file as the mapping layer between MyST data and the Typst layout.
 // It should stay as thin as possible:
 // - read metadata, part files, and PDF export options from MyST
-// - reshape them into the argument names expected by src/main.typ
-// - avoid hardcoding layout defaults when src/main.typ can own them directly
+// - map them to the argument names expected by src/main.typ
+// - leave layout defaults in src/main.typ whenever possible
 //
 // Navigation notes:
-// - `project.*` values are preferred and `doc.*` values are only used as fallbacks
+// - `project.*` values are preferred and `doc.*` values are used as fallbacks
 // - some MyST values are mapped twice in different shapes for the title page
-// - if an argument is omitted here, src/main.typ provides the default
+// - if an argument is omitted here, src/main.typ supplies the default
 
 #show: thesis_template.with(
   // Shared document metadata
@@ -40,8 +40,8 @@
   ),
 [# endif #]
 
-  // Contributor ids are kept because src/layout/titlepage.typ groups them by
-  // prefixes such as supervisor-1 and committee-1.
+  // Keep contributor ids so the title page can group entries such as
+  // supervisor-1 and committee-1.
 [# if project.contributors or doc.contributors #]
   contributors: (
 [# if project.contributors #]
@@ -113,7 +113,7 @@
   ),
 [# endif #]
 
-  // MyST dates are structured values; here they are flattened into a simple string.
+  // MyST dates are structured values, so this mapping flattens them into a simple string.
 [# if project.date #]
   date: "[-project.date.day-]-[-project.date.month-]-[-project.date.year-]",
 [# elif doc.date #]
@@ -135,7 +135,7 @@
 [# endif #]
 
   // Thesis-specific metadata
-  // These are layout-specific academic labels used mainly by the formal title page.
+  // Use these fields for the academic labels shown mainly on the formal title page.
 [# if options.thesis_degree #]
   thesis_degree: "[-options.thesis_degree-]",
 [# endif #]
@@ -211,7 +211,7 @@
 [# endif #]
 
   // Typography
-  // Font family options are only passed when the user sets them explicitly.
+  // Font family options are only passed when they are set explicitly.
   // Otherwise src/main.typ keeps the template's built-in fallback families.
 [# if options.font_body #]
   font_body: "[-options.font_body-]",
@@ -230,8 +230,8 @@
 [# endif #]
 
   // Bibliography
-  // The bibliography file is discovered from MyST itself, while the remaining settings
-  // come from user-facing PDF export options.
+  // The bibliography file comes from MyST itself, while the remaining settings
+  // come from the PDF export options.
 [# if doc.bibtex #]
   bibliography_file: "[-doc.bibtex-]",
 [# endif #]
@@ -249,7 +249,7 @@
 [# endif #]
 
   // Shared assets and branding
-  // If no custom files are provided, src/main.typ uses the bundled template assets.
+  // If no custom files are provided, src/main.typ falls back to the bundled template assets.
 [# if options.logo #]
   logo: "[-options.logo-]",
 [# endif #]
@@ -294,8 +294,8 @@
 [# endif #]
 )
 
-// MyST injects additional helper imports here.
+// MyST adds helper imports here.
 [-IMPORTS-]
 
-// MyST injects the ordered document content stream here.
+// MyST adds the ordered document content here.
 [-CONTENT-]

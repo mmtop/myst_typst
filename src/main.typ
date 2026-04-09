@@ -9,9 +9,9 @@
 #import "theme/colors.typ": default_text_color, default_heading_color
 #import "theme/numbering.typ": setup-numbering
 
-// This is the main Typst layout entry point for the template.
+// Use this file as the main Typst layout entry point for the template.
 // It receives normalized metadata, part files, and export options from template.typ,
-// applies global page and text styling, and then orchestrates the cover page,
+// applies the global page and text styling, and then assembles the cover page,
 // title page, front matter, main content, and bibliography.
 
 #let thesis_template(
@@ -79,7 +79,7 @@
 ) = {
   // Asset paths may be used from this file or from nested layout files.
   // This helper normalizes Windows separators and rebases bare relative paths
-  // so the same config values work locally and in exported template bundles.
+  // so the same config values keep working locally and in exported template bundles.
   let resolve_asset_path = (path, levels_up: 1) => {
     if path == none {
       none
@@ -114,7 +114,7 @@
   }
 
   // Global page setup for the front matter.
-  // Users who want different page numbering styles can change the values here.
+  // Change the numbering here if you want a different front-matter page style.
   set page(
     paper: paper_size,
     margin: (
@@ -241,10 +241,10 @@
   // Restart page numbering when the main matter begins.
   counter(page).update(1)
 
-  // MyST injects the ordered chapter and appendix content here.
+  // MyST adds the ordered chapter and appendix content here.
   [#body]
 
-  // Optional bibliography after the document content stream.
+  // Optional bibliography after the document content.
   render_bibliography(
     bibliography_file: bibliography_file,
     show_bibliography: show_bibliography,
