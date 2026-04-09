@@ -54,7 +54,7 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 - `title_page_image_height_cm` (number, optional): Image height in cm. If omitted, image height is automatic.
 - `title_page_image_dx_cm` (number, optional): Horizontal offset in cm for placed title-page image. Default is `0`.
 - `title_page_image_dy_cm` (number, optional): Vertical offset in cm for placed title-page image. Default is `0`.
-- `logo` (file): Header and title-page logo path.
+- `logo` (file): Logo path for the title page and the graphical cover.
 
 ## Path handling
 - File paths are normalized to forward slashes before Typst loads them, which keeps Windows, macOS, Linux, and CI builds aligned.

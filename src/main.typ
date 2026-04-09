@@ -104,7 +104,6 @@
   let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
   let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
   let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
-  let resolved_logo_for_main = resolve_asset_path(logo, levels_up: 1)
   let resolved_logo_for_layout = resolve_asset_path(logo, levels_up: 2)
   let resolved_cover_background_image = resolve_asset_path(cover_background_image, levels_up: 2)
   let resolved_title_page_image = if show_title_page_image {
@@ -221,7 +220,7 @@
     toc_depth: toc_depth,
   )
 
-  // Main matter uses arabic page numbers and can show the logo in the running header.
+  // Main matter uses arabic page numbers.
   set page(
     paper: paper_size,
     margin: (
@@ -231,11 +230,6 @@
       right: margin_right_cm,
     ),
     numbering: "1",
-    header: if resolved_logo_for_main != none {
-      align(right, image(resolved_logo_for_main, width: 1.4cm))
-    } else {
-      none
-    },
   )
 
   // Restart page numbering when the main matter begins.

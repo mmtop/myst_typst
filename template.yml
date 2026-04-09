@@ -154,7 +154,7 @@ options:
   # Branding and shared assets
   - id: logo
     type: file
-    description: "Logo used on the title page and in the running header. If omitted, the bundled template logo is used."
+    description: "Logo used on the title page and on the graphical cover. If omitted, the bundled template logo is used."
 
   # Cover page
   - id: cover_page_variant
