@@ -18,17 +18,27 @@ Front matter uses roman page numbers and the main matter uses arabic page number
 Users who want to change this can edit the `numbering:` lines in `src/main.typ`.
 
 ## Page and typography options
-- `paper_size` (string): Typst paper size, for example `a4`.
-- `margin_top_cm` (number): Top margin in cm.
-- `margin_bottom_cm` (number): Bottom margin in cm.
-- `margin_left_cm` (number): Left margin in cm.
-- `margin_right_cm` (number): Right margin in cm.
-- `font_body` (string): Body font family.
-- `font_mono` (string): Monospace font family.
-- `font_math` (string): Math font family for equations. Use a real math font.
-- `font_size_pt` (number): Base font size in points.
-- `line_spacing_em` (number): Paragraph leading in em.
+- `paper_size` (string): Typst paper size. Default is `a4`. Common values are `a4` and `us-letter`.
+- `margin_top_cm` (number): Top margin in cm. Default is `2.5`.
+- `margin_bottom_cm` (number): Bottom margin in cm. Default is `2.5`.
+- `margin_left_cm` (number): Left margin in cm. Default is `2.5`.
+- `margin_right_cm` (number): Right margin in cm. Default is `2.5`.
+- `font_body` (string): Body font family. Default is `Libertinus Serif`.
+- `font_mono` (string): Monospace font family. Default is `DejaVu Sans Mono`.
+- `font_math` (string): Math font family for equations. Use a real math font. Default is `New Computer Modern Math`.
+- `font_size_pt` (number): Base font size in points. Default is `11`.
+- `line_spacing_em` (number): Paragraph leading in em. Default is `0.6`.
 - `toc_depth` (number): Depth for table of contents.
+
+The `paper_size` setting is passed directly to Typst's page setup and applies to the cover, front matter, main matter, and bibliography. If you switch to `us-letter`, you can usually keep the same defaults and only adjust margins later if your institution asks for something more specific.
+
+## Bundled fonts
+- The template bundles `STIX Two Text` and `STIX Two Math` in `src/assets/fonts`.
+- Recommended for GitHub Pages, CI, and also local builds: point Typst to that folder through the `TYPST_FONT_PATHS` environment variable.
+- Local alternative: install the bundled font families on your machine so Typst can find them like normal system fonts.
+- Until you enable those bundled fonts, the template falls back to `Libertinus Serif`, `DejaVu Sans Mono`, and `New Computer Modern Math`.
+- After enabling the bundled fonts, you can optionally switch to `font_body: STIX Two Text` and `font_math: STIX Two Math`.
+- `font_mono` currently stays on the fallback value `DejaVu Sans Mono`.
 
 ## Cover page options
 - `cover_page_variant` (string): `simple`, `graphical`, or `custom`.
@@ -78,16 +88,16 @@ For clarity, appendix files should keep their titles written out explicitly, for
 
 ## Custom variant entry points
 For cover-page customization:
-1. Set `cover_page_variant: custom` in `config/exports/typst_config.yml`.
+1. Set `cover_page_variant: custom` in `example/typst_export_config.yml`.
 2. Edit `templates/thesis-typst/src/layout/cover.typ`.
 3. Replace `cover_page_custom(...)` while keeping its signature stable.
 4. If you add new knobs, register them in `templates/thesis-typst/template.yml` and map them in `templates/thesis-typst/template.typ`.
 
 For title-page customization:
-1. Set `title_page_variant: custom` in `config/exports/typst_config.yml`.
+1. Set `title_page_variant: custom` in `example/typst_export_config.yml`.
 2. Edit `templates/thesis-typst/src/layout/titlepage.typ`.
 3. Replace `title_page_custom(...)` while keeping its signature stable.
 4. If you add new knobs, register them in `templates/thesis-typst/template.yml` and map them in `templates/thesis-typst/template.typ`.
 
 ## Active export config
-- Single export profile: `config/exports/typst_config.yml`.
+- In the example project, the active export profile is `example/typst_export_config.yml`.

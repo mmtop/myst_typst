@@ -15,27 +15,9 @@ files:
   - src/main.typ
   - src/assets/brand_assets/logo.svg
   - src/assets/template_figures/defaultcover.jpg
-  - src/assets/fonts/Lora/OFL.txt
-  - src/assets/fonts/Lora/README.txt
-  - src/assets/fonts/Lora/static/Lora-Bold.ttf
-  - src/assets/fonts/Lora/static/Lora-BoldItalic.ttf
-  - src/assets/fonts/Lora/static/Lora-Italic.ttf
-  - src/assets/fonts/Lora/static/Lora-Medium.ttf
-  - src/assets/fonts/Lora/static/Lora-MediumItalic.ttf
-  - src/assets/fonts/Lora/static/Lora-Regular.ttf
-  - src/assets/fonts/Lora/static/Lora-SemiBold.ttf
-  - src/assets/fonts/Lora/static/Lora-SemiBoldItalic.ttf
-  - src/assets/fonts/Roboto_Slab/LICENSE.txt
-  - src/assets/fonts/Roboto_Slab/README.txt
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Black.ttf
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Bold.ttf
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-ExtraBold.ttf
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-ExtraLight.ttf
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Light.ttf
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Medium.ttf
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Regular.ttf
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-SemiBold.ttf
-  - src/assets/fonts/Roboto_Slab/static/RobotoSlab-Thin.ttf
+  - src/assets/fonts/STIC_Two_Math/OFL.txt
+  - src/assets/fonts/STIC_Two_Math/README.md
+  - src/assets/fonts/STIC_Two_Math/static/STIXTwoMath-Regular.ttf
   - src/assets/fonts/STIX_Two_Text/OFL.txt
   - src/assets/fonts/STIX_Two_Text/README.txt
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Bold.ttf
@@ -120,7 +102,7 @@ options: # cover.type
   # paper and layout options  //check default settings below
   - id: paper_size
     type: string
-    description: "sets the paper size, default = A4"
+    description: "Set the paper size for the whole document. Default: a4. Common values include a4 and us-letter."
   - id: margin_top_cm
     type: number
     description: "sets the top margin in centimeters, default = 2.5"
@@ -146,10 +128,10 @@ options: # cover.type
     description: "Set the math font for equations. Use a real math font. default: built-in Typst fallback."
   - id: font_size_pt
     type: number
-    description: "Set the font size in points. default: 12."
+    description: "Set the font size in points. default: 11."
   - id: line_spacing_em
     type: number
-    description: "Set the line spacing in em units. default: 1.5."
+    description: "Set the line spacing in em units. default: 0.6."
   - id: toc_depth
     type: number
     description: "Set the depth of the table of contents. default: 3 (includes sections, subsections, and subsubsections)."

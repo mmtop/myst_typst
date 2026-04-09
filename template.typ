@@ -132,14 +132,14 @@
   paper_size: "[# if options.paper_size #][-options.paper_size-][# else #]a4[# endif #]",
   margin_top_cm: [# if options.margin_top_cm #][-options.margin_top_cm-]cm[# else #]2.5cm[# endif #],
   margin_bottom_cm: [# if options.margin_bottom_cm #][-options.margin_bottom_cm-]cm[# else #]2.5cm[# endif #],
-  margin_left_cm: [# if options.margin_left_cm #][-options.margin_left_cm-]cm[# else #]3.0cm[# endif #],
-  margin_right_cm: [# if options.margin_right_cm #][-options.margin_right_cm-]cm[# else #]2.0cm[# endif #],
+  margin_left_cm: [# if options.margin_left_cm #][-options.margin_left_cm-]cm[# else #]2.5cm[# endif #],
+  margin_right_cm: [# if options.margin_right_cm #][-options.margin_right_cm-]cm[# else #]2.5cm[# endif #],
 
   [# if options.font_body #]font_body: "[-options.font_body-]",[# endif #]
   [# if options.font_mono #]font_mono: "[-options.font_mono-]",[# endif #]
   [# if options.font_math #]font_math: "[-options.font_math-]",[# endif #]
   font_size_pt: [# if options.font_size_pt #][-options.font_size_pt-]pt[# else #]11pt[# endif #],
-  line_spacing_em: [# if options.line_spacing_em #][-options.line_spacing_em-]em[# else #].55em[# endif #],
+  line_spacing_em: [# if options.line_spacing_em #][-options.line_spacing_em-]em[# else #].6em[# endif #],
 
   toc_depth: [# if options.toc_depth #][-options.toc_depth-][# else #]2[# endif #],
   bibliography_file: [# if doc.bibtex #]"[-doc.bibtex-]"[# else #]none[# endif #],

@@ -31,18 +31,47 @@ project:
       bibliography_numbered_heading: false
 
 # Page layout and styling      
-      # paper_size: a5
+      # Default paper size from the template: a4
+      # Common alternatives: us-letter
+      paper_size: a4
+      # Margin defaults come from the template itself, but can be overridden here:
       margin_top_cm: 2.5
       margin_bottom_cm: 2.5
-      margin_left_cm: 2.0
-      margin_right_cm: 2.0
-      font_body: Libertinus Serif
-      font_mono: DejaVu Sans Mono
-      font_size_pt: 11
-      line_spacing_em: .55
-      
+      margin_left_cm: 2.5
+      margin_right_cm: 2.5
 
-      
+# Font options      
+      # Font defaults come from the template itself:
+      font_size_pt: 11
+      line_spacing_em: .6
+
+      # The following default fonts also come from the template itself.
+      # Those fonts are always available for the typst compiler as built-in fallbacks,
+      # but you can optionally override them 
+      # if you have specific fonts installed on your system that you'd like to use. 
+      # Just make sure to provide the correct font names 
+      # as recognized by your local Typst installation.
+      # 
+      # font_body: Libertinus Serif
+      # font_math: New Computer Modern Math
+      # font_mono: DejaVu Sans Mono
+      #
+      # Instructions for the optional (recommended) bundled STIX setup:
+      # 1. Make the bundled fonts visible to Typst.
+      #
+      #    Windows: Execute the line below in the Powershell from the "example" folder:
+      #    $env:TYPST_FONT_PATHS = (Resolve-Path ..\src\assets\fonts)
+      #
+      #    MacOS/Linux/WSL: Execute the line below in bash/zsh from the "example folder:
+      #    export TYPST_FONT_PATHS="$(cd ../src/assets/fonts)"
+      #
+      # 2. Then uncomment the overrides below:
+      font_body: STIX Two Text
+      font_math: STIX Two Math
+      #
+      # `font_mono` stays on the template default, 
+      # but you can override it if needed following 
+      # the same pattern as for the other two font options above.
 
 
       # Cover variant: simple | graphical | custom
