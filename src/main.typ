@@ -2,13 +2,17 @@
 #import "layout/titlepage.typ": title_page, contributors_by_group
 #import "layout/frontmatter.typ": render_frontmatter
 #import "layout/bibliography.typ": render_bibliography
+
 #import "components/headings.typ": configure_headings
 #import "components/figures.typ": configure_figures
-#import "theme/colors.typ": * 
+
+#import "theme/colors.typ": default_text_color, default_heading_color
 #import "theme/numbering.typ": setup-numbering
 
-
-
+// This is the main Typst layout entry point for the template.
+// It receives normalized metadata, part files, and export options from template.typ,
+// applies global page and text styling, and then orchestrates the cover page,
+// title page, front matter, main content, and bibliography.
 
 #let thesis_template(
   title: "Untitled Report",
@@ -19,16 +23,19 @@
   affiliations: (),
   date: none,
   keywords: (),
+
   thesis_degree: none,
   thesis_program: none,
   thesis_faculty: none,
   thesis_institution: none,
   thesis_defense_date: none,
+
   abstract: none,
   preface: none,
   acknowledgements: none,
   dedication: none,
   colophon: none,
+
   show_cover_full: true,
   show_title_page: true,
   show_title_page_image: true,
@@ -36,59 +43,78 @@
   show_toc: true,
   show_list_of_figures: false,
   show_list_of_tables: false,
+  toc_depth: 2,
+
   paper_size: "a4",
   margin_top_cm: 2.5cm,
   margin_bottom_cm: 2.5cm,
   margin_left_cm: 2.5cm,
   margin_right_cm: 2.5cm,
+
   font_body: "Libertinus Serif",
   font_mono: "DejaVu Sans Mono",
   font_math: "New Computer Modern Math",
   font_size_pt: 11pt,
   line_spacing_em: 0.6em,
-  toc_depth: 2,
+
   bibliography_file: none,
   show_bibliography: true,
   bibliography_title: "Bibliography",
   bibliography_style: "ieee",
   bibliography_numbered_heading: false,
-  logo: none,
+
+  logo: "src/assets/brand_assets/logo.svg",
   cover_page_variant: "simple",
-  cover_background_image: none,
+  cover_background_image: "src/assets/template_figures/defaultcover.jpg",
   cover_title_box_opacity_pct: 55,
-  title_page_variant: "1",
-  title_page_image: none,
+
+  title_page_variant: "simple",
+  title_page_image: "src/assets/template_figures/defaultcover.jpg",
   title_page_image_anchor: "bottom",
   title_page_image_width_cm: none,
   title_page_image_height_cm: none,
   title_page_image_dx_cm: none,
   title_page_image_dy_cm: none,
-  heading_color: rgb("#0F172A"),
   body,
 ) = {
-  // Keeps logo and image paths working when this template is built on different systems.
+  // Asset paths may be used from this file or from nested layout files.
+  // This helper normalizes Windows separators and rebases bare relative paths
+  // so the same config values work locally and in exported template bundles.
   let resolve_asset_path = (path, levels_up: 1) => {
-         if path == none {  none   }
-    else if type(path) != str {     path  }
-    else {
-      // MyST can emit Windows-style separators such as `files\logo.svg`.
-      // Normalize first, then rebase bare relative paths for nested layout files.
+    if path == none {
+      none
+    } else if type(path) != str {
+      path
+    } else {
       let normalized = str(path).replace("\\", "/")
-           if normalized.starts-with("/") or normalized.starts-with("./") or normalized.starts-with("../") or normalized.contains(":/") { normalized }
-      else if levels_up == 2 {    "../../" + normalized  }
-      else if levels_up == 1 {     "../" + normalized   }
-      else {     normalized  }
+      if normalized.starts-with("/") or normalized.starts-with("./") or normalized.starts-with("../") or normalized.contains(":/") {
+        normalized
+      } else if levels_up == 2 {
+        "../../" + normalized
+      } else if levels_up == 1 {
+        "../" + normalized
+      } else {
+        normalized
+      }
     }
   }
 
+  // Some values are reused in multiple layout blocks, so they are resolved once here.
+  // Bundled fallback assets also live here so template.typ can stay a thin mapping layer.
   let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
   let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
   let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
   let resolved_logo_for_main = resolve_asset_path(logo, levels_up: 1)
   let resolved_logo_for_layout = resolve_asset_path(logo, levels_up: 2)
   let resolved_cover_background_image = resolve_asset_path(cover_background_image, levels_up: 2)
-  let resolved_title_page_image = if show_title_page_image { resolve_asset_path(title_page_image, levels_up: 2)  } else {    none  }
+  let resolved_title_page_image = if show_title_page_image {
+    resolve_asset_path(title_page_image, levels_up: 2)
+  } else {
+    none
+  }
 
+  // Global page setup for the front matter.
+  // Users who want different page numbering styles can change the values here.
   set page(
     paper: paper_size,
     margin: (
@@ -97,15 +123,14 @@
       left: margin_left_cm,
       right: margin_right_cm,
     ),
-    // Page numbering defaults live here for users who want to tweak them:
-    // use "i" for roman numerals, "1" for arabic numerals, or none to hide them.
     numbering: "i",
   )
 
+  // Global text defaults for the document body.
   set text(
     font: font_body,
     size: font_size_pt,
-    fill: rgb("#1E293B"),
+    fill: default_text_color,
   )
 
   set par(
@@ -115,18 +140,18 @@
     first-line-indent: 1.2em,
   )
 
-  
-
+  // Shared component styling.
   show math.equation: set text(font: font_math)
   show math.equation: set block(spacing: 1em)
-
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
-  show link: set text( fill: blue.darken(30%))
-  
+  show link: set text(fill: blue.darken(30%))
+
+  // Global numbering and component rules.
   show: body => setup-numbering(body)
-  show: body => configure_headings(heading_color,body)
+  show: body => configure_headings(default_heading_color, body)
   show: body => configure_figures(body)
 
+  // Optional cover page.
   if show_cover_full {
     cover_page(
       resolved_title,
@@ -138,6 +163,9 @@
       institution_line: thesis_institution,
       logo: resolved_logo_for_layout,
     )
+
+    // Reset the page background and keep roman numbering for the title page
+    // and the remaining front matter after the full cover.
     set page(
       paper: paper_size,
       margin: (
@@ -151,7 +179,7 @@
     )
   }
 
-// deserves its own component file. like below //
+  // Optional title page.
   if show_title_page {
     title_page(
       resolved_title,
@@ -179,6 +207,7 @@
     )
   }
 
+  // Front matter between the title page and the main chapters.
   render_frontmatter(
     abstract: abstract,
     keywords: keywords,
@@ -192,8 +221,7 @@
     toc_depth: toc_depth,
   )
 
-
-//--------- layout main content ---------//
+  // Main matter uses arabic page numbers and can show the logo in the running header.
   set page(
     paper: paper_size,
     margin: (
@@ -204,17 +232,19 @@
     ),
     numbering: "1",
     header: if resolved_logo_for_main != none {
-      align(right, image(resolved_logo_for_main, width: 1.4cm)) //align should be adaptable.
+      align(right, image(resolved_logo_for_main, width: 1.4cm))
     } else {
       none
     },
   )
 
+  // Restart page numbering when the main matter begins.
   counter(page).update(1)
 
-//---------include main content-------//
+  // MyST injects the ordered chapter and appendix content here.
   [#body]
 
+  // Optional bibliography after the document content stream.
   render_bibliography(
     bibliography_file: bibliography_file,
     show_bibliography: show_bibliography,

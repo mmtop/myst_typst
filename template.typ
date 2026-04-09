@@ -1,33 +1,32 @@
 #import "src/main.typ": thesis_template
 
-// This file maps MyST metadata, part files, and export options
-// into the Typst template arguments defined in src/main.typ.
+// This file is the bridge between MyST data and the Typst layout.
+// It should stay as thin as possible:
+// - read metadata, part files, and PDF export options from MyST
+// - reshape them into the argument names expected by src/main.typ
+// - avoid hardcoding layout defaults when src/main.typ can own them directly
 //
 // Navigation notes:
-// - This file prefers `project.*` values and only falls back to `doc.*` when needed.
-// - It reshapes some MyST metadata so the Typst layout files receive the simpler
-//   tuples and strings they expect.
-// - If an option is omitted here, the final default usually comes from src/main.typ.
+// - `project.*` values are preferred and `doc.*` values are only used as fallbacks
+// - some MyST values are mapped twice in different shapes for the title page
+// - if an argument is omitted here, src/main.typ provides the default
 
 #show: thesis_template.with(
   // Shared document metadata
-  // These are the basic title, people, date, and keyword values reused across the template.
+  // These values are reused across the cover, title page, and front matter.
 [# if project.title #]
   title: "[-project.title-]",
 [# elif doc.title #]
   title: "[-doc.title-]",
-[# else #]
-  title: "Untitled Report",
 [# endif #]
 
 [# if project.subtitle #]
   subtitle: "[-project.subtitle-]",
 [# elif doc.subtitle #]
   subtitle: "[-doc.subtitle-]",
-[# else #]
-  subtitle: none,
 [# endif #]
 
+[# if project.authors or doc.authors #]
   authors: (
 [# if project.authors #]
 [# for author in project.authors #]
@@ -39,9 +38,11 @@
 [# endfor #]
 [# endif #]
   ),
+[# endif #]
 
-  // Contributors keep their ids because the title page groups them by prefixes such as
-  // `supervisor-1` and `committee-1`.
+  // Contributor ids are kept because src/layout/titlepage.typ groups them by
+  // prefixes such as supervisor-1 and committee-1.
+[# if project.contributors or doc.contributors #]
   contributors: (
 [# if project.contributors #]
 [# for contributor in project.contributors #]
@@ -73,10 +74,12 @@
 [# endfor #]
 [# endif #]
   ),
+[# endif #]
 
-  // The same affiliation source is mapped in two shapes:
-  // - `affiliation_catalog` keeps ids so contributor affiliations can be resolved
-  // - `affiliations` keeps only printable names for simple title-page rendering
+  // The same affiliation source is mapped in two forms:
+  // - `affiliation_catalog` keeps ids for contributor lookup
+  // - `affiliations` keeps printable names for simpler title-page rendering
+[# if project.affiliations or doc.affiliations #]
   affiliation_catalog: (
 [# if project.affiliations #]
 [# for aff in project.affiliations #]
@@ -94,7 +97,9 @@
 [# endfor #]
 [# endif #]
   ),
+[# endif #]
 
+[# if project.affiliations or doc.affiliations #]
   affiliations: (
 [# if project.affiliations #]
 [# for aff in project.affiliations #]
@@ -106,17 +111,16 @@
 [# endfor #]
 [# endif #]
   ),
+[# endif #]
 
-  // MyST dates arrive as structured values; here they are turned into a simple string
-  // that the Typst template can print directly.
+  // MyST dates are structured values; here they are flattened into a simple string.
 [# if project.date #]
   date: "[-project.date.day-]-[-project.date.month-]-[-project.date.year-]",
 [# elif doc.date #]
   date: "[-doc.date.day-]-[-doc.date.month-]-[-doc.date.year-]",
-[# else #]
-  date: none,
 [# endif #]
 
+[# if project.keywords or doc.keywords #]
   keywords: (
 [# if project.keywords #]
 [# for keyword in project.keywords #]
@@ -128,75 +132,166 @@
 [# endfor #]
 [# endif #]
   ),
+[# endif #]
 
   // Thesis-specific metadata
   // These are layout-specific academic labels used mainly by the formal title page.
-  thesis_degree: [# if options.thesis_degree #]"[-options.thesis_degree-]"[# else #]none[# endif #],
-  thesis_program: [# if options.thesis_program #]"[-options.thesis_program-]"[# else #]none[# endif #],
-  thesis_faculty: [# if options.thesis_faculty #]"[-options.thesis_faculty-]"[# else #]none[# endif #],
-  thesis_institution: [# if options.thesis_institution #]"[-options.thesis_institution-]"[# else #]none[# endif #],
-  thesis_defense_date: [# if options.thesis_defense_date #]"[-options.thesis_defense_date-]"[# else #]none[# endif #],
+[# if options.thesis_degree #]
+  thesis_degree: "[-options.thesis_degree-]",
+[# endif #]
+[# if options.thesis_program #]
+  thesis_program: "[-options.thesis_program-]",
+[# endif #]
+[# if options.thesis_faculty #]
+  thesis_faculty: "[-options.thesis_faculty-]",
+[# endif #]
+[# if options.thesis_institution #]
+  thesis_institution: "[-options.thesis_institution-]",
+[# endif #]
+[# if options.thesis_defense_date #]
+  thesis_defense_date: "[-options.thesis_defense_date-]",
+[# endif #]
 
   // Optional front-matter part files
   // These come from separate MyST part files and are rendered before the main chapters.
-  abstract: [# if parts.abstract #]"[-parts.abstract-]"[# else #]none[# endif #],
-  preface: [# if parts.preface #]"[-parts.preface-]"[# else #]none[# endif #],
-  acknowledgements: [# if parts.acknowledgements #]"[-parts.acknowledgements-]"[# else #]none[# endif #],
-  dedication: [# if parts.dedication #]"[-parts.dedication-]"[# else #]none[# endif #],
-  colophon: [# if parts.colophon #]"[-parts.colophon-]"[# else #]none[# endif #],
+[# if parts.abstract #]
+  abstract: "[-parts.abstract-]",
+[# endif #]
+[# if parts.preface #]
+  preface: "[-parts.preface-]",
+[# endif #]
+[# if parts.acknowledgements #]
+  acknowledgements: "[-parts.acknowledgements-]",
+[# endif #]
+[# if parts.dedication #]
+  dedication: "[-parts.dedication-]",
+[# endif #]
+[# if parts.colophon #]
+  colophon: "[-parts.colophon-]",
+[# endif #]
 
   // Document structure and front matter
-  show_cover_full: [# if options.show_cover_full is defined #][-options.show_cover_full-][# else #]true[# endif #],
-  show_title_page: [# if options.show_title_page is defined #][-options.show_title_page-][# else #]true[# endif #],
-  show_contributor_affiliations: [# if options.show_contributor_affiliations is defined #][-options.show_contributor_affiliations-][# else #]true[# endif #],
-  show_toc: [# if options.show_toc is defined #][-options.show_toc-][# else #]true[# endif #],
-  show_list_of_figures: [# if options.show_list_of_figures is defined #][-options.show_list_of_figures-][# else #]false[# endif #],
-  show_list_of_tables: [# if options.show_list_of_tables is defined #][-options.show_list_of_tables-][# else #]false[# endif #],
-  toc_depth: [# if options.toc_depth #][-options.toc_depth-][# else #]2[# endif #],
+[# if options.show_cover_full is defined #]
+  show_cover_full: [-options.show_cover_full-],
+[# endif #]
+[# if options.show_title_page is defined #]
+  show_title_page: [-options.show_title_page-],
+[# endif #]
+[# if options.show_contributor_affiliations is defined #]
+  show_contributor_affiliations: [-options.show_contributor_affiliations-],
+[# endif #]
+[# if options.show_toc is defined #]
+  show_toc: [-options.show_toc-],
+[# endif #]
+[# if options.show_list_of_figures is defined #]
+  show_list_of_figures: [-options.show_list_of_figures-],
+[# endif #]
+[# if options.show_list_of_tables is defined #]
+  show_list_of_tables: [-options.show_list_of_tables-],
+[# endif #]
+[# if options.toc_depth is defined and options.toc_depth != none #]
+  toc_depth: [-options.toc_depth-],
+[# endif #]
 
   // Page layout
-  paper_size: "[# if options.paper_size #][-options.paper_size-][# else #]a4[# endif #]",
-  margin_top_cm: [# if options.margin_top_cm #][-options.margin_top_cm-]cm[# else #]2.5cm[# endif #],
-  margin_bottom_cm: [# if options.margin_bottom_cm #][-options.margin_bottom_cm-]cm[# else #]2.5cm[# endif #],
-  margin_left_cm: [# if options.margin_left_cm #][-options.margin_left_cm-]cm[# else #]2.5cm[# endif #],
-  margin_right_cm: [# if options.margin_right_cm #][-options.margin_right_cm-]cm[# else #]2.5cm[# endif #],
+[# if options.paper_size is defined and options.paper_size != none and options.paper_size != "" #]
+  paper_size: "[-options.paper_size-]",
+[# endif #]
+[# if options.margin_top_cm is defined and options.margin_top_cm != none #]
+  margin_top_cm: [-options.margin_top_cm-]cm,
+[# endif #]
+[# if options.margin_bottom_cm is defined and options.margin_bottom_cm != none #]
+  margin_bottom_cm: [-options.margin_bottom_cm-]cm,
+[# endif #]
+[# if options.margin_left_cm is defined and options.margin_left_cm != none #]
+  margin_left_cm: [-options.margin_left_cm-]cm,
+[# endif #]
+[# if options.margin_right_cm is defined and options.margin_right_cm != none #]
+  margin_right_cm: [-options.margin_right_cm-]cm,
+[# endif #]
 
   // Typography
   // Font family options are only passed when the user sets them explicitly.
   // Otherwise src/main.typ keeps the template's built-in fallback families.
-  [# if options.font_body #]font_body: "[-options.font_body-]",[# endif #]
-  [# if options.font_mono #]font_mono: "[-options.font_mono-]",[# endif #]
-  [# if options.font_math #]font_math: "[-options.font_math-]",[# endif #]
-  font_size_pt: [# if options.font_size_pt #][-options.font_size_pt-]pt[# else #]11pt[# endif #],
-  line_spacing_em: [# if options.line_spacing_em #][-options.line_spacing_em-]em[# else #].6em[# endif #],
+[# if options.font_body #]
+  font_body: "[-options.font_body-]",
+[# endif #]
+[# if options.font_mono #]
+  font_mono: "[-options.font_mono-]",
+[# endif #]
+[# if options.font_math #]
+  font_math: "[-options.font_math-]",
+[# endif #]
+[# if options.font_size_pt is defined and options.font_size_pt != none #]
+  font_size_pt: [-options.font_size_pt-]pt,
+[# endif #]
+[# if options.line_spacing_em is defined and options.line_spacing_em != none #]
+  line_spacing_em: [-options.line_spacing_em-]em,
+[# endif #]
 
   // Bibliography
   // The bibliography file is discovered from MyST itself, while the remaining settings
   // come from user-facing PDF export options.
-  bibliography_file: [# if doc.bibtex #]"[-doc.bibtex-]"[# else #]none[# endif #],
-  show_bibliography: [# if options.show_bibliography is defined #][-options.show_bibliography-][# else #]true[# endif #],
-  bibliography_title: [# if options.bibliography_title #]"[-options.bibliography_title-]"[# else #]"Bibliography"[# endif #],
-  bibliography_style: [# if options.bibliography_style #]"[-options.bibliography_style-]"[# else #]"ieee"[# endif #],
-  bibliography_numbered_heading: [# if options.bibliography_numbered_heading is defined #][-options.bibliography_numbered_heading-][# else #]false[# endif #],
+[# if doc.bibtex #]
+  bibliography_file: "[-doc.bibtex-]",
+[# endif #]
+[# if options.show_bibliography is defined #]
+  show_bibliography: [-options.show_bibliography-],
+[# endif #]
+[# if options.bibliography_title #]
+  bibliography_title: "[-options.bibliography_title-]",
+[# endif #]
+[# if options.bibliography_style #]
+  bibliography_style: "[-options.bibliography_style-]",
+[# endif #]
+[# if options.bibliography_numbered_heading is defined #]
+  bibliography_numbered_heading: [-options.bibliography_numbered_heading-],
+[# endif #]
 
   // Shared assets and branding
-  // If no custom files are provided, the bundled template assets are used.
-  logo: [# if options.logo #]"[-options.logo-]"[# else #]"src/assets/brand_assets/logo.svg"[# endif #],
+  // If no custom files are provided, src/main.typ uses the bundled template assets.
+[# if options.logo #]
+  logo: "[-options.logo-]",
+[# endif #]
 
   // Cover-page options
-  cover_page_variant: "[# if options.cover_page_variant #][-options.cover_page_variant-][# else #]simple[# endif #]",
-  cover_background_image: [# if options.cover_background_image #]"[-options.cover_background_image-]"[# elif options.cover_image #]"[-options.cover_image-]"[# else #]"src/assets/template_figures/defaultcover.jpg"[# endif #],
-  cover_title_box_opacity_pct: [# if options.cover_title_box_opacity_pct is defined #][-options.cover_title_box_opacity_pct-][# else #]55[# endif #],
+[# if options.cover_page_variant #]
+  cover_page_variant: "[-options.cover_page_variant-]",
+[# endif #]
+[# if options.cover_background_image #]
+  cover_background_image: "[-options.cover_background_image-]",
+[# elif options.cover_image #]
+  cover_background_image: "[-options.cover_image-]",
+[# endif #]
+[# if options.cover_title_box_opacity_pct is defined #]
+  cover_title_box_opacity_pct: [-options.cover_title_box_opacity_pct-],
+[# endif #]
 
   // Title-page options
-  title_page_variant: "[# if options.title_page_variant #][-options.title_page_variant-][# else #]simple[# endif #]",
-  show_title_page_image: [# if options.show_title_page_image is defined #][-options.show_title_page_image-][# else #]true[# endif #],
-  title_page_image: [# if options.title_page_image #]"[-options.title_page_image-]"[# else #]"src/assets/template_figures/defaultcover.jpg"[# endif #],
-  title_page_image_anchor: [# if options.title_page_image_anchor is defined and options.title_page_image_anchor != none and options.title_page_image_anchor != "" #]"[-options.title_page_image_anchor-]"[# else #]"bottom"[# endif #],
-  title_page_image_width_cm: [# if options.title_page_image_width_cm is defined and options.title_page_image_width_cm != none #][-options.title_page_image_width_cm-]cm[# else #]none[# endif #],
-  title_page_image_height_cm: [# if options.title_page_image_height_cm is defined and options.title_page_image_height_cm != none #][-options.title_page_image_height_cm-]cm[# else #]none[# endif #],
-  title_page_image_dx_cm: [# if options.title_page_image_dx_cm is defined and options.title_page_image_dx_cm != none #][-options.title_page_image_dx_cm-]cm[# else #]none[# endif #],
-  title_page_image_dy_cm: [# if options.title_page_image_dy_cm is defined and options.title_page_image_dy_cm != none #][-options.title_page_image_dy_cm-]cm[# else #]none[# endif #]
+[# if options.title_page_variant #]
+  title_page_variant: "[-options.title_page_variant-]",
+[# endif #]
+[# if options.show_title_page_image is defined #]
+  show_title_page_image: [-options.show_title_page_image-],
+[# endif #]
+[# if options.title_page_image #]
+  title_page_image: "[-options.title_page_image-]",
+[# endif #]
+[# if options.title_page_image_anchor is defined and options.title_page_image_anchor != none and options.title_page_image_anchor != "" #]
+  title_page_image_anchor: "[-options.title_page_image_anchor-]",
+[# endif #]
+[# if options.title_page_image_width_cm is defined and options.title_page_image_width_cm != none #]
+  title_page_image_width_cm: [-options.title_page_image_width_cm-]cm,
+[# endif #]
+[# if options.title_page_image_height_cm is defined and options.title_page_image_height_cm != none #]
+  title_page_image_height_cm: [-options.title_page_image_height_cm-]cm,
+[# endif #]
+[# if options.title_page_image_dx_cm is defined and options.title_page_image_dx_cm != none #]
+  title_page_image_dx_cm: [-options.title_page_image_dx_cm-]cm,
+[# endif #]
+[# if options.title_page_image_dy_cm is defined and options.title_page_image_dy_cm != none #]
+  title_page_image_dy_cm: [-options.title_page_image_dy_cm-]cm,
+[# endif #]
 )
 
 // MyST injects additional helper imports here.
