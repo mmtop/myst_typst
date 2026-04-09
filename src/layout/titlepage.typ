@@ -478,8 +478,7 @@
   }
 
   if logo != none {
-    align(right, image(logo, width: 2.5cm))
-    v(1.2em)
+    place(bottom + center, dy: -0.9cm, image(logo, width: 1.9cm))
   }
 
   if mode == "simple" {

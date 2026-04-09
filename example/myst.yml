@@ -4,8 +4,8 @@ extends:
   - options.yml
   - typst_export_config.yml
 project:
-  title: Master Thesis
-  subtitle: Shared Template for MyST and Typst
+  title: Typst Template Example for Student End Projects made with MyST 
+  subtitle: Shared Template for MyST and Typst for Thesis and Academic Writing Projects at TU Delft
   date: 2026-02-22
   parts:
     abstract: content/parts/abstract.md

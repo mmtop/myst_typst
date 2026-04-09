@@ -73,7 +73,7 @@
     set par(first-line-indent: 0pt, justify: false)
 
     if institution_line != none and institution_line != "" {
-      place(left + horizon, dx: 12pt, rotate(-90deg, origin: center, reflow: true)[
+      place(left + bottom, dx: 12pt, dy: -2.6cm, rotate(-90deg, origin: center, reflow: true)[
         #text(fill: white, institution_line)
       ])
     }
@@ -87,17 +87,17 @@
 
       #if subtitle != none and subtitle != "" [
         #v(0.5em)
-        #text(fill: white, size: 18pt, subtitle)
+        #text(fill: white, size: 17pt, weight: "medium", subtitle)
       ]
 
       #if author_line != "" [
-        #v(1.0em)
-        #text(fill: white, size: 18pt, author_line)
+        #v(0.8em)
+        #text(fill: white, size: 14pt, weight: "regular", author_line)
       ]
     ])
 
     if logo != none {
-      place(bottom + left, dx: 1.2cm, dy: -1.2cm, image(
+      place(bottom + center, dy: -1.2cm, image(
         logo,
         width: 4.8cm,
         height: auto,
