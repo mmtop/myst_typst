@@ -1,7 +1,7 @@
 jtex: v1
 kind: typst
 title: Thesis Typst Template for MyST
-description: A modular Typst template that consumes shared MyST metadata and parts.
+description: A modular Typst thesis template for MyST projects, with configurable cover, title page, front matter, and bibliography.
 template: template.typ
 version: 0.1.0
 license: MIT
@@ -11,15 +11,18 @@ tags:
   - myst
 
 files:
+  # Core template entry points
   - template.typ
   - src/main.typ
+
+  # Default bundled assets
   - src/assets/brand_assets/logo.svg
   - src/assets/template_figures/defaultcover.jpg
-  - src/assets/fonts/STIC_Two_Math/OFL.txt
-  - src/assets/fonts/STIC_Two_Math/README.md
-  - src/assets/fonts/STIC_Two_Math/static/STIXTwoMath-Regular.ttf
+
+  # Optional bundled STIX fonts
+  - src/assets/fonts/STIX_Two_Math/OFL.txt
+  - src/assets/fonts/STIX_Two_Math/static/STIXTwoMath-Regular.ttf
   - src/assets/fonts/STIX_Two_Text/OFL.txt
-  - src/assets/fonts/STIX_Two_Text/README.txt
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Bold.ttf
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-BoldItalic.ttf
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Italic.ttf
@@ -28,188 +31,184 @@ files:
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Regular.ttf
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-SemiBold.ttf
   - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-SemiBoldItalic.ttf
+
+  # Layout modules
   - src/layout/cover.typ
   - src/layout/titlepage.typ
   - src/layout/frontmatter.typ
   - src/layout/bibliography.typ
+
+  # Shared styling and numbering modules
   - src/components/headings.typ
   - src/components/figures.typ
   - src/theme/colors.typ
   - src/theme/numbering.typ
-  - docs/options.md
-  - docs/metadata-mapping.md
+
+  # Template license file
   - LICENSE
 
 doc:
+  # Shared MyST metadata consumed by the template
   - id: title
     required: true
-    description: "title, specified in myst.yml"
+    description: "Main document title shown on the cover and title page."
   - id: subtitle
-    description: "subtitle, specified in myst.yml"
+    description: "Optional subtitle shown under the main title on the cover and title page."
   - id: authors
     required: true
-    description: "authors, specified in myst.yml or authors.yml"
+    description: "Document author list, usually the student name or names."
   - id: contributors
-    description: "contributors, specified in myst.yml"
+    description: "Optional contributors such as supervisors or committee members. On the formal title page, ids like supervisor-1 or committee-1 are used to group them."
   - id: affiliations
-    required: true
-    description: "affiliations, specified in myst.yml"
+    description: "Optional affiliation list. Also used to resolve affiliation names for contributors on the title page."
   - id: date
-    required: true
-    description: "date, specified in myst.yml"
+    description: "Optional document date shown on the title page when provided."
   - id: keywords
-    description: "keywords, specified in myst.yml"
+    description: "Optional keyword list shown below the abstract."
 
 parts:
+  # Optional front-matter part files
   - id: abstract
+    description: "Abstract text rendered on the opening front-matter page."
   - id: preface
+    description: "Optional preface page rendered before the main chapters."
   - id: acknowledgements
+    description: "Optional acknowledgements page rendered before the main chapters."
   - id: dedication
+    description: "Optional dedication page rendered before the main chapters."
   - id: colophon
+    description: "Optional colophon page rendered before the main chapters."
 
-options: # cover.type
+options:
+  # Document structure and front matter
   - id: show_cover_full
     type: boolean
-    description: "Render a cover page"
+    description: "Render a separate cover page before the title page. Default: true."
   - id: show_title_page
     type: boolean
-    description: "Render a title page"
+    description: "Render the title page after the cover page. Default: true."
   - id: show_contributor_affiliations
     type: boolean
-    description: "Show contributor affiliations"
+    description: "Show affiliation lines under supervisor and committee names on the formal title page. Default: true."
   - id: show_toc
     type: boolean
-    description: "Show table of contents, default: true"
-  - id: show_list_of_figures
-    type: boolean
-    description: "Show list of figures, default: false"
-  - id: show_list_of_tables
-    type: boolean
-    description: "Show list of tables, default: false"
-  - id: show_bibliography
-    type: boolean
-    description: "Show the bibliography chapter, default: true"
-  - id: bibliography_title
-    type: string
-    description: "Set the bibliography chapter title, default: Bibliography"
-  - id: bibliography_style
-    type: string
-    description: "Set the bibliography style, default: ieee"
-  - id: bibliography_numbered_heading
-    type: boolean
-    description: "Number the bibliography chapter heading, default: false"
-
-  # paper and layout options  //check default settings below
-  - id: paper_size
-    type: string
-    description: "Set the paper size for the whole document. Default: a4. Common values include a4 and us-letter."
-  - id: margin_top_cm
-    type: number
-    description: "sets the top margin in centimeters, default = 2.5"
-  - id: margin_bottom_cm
-    type: number
-    description: "sets the bottom margin in centimeters, default = 2.5"
-  - id: margin_left_cm
-    type: number
-    description: "sets the left margin in centimeters, default = 2.5"
-  - id: margin_right_cm
-    type: number
-    description: "sets the right margin in centimeters, default = 2.5"
-
-
-  - id: font_body
-    type: string
-    description: "Set the main font for the document. Provide a font name. default: built-in Typst fallback."
-  - id: font_mono
-    type: string
-    description: "Set the monospace font for the document. Provide a font name. default: built-in Typst fallback."
-  - id: font_math
-    type: string
-    description: "Set the math font for equations. Use a real math font. default: built-in Typst fallback."
-  - id: font_size_pt
-    type: number
-    description: "Set the font size in points. default: 11."
-  - id: line_spacing_em
-    type: number
-    description: "Set the line spacing in em units. default: 0.6."
+    description: "Render the table of contents in the front matter. Default: true."
   - id: toc_depth
     type: number
-    description: "Set the depth of the table of contents. default: 3 (includes sections, subsections, and subsubsections)."
+    description: "Maximum heading depth shown in the table of contents. Default: 2."
+  - id: show_list_of_figures
+    type: boolean
+    description: "Render a list of figures in the front matter. Default: false."
+  - id: show_list_of_tables
+    type: boolean
+    description: "Render a list of tables in the front matter. Default: false."
+
+  # Bibliography
+  - id: show_bibliography
+    type: boolean
+    description: "Render the bibliography section after the document content. Default: true."
+  - id: bibliography_title
+    type: string
+    description: "Title used for the bibliography section. Default: Bibliography."
+  - id: bibliography_style
+    type: string
+    description: "Bibliography style passed to Typst, for example ieee, apa, mla, chicago-author-date, or chicago-notes. Default: ieee."
+  - id: bibliography_numbered_heading
+    type: boolean
+    description: "Number the bibliography as a top-level heading. Default: false."
+
+  # Page layout
+  - id: paper_size
+    type: string
+    description: "Paper size for the whole document. Default: a4. Common values include a4 and us-letter."
+  - id: margin_top_cm
+    type: number
+    description: "Top page margin in centimeters. Default: 2.5."
+  - id: margin_bottom_cm
+    type: number
+    description: "Bottom page margin in centimeters. Default: 2.5."
+  - id: margin_left_cm
+    type: number
+    description: "Left page margin in centimeters. Default: 2.5."
+  - id: margin_right_cm
+    type: number
+    description: "Right page margin in centimeters. Default: 2.5."
+
+  # Typography
+  - id: font_body
+    type: string
+    description: "Body font family. Default: Libertinus Serif."
+  - id: font_mono
+    type: string
+    description: "Monospace font family for code and raw blocks. Default: DejaVu Sans Mono."
+  - id: font_math
+    type: string
+    description: "Math font family for equations. Default: New Computer Modern Math."
+  - id: font_size_pt
+    type: number
+    description: "Base text size in points. Default: 11."
+  - id: line_spacing_em
+    type: number
+    description: "Paragraph leading in em units. Default: 0.6."
+
+  # Branding and shared assets
   - id: logo
     type: file
-    description: "Set a logo for the page header. Provide a file path to the logo image. default: none."
-  
+    description: "Logo used on the title page and in the running header. If omitted, the bundled template logo is used."
+
+  # Cover page
   - id: cover_page_variant
     type: string
-    description: "Choose a variant for the cover page design. Accepted values are 'simple', 'modern', or 'classic'. default: 'simple'."
+    description: "Cover-page layout. Accepted values: 1/simple, 2/graphical, 3/custom. Default: simple."
   - id: cover_background_image
     type: file
-    description: "Set a background image for the cover page. Provide a file path to the image. default: none."
-  - id: cover_title_box_opacity_pct
-    type: number
-    description: "Set the opacity of the title box on the cover page. Provide a percentage value (0-100). default: 55 (fully opaque)."
-  - id: cover_title_box_color #new
-    type: string
-    description: "Set the background color of the title box on the cover page. Provide a color name or hex code. default: '#FFFFFF' (white)."
-  
-  # title page options
+    description: "Background image for the graphical cover variant. If omitted, the bundled template cover image is used."
   - id: cover_image
     type: file
-    description: "Set a cover image for the title page. Provide a file path to the image. default: none."
+    description: "Legacy alias for cover_background_image."
+  - id: cover_title_box_opacity_pct
+    type: number
+    description: "Opacity of the title box on the graphical cover, from 0 to 100. Default: 55."
+
+  # Title page
   - id: title_page_variant
     type: string
-    description: "Choose a variant for the title page design. Accepted values are 'simple', 'modern', or 'classic'. default: 'simple'."
+    description: "Title-page layout. Accepted values: 1/simple, 2/formal, 3/custom. Default: simple."
   - id: show_title_page_image
     type: boolean
-    description: "Show an image on the title page. default: false. If true, provide additional details about the image using the following options."
+    description: "Show the optional decorative image on the title page. Default: true."
   - id: title_page_image
     type: file
-    description: "Set an image for the title page. Provide a file path to the image. default: none."
+    description: "Image file shown on the title page when title-page images are enabled. If omitted, the bundled template image is used."
   - id: title_page_image_anchor
     type: string
-    description: "Specify the anchor point for the title page image. Accepted values are 'top-left', 'top-right', 'bottom-left', 'bottom-right', or 'center'. default: 'center'."
+    description: "Placement anchor for the title-page image. Accepted values: top-right, top, top-left, center, bottom, bottom-right, bottom-left. Default: bottom."
   - id: title_page_image_width_cm
     type: number
-    description: "Set the width of the title page image in centimeters. default: 10."
+    description: "Width of the title-page image in centimeters. Default: 5."
   - id: title_page_image_height_cm
     type: number
-    description: "Set the height of the title page image in centimeters. default: 10."
+    description: "Optional height of the title-page image in centimeters. If omitted, the image keeps its aspect ratio."
   - id: title_page_image_dx_cm
     type: number
-    description: "Set the horizontal offset of the title page image in centimeters. default: 0."
+    description: "Horizontal offset for the title-page image in centimeters. Default: 0."
   - id: title_page_image_dy_cm
     type: number
-    description: "Set the vertical offset of the title page image in centimeters. default: 0."
-  
-  # Thesis-specific metadata options
+    description: "Vertical offset for the title-page image in centimeters. Default: 0."
+
+  # Formal title-page metadata
   - id: thesis_degree
     type: string
-    description: "Set the degree for the thesis. default: none."
+    description: "Degree line shown on the formal title page, for example Master of Science."
   - id: thesis_program
     type: string
-    description: "Set the academic program for the thesis. default: none."
+    description: "Program or department line shown on the formal title page."
   - id: thesis_faculty
     type: string
-    description: "Set the faculty for the thesis. default: none."
+    description: "Faculty line shown on the formal title page."
   - id: thesis_institution
     type: string
-    description: "Set the institution for the thesis. default: none."
+    description: "Institution line shown on the cover and formal title page."
   - id: thesis_defense_date
     type: string
-    description: "Set the defense date for the thesis. default: none. Provide a date in a standard format (e.g., 'YYYY-MM-DD')."
-
-
-  - id: set_page_logo #new
-    type: string 
-    description: "Set a logo on the page header. default: none. Provide a file path to the logo image. "
-  - id: set_page_logo_position #new
-    type: string
-    description: "Specify the position of the page header logo. Accepted values are 'left', 'center', or 'right'. default: 'center'."
-    
-  - id: set_logo_cover_position #new
-    type: string
-    description: "Specify the position of the logo on the cover page. Accepted values are 'top-left', 'top-right', 'bottom-left', 'bottom-right', or 'center'. default: 'top-right'."
-
-  - id: language #new
-    type: string
-    description: "Set the language for the document. This can affect elements like date formatting and predefined text (e.g., 'Abstract', 'Table of Contents'). default: 'en' (English)."
+    description: "Full defense date line shown on the formal title page."
