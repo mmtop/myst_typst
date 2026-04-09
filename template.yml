@@ -67,7 +67,7 @@ doc:
     description: "Optional keyword list shown below the abstract."
 
 parts:
-  # Optional front-matter part files
+  # Optional front-matter part files 
   - id: abstract
     description: "Abstract text rendered on the opening front-matter page."
   - id: preface
