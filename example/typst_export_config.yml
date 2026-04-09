@@ -28,11 +28,16 @@ project:
       line_spacing_em: .55
       
       toc_depth: 2
-      logo: config/template_assets/brand_assets/logo.svg
+      
+      # Optional: override the default template logo with your own file path.
+      # If omitted, the template's built-in logo is used.
+      # logo: content/assets/logo.svg
 
       # Cover variant: simple | graphical | custom
       cover_page_variant: graphical
-      cover_background_image: config/template_assets/figures/defaultcover.jpg
+      # Recommended: replace the default template cover image with your own.
+      # If omitted, the template's built-in cover image is used.
+      # cover_background_image: content/assets/cover.jpg
       cover_title_box_opacity_pct: 55
       
       # Title-page variant: simple | formal | custom
