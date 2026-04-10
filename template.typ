@@ -135,7 +135,7 @@
 [# endif #]
 
   // Thesis-specific metadata
-  // Use these fields for the academic labels shown mainly on the formal title page.
+  // Use these fields for the academic labels shown on the detailed title-page layouts.
 [# if options.thesis_degree #]
   thesis_degree: "[-options.thesis_degree-]",
 [# endif #]
@@ -273,6 +273,18 @@
 [# endif #]
 [# if options.show_title_page_image is defined #]
   show_title_page_image: [-options.show_title_page_image-],
+[# endif #]
+[# if options.show_title_page_cover_description is defined #]
+  show_title_page_cover_description: [-options.show_title_page_cover_description-],
+[# endif #]
+[# if options.title_page_cover_description #]
+  title_page_cover_description: "[-options.title_page_cover_description-]",
+[# endif #]
+[# if options.show_title_page_confidentiality_statement is defined #]
+  show_title_page_confidentiality_statement: [-options.show_title_page_confidentiality_statement-],
+[# endif #]
+[# if options.title_page_confidentiality_statement #]
+  title_page_confidentiality_statement: "[-options.title_page_confidentiality_statement-]",
 [# endif #]
 [# if options.title_page_image #]
   title_page_image: "[-options.title_page_image-]",

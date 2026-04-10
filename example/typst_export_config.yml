@@ -27,12 +27,12 @@ project:
       bibliography_title: Bibliography
       # Common built-in Typst styles include:
       # ieee | apa | mla | chicago-author-date | chicago-notes
-      bibliography_style: ieee
+      bibliography_style: chicago-author-date
       bibliography_numbered_heading: false
 
 # Page layout and styling      
       # Default paper size from the template: a4
-      # Common alternatives: us-letter
+      # Common alternatives: us-letter, b5
       paper_size: a4
       # Margin defaults come from the template itself, but can be overridden here:
       margin_top_cm: 2.5
@@ -66,8 +66,8 @@ project:
       #    export TYPST_FONT_PATHS="$(cd ../src/assets/fonts)"
       #
       # 2. Then uncomment the overrides below:
-      font_body: STIX Two Text
-      font_math: STIX Two Math
+      #     font_body: STIX Two Text
+      #     font_math: STIX Two Math
       #
       # `font_mono` stays on the template default, 
       # but you can override it if needed following 
@@ -81,9 +81,14 @@ project:
       # cover_background_image: content/assets/cover.jpg
       cover_title_box_opacity_pct: 55
       
-      # Title-page variant: simple | formal | custom
+      # Title-page variant: basic | formal | custom
       title_page_variant: "formal"
-      ## Title-page image settings (only for formal variant):
+      # Optional title-page footer notes for both detailed variants:
+      # show_title_page_cover_description: true
+      # title_page_cover_description: A short description of the cover image.
+      # show_title_page_confidentiality_statement: true
+      # title_page_confidentiality_statement: This thesis is confidential and cannot be made public.
+      ## Title-page image settings:
       # title_page_image: config/template_assets/figures/defaultcover.jpg
       # title_page_image_anchor: bottom
       # title_page_image_width_cm: 3

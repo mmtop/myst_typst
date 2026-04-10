@@ -4,7 +4,7 @@
 - `show_cover_full` (boolean): Render a cover page.
 - `show_title_page` (boolean): Render a title page.
 - `show_title_page_image` (boolean): Enable or disable title-page image rendering.
-- `show_contributor_affiliations` (boolean): Show supervisor/committee affiliations on the title page (dark gray italic line under each name).
+- `show_contributor_affiliations` (boolean): Show supervisor/committee affiliations on the detailed title-page layouts (dark gray italic line under each name).
 - `show_toc` (boolean): Render the table of contents.
 - `show_list_of_figures` (boolean): Render list of figures.
 - `show_list_of_tables` (boolean): Render list of tables.
@@ -47,7 +47,11 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 - `cover_image` (file): Legacy alias for `cover_background_image`.
 
 ## Title page options
-- `title_page_variant` (string): `simple`, `formal`, or `custom`.
+- `title_page_variant` (string): `basic`, `formal`, or `custom`. The legacy value `simple` is still accepted as an alias for `basic`.
+- `show_title_page_cover_description` (boolean): Show the optional cover description line near the bottom of the title page.
+- `title_page_cover_description` (string): Text for the optional cover description line on the title page.
+- `show_title_page_confidentiality_statement` (boolean): Show the optional confidentiality statement near the bottom of the title page.
+- `title_page_confidentiality_statement` (string): Text for the optional confidentiality statement. Default is `This thesis is confidential and cannot be made public.`
 - `title_page_image` (file): Optional image on title page.
 - `title_page_image_anchor` (string, optional): `top-right`, `top`, `top-left`, `center`, `bottom`, `bottom-right`, or `bottom-left`.
 - `title_page_image_width_cm` (number, optional): Image width in cm. Default is `5`.

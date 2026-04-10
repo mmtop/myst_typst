@@ -44,6 +44,10 @@ Examples of PDF-only options:
 - `options.cover_background_image`
 - `options.cover_title_box_opacity_pct`
 - `options.title_page_variant`
+- `options.show_title_page_cover_description`
+- `options.title_page_cover_description`
+- `options.show_title_page_confidentiality_statement`
+- `options.title_page_confidentiality_statement`
 - `options.title_page_image`
 - `options.title_page_image_anchor`
 - `options.title_page_image_width_cm`
