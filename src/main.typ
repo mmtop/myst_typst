@@ -18,6 +18,7 @@
   title: "Untitled Report",
   subtitle: none,
   authors: (),
+  isbn: none,
   contributors: (),
   affiliation_catalog: (),
   affiliations: (),
@@ -69,14 +70,24 @@
 
   logo: "src/assets/brand_assets/logo.svg",
   cover_page_variant: "simple",
+  show_cover_subtitle: true,
   cover_background_image: "src/assets/template_figures/defaultcover.jpg",
   cover_graphical_appearance: "white-on-dark",
+  cover_graphical_alignment: "left",
   cover_title_text_color: none,
+  cover_bottom_text_color: none,
   cover_title_box_color: none,
+  cover_title_box_text: none,
   cover_title_box_opacity_pct: 55,
+  cover_isbn_position: "titlebox",
   cover_logo_variant: none,
   cover_logo_white: "src/assets/brand_assets/international-logo_white_rgb.svg",
   cover_logo_black: "src/assets/brand_assets/international-logo_black_rgb.svg",
+  cover_logo_text: none,
+  cover_logo_dx_cm: 0cm,
+  cover_logo_dy_cm: 0cm,
+  cover_bottom_text_dx_cm: 0cm,
+  cover_bottom_text_dy_cm: 0cm,
 
   title_page_variant: "basic",
   title_page_image: "src/assets/template_figures/defaultcover.jpg",
@@ -135,6 +146,52 @@
     }
   }
 
+  let resolve_cover_color_choice = (value, option_name) => {
+    if value == none or value == "" {
+      panic("Option '" + option_name + "' must be 'white', 'black', or a hex color like '#f5f5f5'.")
+    } else {
+      let normalized = str(value)
+      if normalized == "white" or normalized == "black" {
+        normalized
+      } else if normalized.starts-with("#") and (normalized.len() == 4 or normalized.len() == 7) {
+        normalized
+      } else if normalized.len() == 3 or normalized.len() == 6 {
+        "#" + normalized
+      } else {
+        panic("Invalid " + option_name + " '" + normalized + "'. Use 'white', 'black', or a hex color like '#f5f5f5'.")
+      }
+    }
+  }
+
+  let resolve_cover_color_fill = (value, option_name) => {
+    let normalized = resolve_cover_color_choice(value, option_name)
+    if normalized == "white" {
+      white
+    } else if normalized == "black" {
+      black
+    } else {
+      rgb(normalized)
+    }
+  }
+
+  let resolve_left_center_choice = (value, option_name) => {
+    let normalized = str(value)
+    if normalized == "left" or normalized == "center" {
+      normalized
+    } else {
+      panic("Invalid " + option_name + " '" + normalized + "'. Use 'left' or 'center'.")
+    }
+  }
+
+  let resolve_cover_isbn_position = value => {
+    let normalized = str(value)
+    if normalized == "titlebox" or normalized == "logo" {
+      normalized
+    } else {
+      panic("Invalid cover_isbn_position '" + normalized + "'. Use 'titlebox' or 'logo'.")
+    }
+  }
+
   // Some values are reused in multiple layout blocks, so they are resolved once here.
   // Bundled fallback assets also live here so template.typ can stay a thin mapping layer.
   let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
@@ -145,6 +202,7 @@
   let resolved_cover_logo_white = resolve_asset_path(cover_logo_white, levels_up: 2)
   let resolved_cover_logo_black = resolve_asset_path(cover_logo_black, levels_up: 2)
   let resolved_cover_appearance = resolve_cover_appearance(cover_graphical_appearance)
+  let resolved_cover_alignment = resolve_left_center_choice(cover_graphical_alignment, "cover_graphical_alignment")
   let resolved_cover_box_opacity_pct = if cover_title_box_opacity_pct < 0 {
     0
   } else if cover_title_box_opacity_pct > 100 {
@@ -152,15 +210,15 @@
   } else {
     cover_title_box_opacity_pct
   }
-  let resolved_cover_title_text_tone = if cover_title_text_color != none and cover_title_text_color != "" {
-    resolve_black_white_choice(cover_title_text_color, "cover_title_text_color")
+  let resolved_cover_title_text_color_value = if cover_title_text_color != none and cover_title_text_color != "" {
+    resolve_cover_color_choice(cover_title_text_color, "cover_title_text_color")
   } else if resolved_cover_appearance == "black-on-light" {
     "black"
   } else {
     "white"
   }
-  let resolved_cover_title_box_tone = if cover_title_box_color != none and cover_title_box_color != "" {
-    resolve_black_white_choice(cover_title_box_color, "cover_title_box_color")
+  let resolved_cover_title_box_color_value = if cover_title_box_color != none and cover_title_box_color != "" {
+    resolve_cover_color_choice(cover_title_box_color, "cover_title_box_color")
   } else if resolved_cover_appearance == "black-on-light" {
     "white"
   } else {
@@ -173,17 +231,20 @@
   } else {
     "white"
   }
-  let resolved_cover_title_text_fill = if resolved_cover_title_text_tone == "black" { black } else { white }
-  let resolved_cover_title_box_fill = if resolved_cover_title_box_tone == "black" {
-    color.hsv(0deg, 0%, 0%, resolved_cover_box_opacity_pct * 1%)
+  let resolved_cover_title_text_fill = resolve_cover_color_fill(resolved_cover_title_text_color_value, "cover_title_text_color")
+  let resolved_cover_bottom_text_color_value = if cover_bottom_text_color != none and cover_bottom_text_color != "" {
+    resolve_cover_color_choice(cover_bottom_text_color, "cover_bottom_text_color")
   } else {
-    color.hsv(0deg, 0%, 100%, resolved_cover_box_opacity_pct * 1%)
+    resolved_cover_title_text_color_value
   }
+  let resolved_cover_bottom_text_fill = resolve_cover_color_fill(resolved_cover_bottom_text_color_value, "cover_bottom_text_color")
+  let resolved_cover_title_box_fill = resolve_cover_color_fill(resolved_cover_title_box_color_value, "cover_title_box_color").transparentize((100 - resolved_cover_box_opacity_pct) * 1%)
   let resolved_cover_logo_for_layout = if resolved_cover_logo_tone == "black" {
     if resolved_cover_logo_black != none { resolved_cover_logo_black } else { resolved_logo_for_layout }
   } else {
     if resolved_cover_logo_white != none { resolved_cover_logo_white } else { resolved_logo_for_layout }
   }
+  let resolved_cover_isbn_position = resolve_cover_isbn_position(cover_isbn_position)
   let resolved_title_page_image = if show_title_page_image {
     resolve_asset_path(title_page_image, levels_up: 2)
   } else {
@@ -238,6 +299,17 @@
       image_path: resolved_cover_background_image,
       box_fill: resolved_cover_title_box_fill,
       title_text_fill: resolved_cover_title_text_fill,
+      bottom_text_fill: resolved_cover_bottom_text_fill,
+      show_subtitle: show_cover_subtitle,
+      page_alignment: resolved_cover_alignment,
+      title_box_text: cover_title_box_text,
+      isbn: isbn,
+      isbn_position: resolved_cover_isbn_position,
+      logo_text: cover_logo_text,
+      logo_dx: cover_logo_dx_cm,
+      logo_dy: cover_logo_dy_cm,
+      bottom_text_dx: cover_bottom_text_dx_cm,
+      bottom_text_dy: cover_bottom_text_dy_cm,
       institution_line: thesis_institution,
       logo: resolved_cover_logo_for_layout,
     )

@@ -43,14 +43,24 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 
 ## Cover page options
 - `cover_page_variant` (string): `simple`, `graphical`, or `custom`.
+- `show_cover_subtitle` (boolean): Show or hide the document subtitle on the cover page.
 - `cover_background_image` (file): Background image path for graphical cover.
 - `cover_graphical_appearance` (string): Graphical-cover contrast preset: `white-on-dark` or `black-on-light`.
-- `cover_title_text_color` (string, optional): Override graphical-cover title-box text color with `white` or `black`.
-- `cover_title_box_color` (string, optional): Override graphical-cover title-box base color with `black` or `white`.
+- `cover_graphical_alignment` (string): Graphical-cover alignment for the title box and bottom branding block: `left` or `center`.
+- `cover_title_text_color` (string, optional): Override graphical-cover title-box text color with `white`, `black`, or a hex color like `#f5f5f5`.
+- `cover_bottom_text_color` (string, optional): Override graphical-cover text shown outside the title box, such as the logo caption or a bottom ISBN, with `white`, `black`, or a hex color like `#f5f5f5`.
+- `cover_title_box_color` (string, optional): Override graphical-cover title-box base color with `black`, `white`, or a hex color like `#f5f5f5`.
+- `cover_title_box_text` (string, optional): Extra text shown in the graphical-cover title box below the author line. Newlines are preserved.
 - `cover_title_box_opacity_pct` (number): Opacity of the graphical cover title box (0-100).
+- `cover_isbn_position` (string): Placement of the cover ISBN: `titlebox` or `logo`.
 - `cover_logo_variant` (string, optional): Override graphical-cover logo selection with `white` or `black`.
 - `cover_logo_white` (file, optional): White logo file used by the graphical cover.
 - `cover_logo_black` (file, optional): Black logo file used by the graphical cover.
+- `cover_logo_text` (string, optional): Small text shown below the graphical-cover logo. Newlines are preserved.
+- `cover_logo_dx_cm` (number, optional): Horizontal offset for the graphical-cover logo in cm.
+- `cover_logo_dy_cm` (number, optional): Vertical offset for the graphical-cover logo in cm.
+- `cover_bottom_text_dx_cm` (number, optional): Horizontal offset for the graphical-cover text block below the logo in cm.
+- `cover_bottom_text_dy_cm` (number, optional): Vertical offset for the graphical-cover text block below the logo in cm.
 - `cover_image` (file): Legacy alias for `cover_background_image`.
 
 ## Title page options
@@ -66,6 +76,7 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 - `title_page_image_dx_cm` (number, optional): Horizontal offset in cm for placed title-page image. Default is `0`.
 - `title_page_image_dy_cm` (number, optional): Vertical offset in cm for placed title-page image. Default is `0`.
 - `logo` (file): Shared logo path used on the title page and as a fallback for the graphical cover when no cover-specific logo file is available.
+- `isbn` (string, optional): Shared project option used as the canonical ISBN source for the graphical cover.
 
 ## Path handling
 - File paths are normalized to forward slashes before Typst loads them, which keeps Windows, macOS, Linux, and CI builds aligned.

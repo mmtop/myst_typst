@@ -11,6 +11,7 @@ This template keeps semantic metadata in shared MyST config files and maps those
 - `project.affiliations` (fallback `doc.affiliations`) -> `affiliations`
 - `project.date` (fallback `doc.date`) -> `date`
 - `project.keywords` (fallback `doc.keywords`) -> `keywords`
+- `project.options.isbn` -> `options.isbn` -> `isbn`
 - `project.options.thesis_degree` -> `options.thesis_degree` -> `thesis_degree`
 - `project.options.thesis_program` -> `options.thesis_program` -> `thesis_program`
 - `project.options.thesis_faculty` -> `options.thesis_faculty` -> `thesis_faculty`
@@ -40,15 +41,26 @@ Examples of PDF-only options:
 - `options.show_toc`
 - `options.paper_size`
 - `options.logo`
+- `options.isbn`
 - `options.cover_page_variant`
+- `options.show_cover_subtitle`
 - `options.cover_background_image`
 - `options.cover_graphical_appearance`
+- `options.cover_graphical_alignment`
 - `options.cover_title_text_color`
+- `options.cover_bottom_text_color`
 - `options.cover_title_box_color`
+- `options.cover_title_box_text`
 - `options.cover_title_box_opacity_pct`
+- `options.cover_isbn_position`
 - `options.cover_logo_variant`
 - `options.cover_logo_white`
 - `options.cover_logo_black`
+- `options.cover_logo_text`
+- `options.cover_logo_dx_cm`
+- `options.cover_logo_dy_cm`
+- `options.cover_bottom_text_dx_cm`
+- `options.cover_bottom_text_dy_cm`
 - `options.title_page_variant`
 - `options.show_title_page_cover_description`
 - `options.title_page_cover_description`

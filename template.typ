@@ -40,6 +40,10 @@
   ),
 [# endif #]
 
+[# if options.isbn is defined and options.isbn != none and options.isbn != "" #]
+  isbn: "[-options.isbn-]",
+[# endif #]
+
   // Keep contributor ids so the title page can group entries such as
   // supervisor-1 and committee-1.
 [# if project.contributors or doc.contributors #]
@@ -258,6 +262,9 @@
 [# if options.cover_page_variant #]
   cover_page_variant: "[-options.cover_page_variant-]",
 [# endif #]
+[# if options.show_cover_subtitle is defined #]
+  show_cover_subtitle: [-options.show_cover_subtitle-],
+[# endif #]
 [# if options.cover_background_image #]
   cover_background_image: "[-options.cover_background_image-]",
 [# elif options.cover_image #]
@@ -266,14 +273,26 @@
 [# if options.cover_graphical_appearance #]
   cover_graphical_appearance: "[-options.cover_graphical_appearance-]",
 [# endif #]
+[# if options.cover_graphical_alignment is defined and options.cover_graphical_alignment != none and options.cover_graphical_alignment != "" #]
+  cover_graphical_alignment: "[-options.cover_graphical_alignment-]",
+[# endif #]
 [# if options.cover_title_text_color is defined and options.cover_title_text_color != none and options.cover_title_text_color != "" #]
   cover_title_text_color: "[-options.cover_title_text_color-]",
+[# endif #]
+[# if options.cover_bottom_text_color is defined and options.cover_bottom_text_color != none and options.cover_bottom_text_color != "" #]
+  cover_bottom_text_color: "[-options.cover_bottom_text_color-]",
 [# endif #]
 [# if options.cover_title_box_color is defined and options.cover_title_box_color != none and options.cover_title_box_color != "" #]
   cover_title_box_color: "[-options.cover_title_box_color-]",
 [# endif #]
+[# if options.cover_title_box_text is defined and options.cover_title_box_text != none and options.cover_title_box_text != "" #]
+  cover_title_box_text: "[-options.cover_title_box_text-]",
+[# endif #]
 [# if options.cover_title_box_opacity_pct is defined #]
   cover_title_box_opacity_pct: [-options.cover_title_box_opacity_pct-],
+[# endif #]
+[# if options.cover_isbn_position is defined and options.cover_isbn_position != none and options.cover_isbn_position != "" #]
+  cover_isbn_position: "[-options.cover_isbn_position-]",
 [# endif #]
 [# if options.cover_logo_variant is defined and options.cover_logo_variant != none and options.cover_logo_variant != "" #]
   cover_logo_variant: "[-options.cover_logo_variant-]",
@@ -283,6 +302,21 @@
 [# endif #]
 [# if options.cover_logo_black #]
   cover_logo_black: "[-options.cover_logo_black-]",
+[# endif #]
+[# if options.cover_logo_text is defined and options.cover_logo_text != none and options.cover_logo_text != "" #]
+  cover_logo_text: "[-options.cover_logo_text-]",
+[# endif #]
+[# if options.cover_logo_dx_cm is defined and options.cover_logo_dx_cm != none #]
+  cover_logo_dx_cm: [-options.cover_logo_dx_cm-]cm,
+[# endif #]
+[# if options.cover_logo_dy_cm is defined and options.cover_logo_dy_cm != none #]
+  cover_logo_dy_cm: [-options.cover_logo_dy_cm-]cm,
+[# endif #]
+[# if options.cover_bottom_text_dx_cm is defined and options.cover_bottom_text_dx_cm != none #]
+  cover_bottom_text_dx_cm: [-options.cover_bottom_text_dx_cm-]cm,
+[# endif #]
+[# if options.cover_bottom_text_dy_cm is defined and options.cover_bottom_text_dy_cm != none #]
+  cover_bottom_text_dy_cm: [-options.cover_bottom_text_dy_cm-]cm,
 [# endif #]
 
   // Title-page options
