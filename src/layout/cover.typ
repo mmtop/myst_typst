@@ -72,27 +72,21 @@
     set page(background: image(image_path), margin: 0pt)
     set par(first-line-indent: 0pt, justify: false)
 
-    if institution_line != none and institution_line != "" {
-      place(left + bottom, dx: 12pt, dy: -2.6cm, rotate(-90deg, origin: center, reflow: true)[
-        #text(fill: white, institution_line)
-      ])
-    }
-
     place(dy: 2cm, rect(
       width: 100%,
-      inset: 24pt,
+      inset: 30pt,
       fill: color.hsv(0deg, 0%, 0%, opacity_pct * 1%),
     )[
-      #text(fill: white, size: 36pt, weight: "bold", title)
+      #text(fill: white, size: 40pt, weight: "regular", title)
 
       #if subtitle != none and subtitle != "" [
-        #v(0.5em)
-        #text(fill: white, size: 17pt, weight: "medium", subtitle)
+        #v(0.2em)
+        #text(fill: white, size: 20pt, weight: "regular", subtitle)
       ]
 
       #if author_line != "" [
-        #v(0.8em)
-        #text(fill: white, size: 14pt, weight: "regular", author_line)
+        #v(0.5em)
+        #text(fill: white, size: 30pt, weight: "regular", author_line)
       ]
     ])
 
