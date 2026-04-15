@@ -183,6 +183,15 @@ options:
   - id: cover_title_text_color
     type: string
     description: "Optional override for graphical-cover title, subtitle, and author text color. Accepted values: white, black, or a hex color like #f5f5f5."
+  - id: cover_title_weight
+    type: string
+    description: "Optional font weight for the graphical-cover title. Passed directly to Typst, for example regular, medium, bold, light, or extralight."
+  - id: cover_subtitle_weight
+    type: string
+    description: "Optional font weight for the graphical-cover subtitle. Passed directly to Typst, for example regular, medium, bold, light, or extralight."
+  - id: cover_author_weight
+    type: string
+    description: "Optional font weight for the graphical-cover author line. Passed directly to Typst, for example regular, medium, bold, light, or extralight."
   - id: cover_bottom_text_color
     type: string
     description: "Optional override for graphical-cover text shown outside the title box, such as logo text or a bottom ISBN. Accepted values: white, black, or a hex color like #f5f5f5."

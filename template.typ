@@ -279,6 +279,15 @@
 [# if options.cover_title_text_color is defined and options.cover_title_text_color != none and options.cover_title_text_color != "" #]
   cover_title_text_color: "[-options.cover_title_text_color-]",
 [# endif #]
+[# if options.cover_title_weight is defined and options.cover_title_weight != none and options.cover_title_weight != "" #]
+  cover_title_weight: "[-options.cover_title_weight-]",
+[# endif #]
+[# if options.cover_subtitle_weight is defined and options.cover_subtitle_weight != none and options.cover_subtitle_weight != "" #]
+  cover_subtitle_weight: "[-options.cover_subtitle_weight-]",
+[# endif #]
+[# if options.cover_author_weight is defined and options.cover_author_weight != none and options.cover_author_weight != "" #]
+  cover_author_weight: "[-options.cover_author_weight-]",
+[# endif #]
 [# if options.cover_bottom_text_color is defined and options.cover_bottom_text_color != none and options.cover_bottom_text_color != "" #]
   cover_bottom_text_color: "[-options.cover_bottom_text_color-]",
 [# endif #]

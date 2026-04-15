@@ -48,6 +48,9 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 - `cover_graphical_appearance` (string): Graphical-cover contrast preset: `white-on-dark` or `black-on-light`.
 - `cover_graphical_alignment` (string): Graphical-cover alignment for the title box and bottom branding block: `left` or `center`.
 - `cover_title_text_color` (string, optional): Override graphical-cover title-box text color with `white`, `black`, or a hex color like `#f5f5f5`.
+- `cover_title_weight` (string, optional): Font weight for the graphical-cover title.
+- `cover_subtitle_weight` (string, optional): Font weight for the graphical-cover subtitle.
+- `cover_author_weight` (string, optional): Font weight for the graphical-cover author line.
 - `cover_bottom_text_color` (string, optional): Override graphical-cover text shown outside the title box, such as the logo caption or a bottom ISBN, with `white`, `black`, or a hex color like `#f5f5f5`.
 - `cover_title_box_color` (string, optional): Override graphical-cover title-box base color with `black`, `white`, or a hex color like `#f5f5f5`.
 - `cover_title_box_text` (string, optional): Extra text shown in the graphical-cover title box below the author line. Newlines are preserved.

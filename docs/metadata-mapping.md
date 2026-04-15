@@ -48,6 +48,9 @@ Examples of PDF-only options:
 - `options.cover_graphical_appearance`
 - `options.cover_graphical_alignment`
 - `options.cover_title_text_color`
+- `options.cover_title_weight`
+- `options.cover_subtitle_weight`
+- `options.cover_author_weight`
 - `options.cover_bottom_text_color`
 - `options.cover_title_box_color`
 - `options.cover_title_box_text`

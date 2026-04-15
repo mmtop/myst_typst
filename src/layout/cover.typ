@@ -75,6 +75,9 @@
   box_fill: auto,
   title_text_fill: auto,
   bottom_text_fill: auto,
+  title_weight: "regular",
+  subtitle_weight: "regular",
+  author_weight: "regular",
   show_subtitle: true,
   page_alignment: "left",
   title_box_text: none,
@@ -122,16 +125,16 @@
       fill: resolved_box_fill,
     )[
       #align(resolved_content_alignment, [
-        #text(fill: resolved_title_text_fill, size: 40pt, weight: "regular", title)
+        #text(fill: resolved_title_text_fill, size: 40pt, weight: title_weight, title)
 
         #if show_subtitle and subtitle != none and subtitle != "" [
           #v(0.5em)
-          #text(fill: resolved_title_text_fill, size: 20pt, weight: "regular", subtitle)
+          #text(fill: resolved_title_text_fill, size: 20pt, weight: subtitle_weight, subtitle)
         ]
 
         #if author_line != "" [
-          #v(1.5em)
-          #text(fill: resolved_title_text_fill, size: 30pt, weight: "regular", author_line)
+          #v(3.5em)
+          #text(fill: resolved_title_text_fill, size: 30pt, weight: author_weight, author_line)
         ]
 
         #if title_box_text != none and title_box_text != "" [
@@ -190,6 +193,9 @@
   box_fill: auto,
   title_text_fill: auto,
   bottom_text_fill: auto,
+  title_weight: "regular",
+  subtitle_weight: "regular",
+  author_weight: "regular",
   show_subtitle: true,
   page_alignment: "left",
   title_box_text: none,
@@ -217,6 +223,9 @@
   box_fill: auto,
   title_text_fill: auto,
   bottom_text_fill: auto,
+  title_weight: "regular",
+  subtitle_weight: "regular",
+  author_weight: "regular",
   show_subtitle: true,
   page_alignment: "left",
   title_box_text: none,
@@ -243,6 +252,9 @@
       box_fill: box_fill,
       title_text_fill: title_text_fill,
       bottom_text_fill: bottom_text_fill,
+      title_weight: title_weight,
+      subtitle_weight: subtitle_weight,
+      author_weight: author_weight,
       show_subtitle: show_subtitle,
       page_alignment: page_alignment,
       title_box_text: title_box_text,
@@ -266,6 +278,9 @@
       box_fill: box_fill,
       title_text_fill: title_text_fill,
       bottom_text_fill: bottom_text_fill,
+      title_weight: title_weight,
+      subtitle_weight: subtitle_weight,
+      author_weight: author_weight,
       show_subtitle: show_subtitle,
       page_alignment: page_alignment,
       title_box_text: title_box_text,
