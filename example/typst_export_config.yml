@@ -45,33 +45,57 @@ project:
       font_size_pt: 11
       line_spacing_em: .6
 
-      # The following default fonts also come from the template itself.
-      # Those fonts are always available for the typst compiler as built-in fallbacks,
-      # but you can optionally override them 
-      # if you have specific fonts installed on your system that you'd like to use. 
-      # Just make sure to provide the correct font names 
-      # as recognized by your local Typst installation.
+      # The template defaults stay on Typst's built-in families so exports work
+      # even before you enable bundled fonts.
       # 
+      # Defaults:
       # font_body: Libertinus Serif
       # font_math: New Computer Modern Math
       # font_mono: DejaVu Sans Mono
       #
-      # Instructions for the optional (recommended) bundled STIX setup:
-      # 1. Make the bundled fonts visible to Typst.
+      # Bundled font families in ../src/assets/fonts:
+      # - STIX Two Text + STIX Two Math:
+      #     lighter and a familiar (from the TeX universe) serif + math pair
+      # - JetBrains Mono:
+      #     recommended code font for all presets
+      # - Atkinson Hyperlegible Next serif font + New Computer Modern Math font:
+      #     accessible sans-first option
+      # - Atkinson Hyperlegible Mono:
+      #     available if you want a matching mono companion to the Atkinson Hyperlegible Next body font
       #
-      #    Windows: Execute the line below in the Powershell from the "example" folder:
+      # If you are using Github Actions for your builds, 
+      # the template's bundled fonts will be available by default without any additional configuration, 
+      # because the build script sets TYPST_FONT_PATHS to include the template's font assets.
+      # To use the bundled fonts locally, first make them visible to you local Typst compiler.
+      # 1. From the "example" folder, set TYPST_FONT_PATHS:
+      #
+      #    Windows (PowerShell):
       #    $env:TYPST_FONT_PATHS = (Resolve-Path ..\src\assets\fonts)
       #
-      #    MacOS/Linux/WSL: Execute the line below in bash/zsh from the "example folder:
+      #    MacOS/Linux/WSL (bash/zsh):
       #    export TYPST_FONT_PATHS="$(cd ../src/assets/fonts)"
       #
-      # 2. Then uncomment the overrides below:
-      #     font_body: STIX Two Text
-      #     font_math: STIX Two Math
+      #    You could also install the fonts on your system to make them available globally, 
+      #    but setting TYPST_FONT_PATHS is a more self-contained way to work with them in this project.
       #
-      # `font_mono` stays on the template default, 
-      # but you can override it if needed following 
-      # the same pattern as for the other two font options above.
+      #
+      # 2. Suggested presets:
+      #
+      #    Serif preset:
+      #    font_body: STIX Two Text
+      #    font_math: STIX Two Math
+      #    font_mono: JetBrains Mono
+      #
+      #    Accessible Sans preset:
+      #    font_body: Atkinson Hyperlegible Next
+      #    font_math: New Computer Modern Math
+      #    font_mono: JetBrains Mono
+      #    Optional matching Atkinson mono variant:
+      #    font_mono: Atkinson Hyperlegible Mono
+      #
+      # If you only want a code-font upgrade (recommended), keep the template defaults for
+      # body and math and override only:
+      # font_mono: JetBrains Mono
 
 
       # Cover variant: simple | graphical | custom
@@ -84,10 +108,11 @@ project:
       # Title-page variant: basic | formal | custom
       title_page_variant: "formal"
       # Optional title-page footer notes for both detailed variants:
-      # show_title_page_cover_description: true
+      show_title_page_cover_description: true
       # title_page_cover_description: A short description of the cover image.
-      # show_title_page_confidentiality_statement: true
-      # title_page_confidentiality_statement: This thesis is confidential and cannot be made public.
+      show_title_page_confidentiality_statement: true
+      title_page_confidentiality_statement: This thesis is confidential and cannot be made public.
+      
       ## Title-page image settings:
       # title_page_image: config/template_assets/figures/defaultcover.jpg
       # title_page_image_anchor: bottom

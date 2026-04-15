@@ -51,6 +51,10 @@
   margin_left_cm: 2.5cm,
   margin_right_cm: 2.5cm,
 
+  // Keep the template default on Typst's built-in font stack so fresh installs
+  // work without extra setup. Bundled alternatives live in src/assets/fonts:
+  // STIX Two Text + STIX Two Math, JetBrains Mono, Atkinson Hyperlegible Next,
+  // and Atkinson Hyperlegible Mono. JetBrains Mono is the recommended code font.
   font_body: "Libertinus Serif",
   font_mono: "DejaVu Sans Mono",
   font_math: "New Computer Modern Math",

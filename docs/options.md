@@ -33,12 +33,13 @@ Users who want to change this can edit the `numbering:` lines in `src/main.typ`.
 The `paper_size` setting is passed directly to Typst's page setup and applies to the cover, front matter, main matter, and bibliography. If you switch to `us-letter`, you can usually keep the same defaults and only adjust margins later if your institution asks for something more specific.
 
 ## Bundled fonts
-- The template bundles `STIX Two Text` and `STIX Two Math` in `src/assets/fonts`.
+- The template bundles `STIX Two Text`, `STIX Two Math`, `JetBrains Mono`, `Atkinson Hyperlegible Next`, and `Atkinson Hyperlegible Mono` in `src/assets/fonts`.
 - Recommended for GitHub Pages, CI, and also local builds: point Typst to that folder through the `TYPST_FONT_PATHS` environment variable.
 - Local alternative: install the bundled font families on your machine so Typst can find them like normal system fonts.
 - Until you enable those bundled fonts, the template falls back to `Libertinus Serif`, `DejaVu Sans Mono`, and `New Computer Modern Math`.
-- After enabling the bundled fonts, you can optionally switch to `font_body: STIX Two Text` and `font_math: STIX Two Math`.
-- `font_mono` currently stays on the fallback value `DejaVu Sans Mono`.
+- Recommended bundled serif preset: `font_body: STIX Two Text`, `font_math: STIX Two Math`, `font_mono: JetBrains Mono`.
+- Recommended bundled accessible sans preset: `font_body: Atkinson Hyperlegible Next`, `font_math: New Computer Modern Math`, `font_mono: JetBrains Mono`.
+- `Atkinson Hyperlegible Mono` is bundled as an optional matching mono companion, but `JetBrains Mono` remains the default recommendation for code.
 
 ## Cover page options
 - `cover_page_variant` (string): `simple`, `graphical`, or `custom`.
