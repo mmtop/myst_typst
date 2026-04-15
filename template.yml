@@ -17,6 +17,8 @@ files:
 
   # Default bundled assets
   - src/assets/brand_assets/logo.svg
+  - src/assets/brand_assets/international-logo_black_rgb.svg
+  - src/assets/brand_assets/international-logo_white_rgb.svg
   - src/assets/template_figures/defaultcover.jpg
 
   # Optional bundled STIX fonts
@@ -154,7 +156,7 @@ options:
   # Branding and shared assets
   - id: logo
     type: file
-    description: "Logo used on the title page and on the graphical cover. If omitted, the bundled template logo is used."
+    description: "Shared logo used on the title page and as a fallback on the graphical cover. If omitted, the bundled template logo is used."
 
   # Cover page
   - id: cover_page_variant
@@ -166,9 +168,27 @@ options:
   - id: cover_image
     type: file
     description: "Legacy alias for cover_background_image."
+  - id: cover_graphical_appearance
+    type: string
+    description: "Graphical-cover contrast preset. Accepted values: white-on-dark or black-on-light. Default: white-on-dark."
+  - id: cover_title_text_color
+    type: string
+    description: "Optional override for graphical-cover title, subtitle, and author text color. Accepted values: white or black."
+  - id: cover_title_box_color
+    type: string
+    description: "Optional override for the graphical-cover translucent title-box base color. Accepted values: black or white."
   - id: cover_title_box_opacity_pct
     type: number
     description: "Opacity of the title box on the graphical cover, from 0 to 100. Default: 55."
+  - id: cover_logo_variant
+    type: string
+    description: "Optional override for the bundled graphical-cover logo variant. Accepted values: white or black."
+  - id: cover_logo_white
+    type: file
+    description: "Optional file path for the white logo used by the graphical cover."
+  - id: cover_logo_black
+    type: file
+    description: "Optional file path for the black logo used by the graphical cover."
 
   # Title page
   - id: title_page_variant

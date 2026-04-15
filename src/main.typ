@@ -70,7 +70,13 @@
   logo: "src/assets/brand_assets/logo.svg",
   cover_page_variant: "simple",
   cover_background_image: "src/assets/template_figures/defaultcover.jpg",
+  cover_graphical_appearance: "white-on-dark",
+  cover_title_text_color: none,
+  cover_title_box_color: none,
   cover_title_box_opacity_pct: 55,
+  cover_logo_variant: none,
+  cover_logo_white: "src/assets/brand_assets/international-logo_white_rgb.svg",
+  cover_logo_black: "src/assets/brand_assets/international-logo_black_rgb.svg",
 
   title_page_variant: "basic",
   title_page_image: "src/assets/template_figures/defaultcover.jpg",
@@ -107,6 +113,28 @@
     }
   }
 
+  let resolve_cover_appearance = appearance => {
+    let normalized = str(appearance)
+    if normalized == "white-on-dark" or normalized == "black-on-light" {
+      normalized
+    } else {
+      panic("Invalid cover_graphical_appearance '" + normalized + "'. Use 'white-on-dark' or 'black-on-light'.")
+    }
+  }
+
+  let resolve_black_white_choice = (value, option_name) => {
+    if value == none or value == "" {
+      panic("Option '" + option_name + "' must be 'white' or 'black'.")
+    } else {
+      let normalized = str(value)
+      if normalized == "white" or normalized == "black" {
+        normalized
+      } else {
+        panic("Invalid " + option_name + " '" + normalized + "'. Use 'white' or 'black'.")
+      }
+    }
+  }
+
   // Some values are reused in multiple layout blocks, so they are resolved once here.
   // Bundled fallback assets also live here so template.typ can stay a thin mapping layer.
   let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
@@ -114,6 +142,48 @@
   let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
   let resolved_logo_for_layout = resolve_asset_path(logo, levels_up: 2)
   let resolved_cover_background_image = resolve_asset_path(cover_background_image, levels_up: 2)
+  let resolved_cover_logo_white = resolve_asset_path(cover_logo_white, levels_up: 2)
+  let resolved_cover_logo_black = resolve_asset_path(cover_logo_black, levels_up: 2)
+  let resolved_cover_appearance = resolve_cover_appearance(cover_graphical_appearance)
+  let resolved_cover_box_opacity_pct = if cover_title_box_opacity_pct < 0 {
+    0
+  } else if cover_title_box_opacity_pct > 100 {
+    100
+  } else {
+    cover_title_box_opacity_pct
+  }
+  let resolved_cover_title_text_tone = if cover_title_text_color != none and cover_title_text_color != "" {
+    resolve_black_white_choice(cover_title_text_color, "cover_title_text_color")
+  } else if resolved_cover_appearance == "black-on-light" {
+    "black"
+  } else {
+    "white"
+  }
+  let resolved_cover_title_box_tone = if cover_title_box_color != none and cover_title_box_color != "" {
+    resolve_black_white_choice(cover_title_box_color, "cover_title_box_color")
+  } else if resolved_cover_appearance == "black-on-light" {
+    "white"
+  } else {
+    "black"
+  }
+  let resolved_cover_logo_tone = if cover_logo_variant != none and cover_logo_variant != "" {
+    resolve_black_white_choice(cover_logo_variant, "cover_logo_variant")
+  } else if resolved_cover_appearance == "black-on-light" {
+    "black"
+  } else {
+    "white"
+  }
+  let resolved_cover_title_text_fill = if resolved_cover_title_text_tone == "black" { black } else { white }
+  let resolved_cover_title_box_fill = if resolved_cover_title_box_tone == "black" {
+    color.hsv(0deg, 0%, 0%, resolved_cover_box_opacity_pct * 1%)
+  } else {
+    color.hsv(0deg, 0%, 100%, resolved_cover_box_opacity_pct * 1%)
+  }
+  let resolved_cover_logo_for_layout = if resolved_cover_logo_tone == "black" {
+    if resolved_cover_logo_black != none { resolved_cover_logo_black } else { resolved_logo_for_layout }
+  } else {
+    if resolved_cover_logo_white != none { resolved_cover_logo_white } else { resolved_logo_for_layout }
+  }
   let resolved_title_page_image = if show_title_page_image {
     resolve_asset_path(title_page_image, levels_up: 2)
   } else {
@@ -166,9 +236,10 @@
       authors: authors,
       variant: cover_page_variant,
       image_path: resolved_cover_background_image,
-      box_opacity_pct: cover_title_box_opacity_pct,
+      box_fill: resolved_cover_title_box_fill,
+      title_text_fill: resolved_cover_title_text_fill,
       institution_line: thesis_institution,
-      logo: resolved_logo_for_layout,
+      logo: resolved_cover_logo_for_layout,
     )
 
     // Reset the page background and keep roman numbering for the title page

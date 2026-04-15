@@ -42,7 +42,13 @@ Examples of PDF-only options:
 - `options.logo`
 - `options.cover_page_variant`
 - `options.cover_background_image`
+- `options.cover_graphical_appearance`
+- `options.cover_title_text_color`
+- `options.cover_title_box_color`
 - `options.cover_title_box_opacity_pct`
+- `options.cover_logo_variant`
+- `options.cover_logo_white`
+- `options.cover_logo_black`
 - `options.title_page_variant`
 - `options.show_title_page_cover_description`
 - `options.title_page_cover_description`

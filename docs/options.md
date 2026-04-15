@@ -44,7 +44,13 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 ## Cover page options
 - `cover_page_variant` (string): `simple`, `graphical`, or `custom`.
 - `cover_background_image` (file): Background image path for graphical cover.
+- `cover_graphical_appearance` (string): Graphical-cover contrast preset: `white-on-dark` or `black-on-light`.
+- `cover_title_text_color` (string, optional): Override graphical-cover title-box text color with `white` or `black`.
+- `cover_title_box_color` (string, optional): Override graphical-cover title-box base color with `black` or `white`.
 - `cover_title_box_opacity_pct` (number): Opacity of the graphical cover title box (0-100).
+- `cover_logo_variant` (string, optional): Override graphical-cover logo selection with `white` or `black`.
+- `cover_logo_white` (file, optional): White logo file used by the graphical cover.
+- `cover_logo_black` (file, optional): Black logo file used by the graphical cover.
 - `cover_image` (file): Legacy alias for `cover_background_image`.
 
 ## Title page options
@@ -59,7 +65,7 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 - `title_page_image_height_cm` (number, optional): Image height in cm. If omitted, image height is automatic.
 - `title_page_image_dx_cm` (number, optional): Horizontal offset in cm for placed title-page image. Default is `0`.
 - `title_page_image_dy_cm` (number, optional): Vertical offset in cm for placed title-page image. Default is `0`.
-- `logo` (file): Logo path for the title page and the graphical cover.
+- `logo` (file): Shared logo path used on the title page and as a fallback for the graphical cover when no cover-specific logo file is available.
 
 ## Path handling
 - File paths are normalized to forward slashes before Typst loads them, which keeps Windows, macOS, Linux, and CI builds aligned.

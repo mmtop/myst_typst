@@ -103,7 +103,16 @@ project:
       # Recommended: replace the default template cover image with your own.
       # If omitted, the template's built-in cover image is used.
       # cover_background_image: content/assets/cover.jpg
-      cover_title_box_opacity_pct: 55
+      # Graphical-cover contrast preset: white-on-dark | black-on-light
+      cover_graphical_appearance: white-on-dark
+      # Optional per-element overrides for the graphical cover:
+      # cover_title_text_color: white
+      # cover_title_box_color: black
+      cover_title_box_opacity_pct: 60
+      # cover_logo_variant: white
+      # Optional custom white/black cover-logo files:
+      # cover_logo_white: content/assets/logo_white.svg
+      # cover_logo_black: content/assets/logo_black.svg
       
       # Title-page variant: basic | formal | custom
       title_page_variant: "formal"
@@ -122,7 +131,7 @@ project:
 
 
 # Options:
-      # Optional: override the default template logo on the title page
-      # and on the graphical cover with your own file path.
+      # Optional: override the shared fallback logo used on the title page
+      # and on the graphical cover when no cover-specific logo file is set.
       # If omitted, the template's built-in logo is used.
       # logo: content/assets/logo.svg

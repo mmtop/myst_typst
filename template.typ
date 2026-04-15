@@ -263,8 +263,26 @@
 [# elif options.cover_image #]
   cover_background_image: "[-options.cover_image-]",
 [# endif #]
+[# if options.cover_graphical_appearance #]
+  cover_graphical_appearance: "[-options.cover_graphical_appearance-]",
+[# endif #]
+[# if options.cover_title_text_color is defined and options.cover_title_text_color != none and options.cover_title_text_color != "" #]
+  cover_title_text_color: "[-options.cover_title_text_color-]",
+[# endif #]
+[# if options.cover_title_box_color is defined and options.cover_title_box_color != none and options.cover_title_box_color != "" #]
+  cover_title_box_color: "[-options.cover_title_box_color-]",
+[# endif #]
 [# if options.cover_title_box_opacity_pct is defined #]
   cover_title_box_opacity_pct: [-options.cover_title_box_opacity_pct-],
+[# endif #]
+[# if options.cover_logo_variant is defined and options.cover_logo_variant != none and options.cover_logo_variant != "" #]
+  cover_logo_variant: "[-options.cover_logo_variant-]",
+[# endif #]
+[# if options.cover_logo_white #]
+  cover_logo_white: "[-options.cover_logo_white-]",
+[# endif #]
+[# if options.cover_logo_black #]
+  cover_logo_black: "[-options.cover_logo_black-]",
 [# endif #]
 
   // Title-page options

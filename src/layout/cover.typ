@@ -51,6 +51,8 @@
   authors: (),
   image_path: none,
   box_opacity_pct: 55,
+  box_fill: auto,
+  title_text_fill: auto,
   institution_line: none,
   logo: none,
 ) = context {
@@ -59,14 +61,20 @@
   } else {
     let pw = page.width
     let ph = page.height
-    let opacity_pct = if box_opacity_pct < 0 {
-      0
-    } else if box_opacity_pct > 100 {
-      100
-    } else {
-      box_opacity_pct
-    }
     let author_line = render_comma_list(authors)
+    let resolved_box_fill = if box_fill == auto {
+      let opacity_pct = if box_opacity_pct < 0 {
+        0
+      } else if box_opacity_pct > 100 {
+        100
+      } else {
+        box_opacity_pct
+      }
+      color.hsv(0deg, 0%, 0%, opacity_pct * 1%)
+    } else {
+      box_fill
+    }
+    let resolved_title_text_fill = if title_text_fill == auto { white } else { title_text_fill }
 
     set image(width: pw, height: ph, fit: "cover")
     set page(background: image(image_path), margin: 0pt)
@@ -75,25 +83,25 @@
     place(dy: 2cm, rect(
       width: 100%,
       inset: 30pt,
-      fill: color.hsv(0deg, 0%, 0%, opacity_pct * 1%),
+      fill: resolved_box_fill,
     )[
-      #text(fill: white, size: 40pt, weight: "regular", title)
+      #text(fill: resolved_title_text_fill, size: 40pt, weight: "regular", title)
 
       #if subtitle != none and subtitle != "" [
-        #v(0.2em)
-        #text(fill: white, size: 20pt, weight: "regular", subtitle)
+        #v(0.5em)
+        #text(fill: resolved_title_text_fill, size: 20pt, weight: "regular", subtitle)
       ]
 
       #if author_line != "" [
-        #v(0.5em)
-        #text(fill: white, size: 30pt, weight: "regular", author_line)
+        #v(1.5em)
+        #text(fill: resolved_title_text_fill, size: 30pt, weight: "regular", author_line)
       ]
     ])
 
     if logo != none {
-      place(bottom + center, dy: -1.2cm, image(
+      place(bottom + left, dy: -1.2cm, image(
         logo,
-        width: 4.8cm,
+        width: 7cm,
         height: auto,
         fit: "contain",
       ))
@@ -107,6 +115,8 @@
   authors: (),
   image_path: none,
   box_opacity_pct: 55,
+  box_fill: auto,
+  title_text_fill: auto,
   institution_line: none,
   logo: none,
 ) = {
@@ -121,6 +131,8 @@
   variant: "simple",
   image_path: none,
   box_opacity_pct: 55,
+  box_fill: auto,
+  title_text_fill: auto,
   institution_line: none,
   logo: none,
 ) = {
@@ -134,6 +146,8 @@
       authors: authors,
       image_path: image_path,
       box_opacity_pct: box_opacity_pct,
+      box_fill: box_fill,
+      title_text_fill: title_text_fill,
       institution_line: institution_line,
       logo: logo,
     )
@@ -144,6 +158,8 @@
       authors: authors,
       image_path: image_path,
       box_opacity_pct: box_opacity_pct,
+      box_fill: box_fill,
+      title_text_fill: title_text_fill,
       institution_line: institution_line,
       logo: logo,
     )
