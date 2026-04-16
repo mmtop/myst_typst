@@ -159,7 +159,7 @@ options:
     description: "Shared logo used on the title page and as a fallback on the graphical cover. If omitted, the bundled template logo is used."
   - id: isbn
     type: string
-    description: "Optional ISBN project option. Used on the graphical cover and in the basic/simple title-page bottom block when enabled."
+    description: "Optional ISBN project option. Used on the graphical cover and in the title-page bottom block when enabled."
 
   # Cover page
   - id: cover_page_variant
@@ -247,16 +247,16 @@ options:
     description: "Alignment of the bottom block in the basic/simple title-page layout. Accepted values: left or center. Default: left."
   - id: title_page_logo_alignment
     type: string
-    description: "Alignment of the title-page logo. Accepted values: left or center. Default: center."
+    description: "Alignment of the title-page logo in the basic/simple layout. Accepted values: left or center. Default: center. The formal/custom path stays centered."
   - id: show_title_page_cover_description
     type: boolean
-    description: "Show the optional cover description text on the title page. In the basic/simple layout it appears as its own section above the bottom block; in the formal/custom path it remains a footer note. Default: false."
+    description: "Show the optional cover description text on the title page. In the basic/simple layout it appears as its own section above the bottom block; in the formal/custom path it appears as a centered metadata row below the supervisor and committee table. Default: false."
   - id: title_page_cover_description
     type: string
-    description: "Text used for the optional cover description on the title page, for example a short note about the cover image."
+    description: "Text used for the optional cover description on the title page, for example a short note about the cover image. In the formal/custom path it is rendered in the same centered two-column grid as the publication date."
   - id: show_title_page_confidentiality_statement
     type: boolean
-    description: "Show the optional confidentiality statement on the title page. In the basic/simple layout it appears in the bottom block; in the formal/custom path it remains a footer note. Default: false."
+    description: "Show the optional confidentiality statement on the title page. In both the basic/simple and formal/custom layouts it appears in the bottom block. Default: false."
   - id: title_page_confidentiality_statement
     type: string
     description: "Text used for the optional confidentiality statement on the title page. Default: This thesis is confidential and cannot be made public."

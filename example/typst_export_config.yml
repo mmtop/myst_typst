@@ -99,7 +99,7 @@ project:
 
 # Cover page options:
       # Cover variant: simple | graphical | custom
-      cover_page_variant: simple
+      cover_page_variant: graphical
       
       # Show or hide the document subtitle on the cover page:
       # show_cover_subtitle: false
@@ -153,17 +153,17 @@ project:
 
 # Title page options:      
       # Title-page variant: basic | formal | custom
-      title_page_variant: basic
+      title_page_variant: formal
 
-      ## Simple variant options:
+      ## Basic/simple variant options (ignored by the centered formal variant):
       # Alignment of the basic/simple title and subtitle block: left | center
-      title_page_basic_title_alignment: center
+      #title_page_basic_title_alignment: left
       # Alignment of the metadata table in the basic/simple title page: left | center
-      title_page_basic_table_alignment: center
+      #title_page_basic_table_alignment: left
       # Alignment of the basic/simple title-page bottom block: left | center
-      title_page_basic_bottom_block_alignment: center
+      #title_page_basic_bottom_block_alignment: left
       # Alignment of the title-page logo: left | center
-      title_page_logo_alignment: center
+      #title_page_logo_alignment: left
 
 
 

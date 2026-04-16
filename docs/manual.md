@@ -22,16 +22,16 @@
 - `title_page_basic_title_alignment` aligns the title and subtitle block in the basic/simple title-page layout: `left` or `center`.
 - `title_page_basic_table_alignment` aligns the metadata table in the basic/simple title-page layout independently from the centered title block: `left` or `center`.
 - `title_page_basic_bottom_block_alignment` aligns the bottom block in the basic/simple title-page layout independently from the metadata table: `left` or `center`.
-- `title_page_logo_alignment` aligns the title-page logo independently: `left` or `center`.
-- `show_title_page_cover_description` toggles the optional cover description on the title page. In the basic/simple layout it becomes its own section above the bottom block.
+- `title_page_logo_alignment` aligns the title-page logo independently in the basic/simple layout: `left` or `center`. The formal/custom path stays centered.
+- `show_title_page_cover_description` toggles the optional cover description on the title page. In the basic/simple layout it becomes its own section above the bottom block, and in the formal/custom path it appears as a centered metadata row below the supervisor and committee table.
 - `title_page_cover_description` sets the text for that cover description.
-- `show_title_page_confidentiality_statement` toggles the optional confidentiality statement on the title page. In the basic/simple layout it is rendered in the bottom block together with the ISBN when present.
+- `show_title_page_confidentiality_statement` toggles the optional confidentiality statement on the title page. In both the basic/simple and formal/custom layouts it is rendered in the bottom block together with the ISBN when present.
 - `title_page_confidentiality_statement` sets the text for that confidentiality statement.
 ## logo
 - `logo` sets the shared logo used on the title page and as a fallback on the graphical cover.
 
 ## metadata
-- `isbn` is a shared project option under `project.options` and is the single source for the ISBN shown on the graphical cover and in the basic/simple title-page bottom block.
+- `isbn` is a shared project option under `project.options` and is the single source for the ISBN shown on the graphical cover and in the title-page bottom block.
 - `thesis_track` optionally adds a specialization or track line to the title page metadata.
 
 ## numbering of eq tables / figures

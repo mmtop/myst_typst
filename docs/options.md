@@ -70,13 +70,13 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 - `title_page_basic_title_alignment` (string): Alignment of the title and subtitle block in the basic/simple title-page layout: `left` or `center`.
 - `title_page_basic_table_alignment` (string): Alignment of the metadata table in the basic/simple title-page layout: `left` or `center`.
 - `title_page_basic_bottom_block_alignment` (string): Alignment of the bottom block in the basic/simple title-page layout: `left` or `center`.
-- `title_page_logo_alignment` (string): Alignment of the title-page logo: `left` or `center`.
-- `show_title_page_cover_description` (boolean): Show the optional cover description on the title page. In the basic/simple layout it appears as its own section above the bottom block; in the formal/custom path it remains a footer note.
-- `title_page_cover_description` (string): Text for the optional cover description on the title page.
-- `show_title_page_confidentiality_statement` (boolean): Show the optional confidentiality statement on the title page. In the basic/simple layout it appears in the bottom block; in the formal/custom path it remains a footer note.
+- `title_page_logo_alignment` (string): Alignment of the title-page logo in the basic/simple layout: `left` or `center`. The formal/custom path stays centered.
+- `show_title_page_cover_description` (boolean): Show the optional cover description on the title page. In the basic/simple layout it appears as its own section above the bottom block; in the formal/custom path it appears as a centered metadata row below the supervisor and committee table.
+- `title_page_cover_description` (string): Text for the optional cover description on the title page. In the formal/custom path it is rendered in the same centered two-column grid as the publication date.
+- `show_title_page_confidentiality_statement` (boolean): Show the optional confidentiality statement on the title page. In both the basic/simple and formal/custom layouts it appears in the bottom block.
 - `title_page_confidentiality_statement` (string): Text for the optional confidentiality statement. Default is `This thesis is confidential and cannot be made public.`
 - `logo` (file): Shared logo path used on the title page and as a fallback for the graphical cover when no cover-specific logo file is available.
-- `isbn` (string, optional): Shared project option used as the canonical ISBN source for the graphical cover and the basic/simple title-page bottom block.
+- `isbn` (string, optional): Shared project option used as the canonical ISBN source for the graphical cover and the title-page bottom block.
 
 ## Path handling
 - File paths are normalized to forward slashes before Typst loads them, which keeps Windows, macOS, Linux, and CI builds aligned.
