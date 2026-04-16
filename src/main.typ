@@ -1,227 +1,258 @@
 #import "layout/cover.typ": cover_page
-#import "layout/titlepage.typ": title_page
-#import "layout/frontmatter.typ": frontmatter_section
-#import "layout/toc.typ": render_table_of_contents, render_list_of_figures, render_list_of_tables
+#import "layout/titlepage.typ": title_page, contributors_by_group
+#import "layout/frontmatter.typ": render_frontmatter
+#import "layout/bibliography.typ": render_bibliography
+
 #import "components/headings.typ": configure_headings
 #import "components/figures.typ": configure_figures
-#import "components/tables.typ": configure_tables
-#import "theme/page.typ": (
-  default_paper_size,
-  default_margin_top,
-  default_margin_bottom,
-  default_margin_left,
-  default_margin_right,
-  default_toc_depth,
-  default_frontmatter_numbering,
-  default_mainmatter_numbering,
-)
-#import "theme/typography.typ": default_font_body, default_font_mono, default_font_size
+
 #import "theme/colors.typ": default_text_color, default_heading_color
-#import "theme/spacing.typ": default_line_spacing, default_par_spacing
+#import "theme/numbering.typ": setup-numbering
 
-#let require_non_empty(value, field_name, fallback: none) = {
-  if value == none or value == "" {
-    if fallback != none {
-      fallback
-    } else {
-      panic("Missing required metadata: " + field_name)
-    }
-  } else {
-    value
-  }
-}
-
-#let resolve_numbering(mode, default: "1") = {
-  if mode == none {
-    default
-  } else if mode == "none" {
-    none
-  } else if mode == "roman" {
-    "i"
-  } else if mode == "arabic" {
-    "1"
-  } else {
-    default
-  }
-}
-
-#let resolve_asset_path(path, levels_up: 1) = {
-  if path == none {
-    none
-  } else if type(path) != str {
-    path
-  } else if path.starts-with("/") or path.starts-with("./") or path.starts-with("../") or path.contains(":/") {
-    path
-  } else if levels_up == 2 {
-    "../../" + path
-  } else if levels_up == 1 {
-    "../" + path
-  } else {
-    path
-  }
-}
-
-#let render_comma_list(items) = {
-  if items == none {
-    ""
-  } else if type(items) == str {
-    items
-  } else if items.len() == 0 {
-    ""
-  } else {
-    let output = ""
-    for (index, item) in items.enumerate() {
-      if index > 0 {
-        output += ", "
-      }
-      output += str(item)
-    }
-    output
-  }
-}
-
-#let contributor_group_matches(contributor_id, group) = {
-  let normalized = if contributor_id == none { "" } else { str(contributor_id) }
-  if group == "supervisor" {
-    normalized == "supervisor" or normalized.starts-with("supervisor") or normalized == "advisor" or normalized.starts-with("advisor")
-  } else if group == "committee" {
-    normalized == "committee" or normalized.starts-with("committee") or normalized == "examiner" or normalized.starts-with("examiner")
-  } else {
-    false
-  }
-}
-
-#let resolve_affiliation_name(affiliation_id, affiliation_catalog) = {
-  let requested_id = if affiliation_id == none { "" } else { str(affiliation_id) }
-  if requested_id == "" or affiliation_catalog == none or type(affiliation_catalog) == str {
-    none
-  } else {
-    let result = none
-    for item in affiliation_catalog {
-      if type(item) != str {
-        let item_id = if item.id == none { "" } else { str(item.id) }
-        if item_id == requested_id {
-          result = if item.name == none { none } else { str(item.name) }
-        }
-      }
-    }
-    result
-  }
-}
-
-#let resolve_affiliation_line(affiliation_ids, affiliation_catalog) = {
-  if affiliation_ids == none {
-    none
-  } else if type(affiliation_ids) == str {
-    let direct = str(affiliation_ids)
-    if direct == "" {
-      none
-    } else {
-      let resolved = resolve_affiliation_name(direct, affiliation_catalog)
-      if resolved == none { direct } else { resolved }
-    }
-  } else {
-    let names = ()
-    for aff_id in affiliation_ids {
-      let aff_name = resolve_affiliation_name(aff_id, affiliation_catalog)
-      if aff_name != none and aff_name != "" {
-        names += (aff_name,)
-      } else if aff_id != none and str(aff_id) != "" {
-        names += (str(aff_id),)
-      }
-    }
-    let rendered = render_comma_list(names)
-    if rendered == "" { none } else { rendered }
-  }
-}
-
-#let contributors_by_group(contributors, group, affiliation_catalog) = {
-  if contributors == none or type(contributors) == str {
-    ()
-  } else {
-    let output = ()
-    for contributor in contributors {
-      if type(contributor) != str {
-        let contributor_id = if contributor.id == none { "" } else { str(contributor.id) }
-        let name = if contributor.name == none { "" } else { str(contributor.name) }
-        if name != "" and contributor_group_matches(contributor_id, group) {
-          let affiliation = resolve_affiliation_line(contributor.affiliations, affiliation_catalog)
-          output += ((
-            name: name,
-            affiliation: affiliation,
-          ),)
-        }
-      }
-    }
-    output
-  }
-}
+// Use this file as the main Typst layout entry point for the template.
+// It receives normalized metadata, part files, and export options from template.typ,
+// applies the global page and text styling, and then assembles the cover page,
+// title page, front matter, main content, and bibliography.
 
 #let thesis_template(
-  title: "Untitled Thesis",
+  title: "Untitled Report",
   subtitle: none,
   authors: (),
+  isbn: none,
   contributors: (),
   affiliation_catalog: (),
   affiliations: (),
   date: none,
   keywords: (),
+
   thesis_degree: none,
   thesis_program: none,
+  thesis_track: none,
   thesis_faculty: none,
   thesis_institution: none,
   thesis_defense_date: none,
+
   abstract: none,
   preface: none,
   acknowledgements: none,
   dedication: none,
   colophon: none,
+
   show_cover_full: true,
   show_title_page: true,
-  show_title_page_image: true,
   show_contributor_affiliations: true,
   show_toc: true,
   show_list_of_figures: false,
   show_list_of_tables: false,
-  frontmatter_numbering: default_frontmatter_numbering,
-  mainmatter_numbering: default_mainmatter_numbering,
-  paper_size: default_paper_size,
-  margin_top_cm: default_margin_top,
-  margin_bottom_cm: default_margin_bottom,
-  margin_left_cm: default_margin_left,
-  margin_right_cm: default_margin_right,
-  font_body: default_font_body,
-  font_mono: default_font_mono,
-  font_size_pt: default_font_size,
-  line_spacing_em: default_line_spacing,
-  toc_depth: default_toc_depth,
-  logo: none,
+  toc_depth: 2,
+
+  paper_size: "a4",
+  margin_top_cm: 2.5cm,
+  margin_bottom_cm: 2.5cm,
+  margin_left_cm: 2.5cm,
+  margin_right_cm: 2.5cm,
+
+  // Keep the template default on Typst's built-in font stack so fresh installs
+  // work without extra setup. Bundled alternatives live in src/assets/fonts:
+  // STIX Two Text + STIX Two Math, JetBrains Mono, Atkinson Hyperlegible Next,
+  // and Atkinson Hyperlegible Mono. JetBrains Mono is the recommended code font.
+  font_body: "Libertinus Serif",
+  font_mono: "DejaVu Sans Mono",
+  font_math: "New Computer Modern Math",
+  font_size_pt: 11pt,
+  line_spacing_em: 0.6em,
+
+  bibliography_file: none,
+  show_bibliography: true,
+  bibliography_title: "Bibliography",
+  bibliography_style: "ieee",
+  bibliography_numbered_heading: false,
+
+  logo: "src/assets/brand_assets/logo.svg",
   cover_page_variant: "simple",
-  cover_background_image: none,
+  show_cover_subtitle: true,
+  cover_background_image: "src/assets/template_figures/defaultcover.jpg",
+  cover_graphical_appearance: "white-on-dark",
+  cover_graphical_alignment: "left",
+  cover_title_text_color: none,
+  cover_bottom_text_color: none,
+  cover_title_weight: "regular",
+  cover_subtitle_weight: "regular",
+  cover_author_weight: "regular",
+  cover_title_box_color: none,
+  cover_title_box_text: none,
   cover_title_box_opacity_pct: 55,
-  title_page_variant: "1",
-  title_page_image: none,
-  title_page_image_anchor: none,
-  title_page_image_width_cm: none,
-  title_page_image_height_cm: none,
-  title_page_image_dx_cm: none,
-  title_page_image_dy_cm: none,
+  cover_isbn_position: "titlebox",
+  cover_logo_variant: none,
+  cover_logo_white: "src/assets/brand_assets/international-logo_white_rgb.svg",
+  cover_logo_black: "src/assets/brand_assets/international-logo_black_rgb.svg",
+  cover_logo_text: none,
+  cover_logo_dx_cm: 0cm,
+  cover_logo_dy_cm: 0cm,
+  cover_bottom_text_dx_cm: 0cm,
+  cover_bottom_text_dy_cm: 0cm,
+
+  title_page_variant: "basic",
+  title_page_basic_title_alignment: "center",
+  title_page_basic_table_alignment: "left",
+  title_page_basic_bottom_block_alignment: "left",
+  title_page_logo_alignment: "center",
+  show_title_page_cover_description: false,
+  title_page_cover_description: none,
+  show_title_page_confidentiality_statement: false,
+  title_page_confidentiality_statement: "This thesis is confidential and cannot be made public.",
   body,
 ) = {
-  let resolved_title = require_non_empty(title, "project.title", fallback: "Untitled Thesis")
-  let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
-  let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
-  let front_numbering = resolve_numbering(frontmatter_numbering, default: "i")
-  let main_numbering = resolve_numbering(mainmatter_numbering, default: "1")
-  let resolved_logo_for_main = resolve_asset_path(logo, levels_up: 1)
-  let resolved_logo_for_layout = resolve_asset_path(logo, levels_up: 2)
-  let resolved_cover_background_image = resolve_asset_path(cover_background_image, levels_up: 2)
-  let resolved_title_page_image = if show_title_page_image {
-    resolve_asset_path(title_page_image, levels_up: 2)
-  } else {
-    none
+  // Asset paths may be used from this file or from nested layout files.
+  // This helper normalizes Windows separators and rebases bare relative paths
+  // so the same config values keep working locally and in exported template bundles.
+  let resolve_asset_path = (path, levels_up: 1) => {
+    if path == none {
+      none
+    } else if type(path) != str {
+      path
+    } else {
+      let normalized = str(path).replace("\\", "/")
+      if normalized.starts-with("/") or normalized.starts-with("./") or normalized.starts-with("../") or normalized.contains(":/") {
+        normalized
+      } else if levels_up == 2 {
+        "../../" + normalized
+      } else if levels_up == 1 {
+        "../" + normalized
+      } else {
+        normalized
+      }
+    }
   }
 
+  let resolve_cover_appearance = appearance => {
+    let normalized = str(appearance)
+    if normalized == "white-on-dark" or normalized == "black-on-light" {
+      normalized
+    } else {
+      panic("Invalid cover_graphical_appearance '" + normalized + "'. Use 'white-on-dark' or 'black-on-light'.")
+    }
+  }
+
+  let resolve_black_white_choice = (value, option_name) => {
+    if value == none or value == "" {
+      panic("Option '" + option_name + "' must be 'white' or 'black'.")
+    } else {
+      let normalized = str(value)
+      if normalized == "white" or normalized == "black" {
+        normalized
+      } else {
+        panic("Invalid " + option_name + " '" + normalized + "'. Use 'white' or 'black'.")
+      }
+    }
+  }
+
+  let resolve_cover_color_choice = (value, option_name) => {
+    if value == none or value == "" {
+      panic("Option '" + option_name + "' must be 'white', 'black', or a hex color like '#f5f5f5'.")
+    } else {
+      let normalized = str(value)
+      if normalized == "white" or normalized == "black" {
+        normalized
+      } else if normalized.starts-with("#") and (normalized.len() == 4 or normalized.len() == 7) {
+        normalized
+      } else if normalized.len() == 3 or normalized.len() == 6 {
+        "#" + normalized
+      } else {
+        panic("Invalid " + option_name + " '" + normalized + "'. Use 'white', 'black', or a hex color like '#f5f5f5'.")
+      }
+    }
+  }
+
+  let resolve_cover_color_fill = (value, option_name) => {
+    let normalized = resolve_cover_color_choice(value, option_name)
+    if normalized == "white" {
+      white
+    } else if normalized == "black" {
+      black
+    } else {
+      rgb(normalized)
+    }
+  }
+
+  let resolve_left_center_choice = (value, option_name) => {
+    let normalized = str(value)
+    if normalized == "left" or normalized == "center" {
+      normalized
+    } else {
+      panic("Invalid " + option_name + " '" + normalized + "'. Use 'left' or 'center'.")
+    }
+  }
+
+  let resolve_cover_isbn_position = value => {
+    let normalized = str(value)
+    if normalized == "titlebox" or normalized == "logo" {
+      normalized
+    } else {
+      panic("Invalid cover_isbn_position '" + normalized + "'. Use 'titlebox' or 'logo'.")
+    }
+  }
+
+  // Some values are reused in multiple layout blocks, so they are resolved once here.
+  // Bundled fallback assets also live here so template.typ can stay a thin mapping layer.
+  let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
+  let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
+  let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
+  let resolved_logo_for_layout = resolve_asset_path(logo, levels_up: 2)
+  let resolved_cover_background_image = resolve_asset_path(cover_background_image, levels_up: 2)
+  let resolved_cover_logo_white = resolve_asset_path(cover_logo_white, levels_up: 2)
+  let resolved_cover_logo_black = resolve_asset_path(cover_logo_black, levels_up: 2)
+  let resolved_cover_appearance = resolve_cover_appearance(cover_graphical_appearance)
+  let resolved_cover_alignment = resolve_left_center_choice(cover_graphical_alignment, "cover_graphical_alignment")
+  let resolved_cover_box_opacity_pct = if cover_title_box_opacity_pct < 0 {
+    0
+  } else if cover_title_box_opacity_pct > 100 {
+    100
+  } else {
+    cover_title_box_opacity_pct
+  }
+  let resolved_cover_title_text_color_value = if cover_title_text_color != none and cover_title_text_color != "" {
+    resolve_cover_color_choice(cover_title_text_color, "cover_title_text_color")
+  } else if resolved_cover_appearance == "black-on-light" {
+    "black"
+  } else {
+    "white"
+  }
+  let resolved_cover_title_box_color_value = if cover_title_box_color != none and cover_title_box_color != "" {
+    resolve_cover_color_choice(cover_title_box_color, "cover_title_box_color")
+  } else if resolved_cover_appearance == "black-on-light" {
+    "white"
+  } else {
+    "black"
+  }
+  let resolved_cover_logo_tone = if cover_logo_variant != none and cover_logo_variant != "" {
+    resolve_black_white_choice(cover_logo_variant, "cover_logo_variant")
+  } else if resolved_cover_appearance == "black-on-light" {
+    "black"
+  } else {
+    "white"
+  }
+  let resolved_cover_title_text_fill = resolve_cover_color_fill(resolved_cover_title_text_color_value, "cover_title_text_color")
+  let resolved_cover_bottom_text_color_value = if cover_bottom_text_color != none and cover_bottom_text_color != "" {
+    resolve_cover_color_choice(cover_bottom_text_color, "cover_bottom_text_color")
+  } else {
+    resolved_cover_title_text_color_value
+  }
+  let resolved_cover_bottom_text_fill = resolve_cover_color_fill(resolved_cover_bottom_text_color_value, "cover_bottom_text_color")
+  let resolved_cover_title_box_fill = resolve_cover_color_fill(resolved_cover_title_box_color_value, "cover_title_box_color").transparentize((100 - resolved_cover_box_opacity_pct) * 1%)
+  let resolved_cover_logo_for_layout = if resolved_cover_logo_tone == "black" {
+    if resolved_cover_logo_black != none { resolved_cover_logo_black } else { resolved_logo_for_layout }
+  } else {
+    if resolved_cover_logo_white != none { resolved_cover_logo_white } else { resolved_logo_for_layout }
+  }
+  let resolved_cover_isbn_position = resolve_cover_isbn_position(cover_isbn_position)
+  let resolved_title_page_basic_title_alignment = resolve_left_center_choice(title_page_basic_title_alignment, "title_page_basic_title_alignment")
+  let resolved_title_page_basic_table_alignment = resolve_left_center_choice(title_page_basic_table_alignment, "title_page_basic_table_alignment")
+  let resolved_title_page_basic_bottom_block_alignment = resolve_left_center_choice(title_page_basic_bottom_block_alignment, "title_page_basic_bottom_block_alignment")
+  let resolved_title_page_logo_alignment = resolve_left_center_choice(title_page_logo_alignment, "title_page_logo_alignment")
+
+  // Global page setup for the front matter.
+  // Change the numbering here if you want a different front-matter page style.
   set page(
     paper: paper_size,
     margin: (
@@ -230,9 +261,10 @@
       left: margin_left_cm,
       right: margin_right_cm,
     ),
-    numbering: front_numbering,
+    numbering: "i",
   )
 
+  // Global text defaults for the document body.
   set text(
     font: font_body,
     size: font_size_pt,
@@ -241,16 +273,23 @@
 
   set par(
     leading: line_spacing_em,
-    spacing: default_par_spacing,
+    spacing: 0.7em,
     justify: true,
+    first-line-indent: 1.2em,
   )
 
+  // Shared component styling.
+  show math.equation: set text(font: font_math)
+  show math.equation: set block(spacing: 1em)
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
+  show link: set text(fill: blue.darken(30%))
 
-  configure_headings(default_heading_color)
-  configure_figures()
-  configure_tables()
+  // Global numbering and component rules.
+  show: body => setup-numbering(body)
+  show: body => configure_headings(default_heading_color, body)
+  show: body => configure_figures(body)
 
+  // Optional cover page.
   if show_cover_full {
     cover_page(
       resolved_title,
@@ -258,10 +297,28 @@
       authors: authors,
       variant: cover_page_variant,
       image_path: resolved_cover_background_image,
-      box_opacity_pct: cover_title_box_opacity_pct,
+      box_fill: resolved_cover_title_box_fill,
+      title_text_fill: resolved_cover_title_text_fill,
+      bottom_text_fill: resolved_cover_bottom_text_fill,
+      title_weight: cover_title_weight,
+      subtitle_weight: cover_subtitle_weight,
+      author_weight: cover_author_weight,
+      show_subtitle: show_cover_subtitle,
+      page_alignment: resolved_cover_alignment,
+      title_box_text: cover_title_box_text,
+      isbn: isbn,
+      isbn_position: resolved_cover_isbn_position,
+      logo_text: cover_logo_text,
+      logo_dx: cover_logo_dx_cm,
+      logo_dy: cover_logo_dy_cm,
+      bottom_text_dx: cover_bottom_text_dx_cm,
+      bottom_text_dy: cover_bottom_text_dy_cm,
       institution_line: thesis_institution,
-      logo: resolved_logo_for_layout,
+      logo: resolved_cover_logo_for_layout,
     )
+
+    // Reset the page background and keep roman numbering for the title page
+    // and the remaining front matter after the full cover.
     set page(
       paper: paper_size,
       margin: (
@@ -270,20 +327,23 @@
         left: margin_left_cm,
         right: margin_right_cm,
       ),
-      numbering: front_numbering,
+      numbering: "i",
       background: none,
     )
   }
 
+  // Optional title page.
   if show_title_page {
     title_page(
       resolved_title,
       subtitle: subtitle,
       authors: authors,
+      isbn: isbn,
       affiliations: affiliations,
       date: date,
       degree: thesis_degree,
       program: thesis_program,
+      track: thesis_track,
       faculty: thesis_faculty,
       institution: thesis_institution,
       defense_date: thesis_defense_date,
@@ -292,37 +352,33 @@
       show_contributor_affiliations: show_contributor_affiliations,
       logo: resolved_logo_for_layout,
       variant: title_page_variant,
+      basic_title_alignment: resolved_title_page_basic_title_alignment,
+      basic_table_alignment: resolved_title_page_basic_table_alignment,
+      basic_bottom_block_alignment: resolved_title_page_basic_bottom_block_alignment,
+      logo_alignment: resolved_title_page_logo_alignment,
       start_on_new_page: show_cover_full,
-      page_image: resolved_title_page_image,
-      page_image_anchor: title_page_image_anchor,
-      page_image_width: title_page_image_width_cm,
-      page_image_height: title_page_image_height_cm,
-      page_image_dx: title_page_image_dx_cm,
-      page_image_dy: title_page_image_dy_cm,
+      show_cover_description: show_title_page_cover_description,
+      cover_description: title_page_cover_description,
+      show_confidentiality_statement: show_title_page_confidentiality_statement,
+      confidentiality_statement: title_page_confidentiality_statement,
     )
   }
 
-  frontmatter_section("Abstract", abstract)
-  frontmatter_section("Preface", preface)
-  frontmatter_section("Acknowledgements", acknowledgements)
-  frontmatter_section("Dedication", dedication)
-  frontmatter_section("Colophon", colophon)
-  frontmatter_section("Keywords", render_comma_list(keywords))
+  // Front matter between the title page and the main chapters.
+  render_frontmatter(
+    abstract: abstract,
+    keywords: keywords,
+    preface: preface,
+    acknowledgements: acknowledgements,
+    dedication: dedication,
+    colophon: colophon,
+    show_toc: show_toc,
+    show_list_of_figures: show_list_of_figures,
+    show_list_of_tables: show_list_of_tables,
+    toc_depth: toc_depth,
+  )
 
-  if show_toc {
-    render_table_of_contents(depth: toc_depth)
-  }
-
-  if show_list_of_figures {
-    render_list_of_figures()
-  }
-
-  if show_list_of_tables {
-    render_list_of_tables()
-  }
-
-  pagebreak()
-
+  // Main matter uses arabic page numbers.
   set page(
     paper: paper_size,
     margin: (
@@ -331,15 +387,21 @@
       left: margin_left_cm,
       right: margin_right_cm,
     ),
-    numbering: main_numbering,
-    header: if resolved_logo_for_main != none {
-      align(right, image(resolved_logo_for_main, width: 1.4cm))
-    } else {
-      none
-    },
+    numbering: "1",
   )
 
+  // Restart page numbering when the main matter begins.
   counter(page).update(1)
 
+  // MyST adds the ordered chapter and appendix content here.
   [#body]
+
+  // Optional bibliography after the document content.
+  render_bibliography(
+    bibliography_file: bibliography_file,
+    show_bibliography: show_bibliography,
+    bibliography_title: bibliography_title,
+    bibliography_style: bibliography_style,
+    bibliography_numbered_heading: bibliography_numbered_heading,
+  )
 }

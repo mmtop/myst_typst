@@ -1,0 +1,181 @@
+version: 1
+project:
+  downloads:
+    - id: thesis-pdf
+  exports:
+    - id: thesis-pdf
+      format: typst
+      template: ../
+      output: ./exports/typst_template_example.pdf
+
+# Template options for Typst export      
+      show_cover_full: true
+      show_title_page: true
+      show_contributor_affiliations: true
+
+# Table of contents and lists of figures/tables options
+      show_toc: true
+      toc_depth: 2
+      
+      show_list_of_figures: false
+      show_list_of_tables: false
+
+
+# Bibliography options 
+      show_bibliography: true     
+      bibliography_title: Bibliography
+      # Common built-in Typst styles include:
+      # ieee | apa | mla | chicago-author-date | chicago-notes
+      bibliography_style: chicago-author-date
+      bibliography_numbered_heading: false
+
+# Page layout and styling      
+      # Default paper size from the template: a4
+      # Common alternatives: us-letter, b5
+      paper_size: a4
+      # Margin defaults come from the template itself, but can be overridden here:
+      margin_top_cm: 2.5
+      margin_bottom_cm: 2.5
+      margin_left_cm: 2.5
+      margin_right_cm: 2.5
+
+# Font options      
+      # Font defaults come from the template itself:
+      font_size_pt: 11
+      line_spacing_em: .6
+
+      # The template defaults stay on Typst's built-in families so exports work
+      # even before you enable bundled fonts.
+      # 
+      # Defaults:
+      # font_body: Libertinus Serif
+      # font_math: New Computer Modern Math
+      # font_mono: DejaVu Sans Mono
+      #
+      # Bundled font families in ../src/assets/fonts:
+      # - STIX Two Text + STIX Two Math:
+      #     lighter and a familiar (from the TeX universe) serif + math pair
+      # - JetBrains Mono:
+      #     recommended code font for all presets
+      # - Atkinson Hyperlegible Next serif font + New Computer Modern Math font:
+      #     accessible sans-first option
+      # - Atkinson Hyperlegible Mono:
+      #     available if you want a matching mono companion to the Atkinson Hyperlegible Next body font
+      #
+      # If you are using Github Actions for your builds, 
+      # the template's bundled fonts will be available by default without any additional configuration, 
+      # because the build script sets TYPST_FONT_PATHS to include the template's font assets.
+      # To use the bundled fonts locally, first make them visible to you local Typst compiler.
+      # 1. From the "example" folder, set TYPST_FONT_PATHS:
+      #
+      #    Windows (PowerShell):
+      #    $env:TYPST_FONT_PATHS = (Resolve-Path ..\src\assets\fonts)
+      #
+      #    MacOS/Linux/WSL (bash/zsh):
+      #    export TYPST_FONT_PATHS="$(cd ../src/assets/fonts)"
+      #
+      #    You could also install the fonts on your system to make them available globally, 
+      #    but setting TYPST_FONT_PATHS is a more self-contained way to work with them in this project.
+      #
+      #
+      # 2. Suggested presets:
+      #
+      #    Serif preset:
+      #    font_body: STIX Two Text
+      #    font_math: STIX Two Math
+      #    font_mono: JetBrains Mono
+      #
+      #    Accessible Sans preset:
+      #    font_body: Atkinson Hyperlegible Next
+      #    font_math: New Computer Modern Math
+      #    font_mono: JetBrains Mono
+      #    Optional matching Atkinson mono variant:
+      #    font_mono: Atkinson Hyperlegible Mono
+      #
+      # If you only want a code-font upgrade (recommended), keep the template defaults for
+      # body and math and override only:
+      # font_mono: JetBrains Mono
+
+
+# Cover page options:
+      # Cover variant: simple | graphical | custom
+      cover_page_variant: graphical
+      
+      # Show or hide the document subtitle on the cover page:
+      # show_cover_subtitle: false
+      
+      ## Graphical cover options:
+      # Recommended: replace the default template cover image with your own.
+      # If omitted, the template's built-in cover image is used.
+      # cover_background_image: content/assets/cover.jpg
+      
+      # Graphical-cover alignment: left | center
+      cover_graphical_alignment: center
+      
+      # Graphical-cover contrast preset: white-on-dark | black-on-light
+      cover_graphical_appearance: black-on-light
+      # cover_title_box_opacity_pct: 55
+      
+      
+      # Optional per-element overrides for the graphical cover:
+      # cover_title_text_color: white
+      # cover_title_text_color: "#f5f5f5"
+      # cover_title_weight: regular
+      # cover_subtitle_weight: regular
+      # cover_author_weight: regular
+      # cover_bottom_text_color: white
+      # cover_title_box_color: black
+      # cover_title_box_color: "#101820"
+
+      # cover_logo_variant: black
+      # Optional custom white/black cover-logo files:
+      # cover_logo_white: content/assets/logo_white.svg
+      # cover_logo_black: content/assets/logo_black.svg
+      # Optional logo and bottom-text nudges in cm, useful when a logo file has padding:
+      # cover_logo_dx_cm: -1.2
+      cover_logo_dy_cm: 0.6
+      # cover_bottom_text_dx_cm: 0
+      # cover_bottom_text_dy_cm: 0
+      
+      # Optional extra multi-line text in the title box, below the author:
+      cover_title_box_text: |
+         Optional extra multi-line text 
+         in the title box
+
+      # Optional ISBN field placement: titlebox | logo
+      # The ISBN itself comes from `project.options.isbn` in options.yml.
+      cover_isbn_position: logo
+  
+      # Optional small text below the cover logo:
+      cover_logo_text: |
+            Optional small text below the cover logo, 
+            e.g. for an imprint line.
+
+# Title page options:      
+      # Title-page variant: basic | formal | custom
+      title_page_variant: formal
+
+      ## Basic/simple variant options (ignored by the centered formal variant):
+      # Alignment of the basic/simple title and subtitle block: left | center
+      #title_page_basic_title_alignment: left
+      # Alignment of the metadata table in the basic/simple title page: left | center
+      #title_page_basic_table_alignment: left
+      # Alignment of the basic/simple title-page bottom block: left | center
+      #title_page_basic_bottom_block_alignment: left
+      # Alignment of the title-page logo: left | center
+      #title_page_logo_alignment: left
+
+
+
+      ## Optional title-page notes:
+      show_title_page_cover_description: true
+      title_page_cover_description: The cover image is a template demonstration background.
+      show_title_page_confidentiality_statement: true
+      title_page_confidentiality_statement: This thesis is confidential and cannot be made public.
+
+
+# Options:
+      # Optional: override the shared fallback logo used on the title page
+      # and on the graphical cover when no cover-specific logo file is set.
+      # If omitted, the template's built-in logo is used.
+      # logo: content/assets/logo.svg
