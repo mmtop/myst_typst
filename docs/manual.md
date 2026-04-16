@@ -19,14 +19,19 @@
 - `cover_bottom_text_dx_cm` and `cover_bottom_text_dy_cm` optionally nudge the graphical-cover text block below the logo independently.
 ## title page
 - `title_page_variant` (string): `basic`, `formal`, or `custom`.
-- `show_title_page_cover_description` toggles the optional cover description line on the title page.
-- `title_page_cover_description` sets the text for that cover description line.
-- `show_title_page_confidentiality_statement` toggles the optional confidentiality statement on the title page.
+- `title_page_basic_title_alignment` aligns the title and subtitle block in the basic/simple title-page layout: `left` or `center`.
+- `title_page_basic_table_alignment` aligns the metadata table in the basic/simple title-page layout independently from the centered title block: `left` or `center`.
+- `title_page_basic_bottom_block_alignment` aligns the bottom block in the basic/simple title-page layout independently from the metadata table: `left` or `center`.
+- `title_page_logo_alignment` aligns the title-page logo independently: `left` or `center`.
+- `show_title_page_cover_description` toggles the optional cover description on the title page. In the basic/simple layout it becomes its own section above the bottom block.
+- `title_page_cover_description` sets the text for that cover description.
+- `show_title_page_confidentiality_statement` toggles the optional confidentiality statement on the title page. In the basic/simple layout it is rendered in the bottom block together with the ISBN when present.
 - `title_page_confidentiality_statement` sets the text for that confidentiality statement.
 ## logo
 - `logo` sets the shared logo used on the title page and as a fallback on the graphical cover.
 
 ## metadata
-- `isbn` is a shared project option under `project.options` and is the single source for the ISBN shown on the graphical cover.
+- `isbn` is a shared project option under `project.options` and is the single source for the ISBN shown on the graphical cover and in the basic/simple title-page bottom block.
+- `thesis_track` optionally adds a specialization or track line to the title page metadata.
 
 ## numbering of eq tables / figures

@@ -123,6 +123,20 @@
   }
 }
 
+#let has_renderable_content(value) = {
+  if value == none {
+    false
+  } else if type(value) == str {
+    str(value) != ""
+  } else if type(value) == content {
+    true
+  } else if value == () {
+    false
+  } else {
+    true
+  }
+}
+
 #let render_contributor_entries(entries, show_affiliations: true) = {
   if entries == none {
     none
@@ -184,62 +198,59 @@
   }
 }
 
-#let resolve_title_page_image_anchor(anchor) = {
-  if anchor == none {
-    bottom + center
-  } else {
-    let normalized = str(anchor)
-    if normalized == "" or normalized == "none" {
-      bottom + center
-    } else if normalized == "top-right" {
-      top + right
-    } else if normalized == "top" {
-      top + center
-    } else if normalized == "top-left" {
-      top + left
-    } else if normalized == "center" {
-      center
-    } else if normalized == "bottom" {
-      bottom + center
-    } else if normalized == "bottom-right" {
-      bottom + right
-    } else if normalized == "bottom-left" {
-      bottom + left
-    } else {
-      panic("Invalid title_page_image_anchor '" + normalized + "'. Use top-right, top, top-left, center, bottom, bottom-right, or bottom-left.")
-    }
-  }
-}
-
-#let render_title_page_image(
-  image_path: none,
-  anchor: none,
-  width: none,
-  height: none,
-  dx: none,
-  dy: none,
-) = {
-  if image_path != none {
-    let resolved_width = if width == none { 5cm } else { width }
-    let resolved_dx = if dx == none { 0cm } else { dx }
-    let resolved_dy = if dy == none { 0cm } else { dy }
-    let placement = resolve_title_page_image_anchor(anchor)
-    if height == none {
-      place(placement, dx: resolved_dx, dy: resolved_dy, image(
-        image_path,
-        width: resolved_width,
-        fit: "contain",
-      ))
-    } else {
-      place(placement, dx: resolved_dx, dy: resolved_dy, image(
-        image_path,
-        width: resolved_width,
-        height: height,
-        fit: "contain",
-      ))
-    }
-  } else {
+#let format_title_page_date(value) = {
+  if value == none or str(value) == "" {
     none
+  } else {
+    let raw = str(value)
+    let parts = raw.split("-")
+    if parts.len() == 3 {
+      let day = if parts.at(0).len() > 1 and parts.at(0).starts-with("0") {
+        parts.at(0).slice(1)
+      } else {
+        parts.at(0)
+      }
+      let month = if parts.at(1).len() > 1 and parts.at(1).starts-with("0") {
+        parts.at(1).slice(1)
+      } else {
+        parts.at(1)
+      }
+      let year = parts.at(2)
+      let month_name = if month == "1" {
+        "January"
+      } else if month == "2" {
+        "February"
+      } else if month == "3" {
+        "March"
+      } else if month == "4" {
+        "April"
+      } else if month == "5" {
+        "May"
+      } else if month == "6" {
+        "June"
+      } else if month == "7" {
+        "July"
+      } else if month == "8" {
+        "August"
+      } else if month == "9" {
+        "September"
+      } else if month == "10" {
+        "October"
+      } else if month == "11" {
+        "November"
+      } else if month == "12" {
+        "December"
+      } else {
+        none
+      }
+      if month_name == none {
+        raw
+      } else {
+        month_name + " " + day + ", " + year
+      }
+    } else {
+      raw
+    }
   }
 }
 
@@ -261,38 +272,120 @@
     show_affiliations: show_contributor_affiliations,
   )
   let resolved_defense_date = if defense_date != none and defense_date != "" { defense_date } else { none }
-  let resolved_date = if date != none and date != "" { date } else { none }
+  let resolved_date = format_title_page_date(date)
   let author_label = if count_items(authors) > 1 { "Authors" } else { "Author" }
   let supervisor_label = if count_items(supervisors) > 1 { "Supervisors" } else { "Supervisor" }
-  let committee_label = if count_items(committee) > 1 { "Committee Members" } else { "Committee Member" }
+  let committee_label = "Committee"
 
   (
-    author_label, author_line,
+    render_title_page_label_cell(author_label), author_line,
   ) + (
     if supervisor_cell != none {
-      (supervisor_label, supervisor_cell,)
+      (render_title_page_label_cell(supervisor_label), supervisor_cell,)
     } else {
       ()
     }
   ) + (
     if committee_cell != none {
-      (committee_label, committee_cell,)
+      (render_title_page_label_cell(committee_label), committee_cell,)
     } else {
       ()
     }
   ) + (
     if resolved_defense_date != none {
-      ("Defense date", resolved_defense_date,)
+      (render_title_page_label_cell("Defense date"), resolved_defense_date,)
     } else {
       ()
     }
   ) + (
     if resolved_date != none {
-      ("Date", resolved_date,)
+      (render_title_page_label_cell("Date"), resolved_date,)
     } else {
       ()
     }
   )
+}
+
+#let render_title_page_label_cell(label) = {
+  text(weight: "semibold", fill: rgb("#555555"), label + ":")
+}
+
+#let title_page_info_row(label, value) = {
+  if has_renderable_content(value) {
+    (render_title_page_label_cell(label), value,)
+  } else {
+    ()
+  }
+}
+
+#let render_title_page_basic_heading_line(
+  content,
+  heading_alignment: "center",
+) = {
+  let alignment = if str(heading_alignment) == "left" {
+    left
+  } else {
+    center
+  }
+  set par(justify: false)
+  set text(hyphenate: false)
+  if str(heading_alignment) == "left" {
+    align(left, block(width: 100%, content))
+  } else {
+    align(alignment, content)
+  }
+}
+
+#let render_title_page_info_table(
+  info_cells,
+  table_alignment: "left",
+) = {
+  let resolved_label_alignment = if str(table_alignment) == "center" {
+    right
+  } else {
+    left
+  }
+  let content_width = 8.8em + 1.3em + 24em
+  let table_content = table(
+    columns: (8.8em, 24em),
+    align: (resolved_label_alignment + top, left + top),
+    inset: 0pt,
+    stroke: none,
+    column-gutter: 1.3em,
+    row-gutter: 0.6em,
+    ..info_cells,
+  )
+
+  if str(table_alignment) == "center" {
+    align(center, box(width: content_width, table_content))
+  } else {
+    align(left, block(width: 100%, table_content))
+  }
+}
+
+#let render_title_page_basic_bottom_block(
+  block_alignment: "left",
+  confidentiality_statement: none,
+  isbn: none,
+) = {
+  let block_items = ()
+  if confidentiality_statement != none and str(confidentiality_statement) != "" {
+    block_items += ([#text(size: 10pt, smallcaps(str(confidentiality_statement)))],)
+  }
+  if isbn != none and isbn != "" {
+    block_items += ([#text(size: 10pt, [ISBN: #isbn])],)
+  }
+
+  if block_items.len() > 0 {
+    let content_width = 8.8em + 1.3em + 24em
+    let stack_body = stack(dir: ttb, spacing: 0.8em, ..block_items)
+    v(1fr)
+    if str(block_alignment) == "center" {
+      align(center, stack_body)
+    } else {
+      align(left, block(width: 100%, stack_body))
+    }
+  }
 }
 
 #let render_title_page_footer_notes(
@@ -322,9 +415,11 @@
   subtitle: none,
   authors: (),
   affiliations: (),
+  isbn: none,
   date: none,
   degree: none,
   program: none,
+  track: none,
   faculty: none,
   institution: none,
   defense_date: none,
@@ -335,69 +430,125 @@
   cover_description: none,
   show_confidentiality_statement: false,
   confidentiality_statement: none,
-  page_image: none,
-  page_image_anchor: none,
-  page_image_width: none,
-  page_image_height: none,
-  page_image_dx: none,
-  page_image_dy: none,
+  title_alignment: "center",
+  table_alignment: "left",
+  bottom_block_alignment: "left",
 ) = {
-  let info_cells = build_title_page_info_cells(
-    authors: authors,
-    date: date,
-    defense_date: defense_date,
-    supervisors: supervisors,
-    committee: committee,
-    show_contributor_affiliations: show_contributor_affiliations,
+  let author_line = render_comma_list(authors)
+  let author_affiliation_line = render_lines(affiliations)
+  let author_cell = render_contributor_entries(
+    if author_line == "" {
+      ()
+    } else {
+      ((name: author_line, affiliation: author_affiliation_line),)
+    },
+    show_affiliations: true,
   )
-
-  render_title_page_image(
-    image_path: page_image,
-    anchor: page_image_anchor,
-    width: page_image_width,
-    height: page_image_height,
-    dx: page_image_dx,
-    dy: page_image_dy,
+  let supervisor_cell = render_contributor_entries(
+    supervisors,
+    show_affiliations: show_contributor_affiliations,
   )
+  let committee_cell = render_contributor_entries(
+    committee,
+    show_affiliations: show_contributor_affiliations,
+  )
+  let author_label = if count_items(authors) > 1 { "Authors" } else { "Author" }
+  let supervisor_label = if count_items(supervisors) > 1 { "Supervisors" } else { "Supervisor" }
+  let committee_label = "Committee"
+  let cover_cell = if show_cover_description and cover_description != none and str(cover_description) != "" {
+    str(cover_description)
+  } else {
+    none
+  }
+  let bottom_confidentiality = if show_confidentiality_statement and confidentiality_statement != none and str(confidentiality_statement) != "" {
+    confidentiality_statement
+  } else {
+    none
+  }
+  let author_rows = title_page_info_row(author_label, author_cell)
+  let academic_rows = (
+    title_page_info_row("Degree", degree) +
+    title_page_info_row("Program", program) +
+    title_page_info_row("Track", track) +
+    title_page_info_row("Faculty", faculty) +
+    title_page_info_row("Institution", institution)
+  )
+  let people_rows = (
+    title_page_info_row(supervisor_label, supervisor_cell) +
+    title_page_info_row(committee_label, committee_cell)
+  )
+  let date_rows = (
+    title_page_info_row("Publication date", format_title_page_date(date)) +
+    title_page_info_row("Defense date", defense_date)
+  )
+  let cover_rows = title_page_info_row("Cover", cover_cell)
 
-  align(center, text(22pt, weight: "bold", title))
+  render_title_page_basic_heading_line(
+    text(22pt, weight: "bold", title),
+    heading_alignment: title_alignment,
+  )
 
   if subtitle != none and subtitle != "" {
     v(0.5em)
-    align(center, text(12pt, subtitle))
+    render_title_page_basic_heading_line(
+      text(12pt, subtitle),
+      heading_alignment: title_alignment,
+    )
   }
 
-  if degree != none and degree != "" {
-    v(0.4em)
-    align(center, degree)
+  v(3.5cm)
+
+  if author_rows != () {
+    render_title_page_info_table(
+      author_rows,
+      table_alignment: table_alignment,
+    )
   }
 
-  if program != none and program != "" {
-    align(center, program)
+  if academic_rows != () {
+    if author_rows != () {
+      v(1.1em)
+    }
+    render_title_page_info_table(
+      academic_rows,
+      table_alignment: table_alignment,
+    )
   }
 
-  if institution != none and institution != "" {
-    align(center, institution)
+  if people_rows != () {
+    if author_rows != () or academic_rows != () {
+      v(1.1em)
+    }
+    render_title_page_info_table(
+      people_rows,
+      table_alignment: table_alignment,
+    )
   }
 
-  if faculty != none and faculty != "" {
-    align(center, faculty)
+  if date_rows != () {
+    if author_rows != () or academic_rows != () or people_rows != () {
+      v(1.1em)
+    }
+    render_title_page_info_table(
+      date_rows,
+      table_alignment: table_alignment,
+    )
   }
 
-  v(2.3em)
+  if cover_rows != () {
+    if author_rows != () or academic_rows != () or people_rows != () or date_rows != () {
+      v(1.8em)
+    }
+    render_title_page_info_table(
+      cover_rows,
+      table_alignment: table_alignment,
+    )
+  }
 
-  table(
-    columns: (auto, 1fr),
-    align: (left, left),
-    stroke: none,
-    ..info_cells,
-  )
-
-  render_title_page_footer_notes(
-    show_cover_description: show_cover_description,
-    cover_description: cover_description,
-    show_confidentiality_statement: show_confidentiality_statement,
-    confidentiality_statement: confidentiality_statement,
+  render_title_page_basic_bottom_block(
+    block_alignment: bottom_block_alignment,
+    confidentiality_statement: bottom_confidentiality,
+    isbn: isbn,
   )
 }
 
@@ -406,9 +557,11 @@
   subtitle: none,
   authors: (),
   affiliations: (),
+  isbn: none,
   date: none,
   degree: none,
   program: none,
+  track: none,
   faculty: none,
   institution: none,
   defense_date: none,
@@ -419,12 +572,6 @@
   cover_description: none,
   show_confidentiality_statement: false,
   confidentiality_statement: none,
-  page_image: none,
-  page_image_anchor: none,
-  page_image_width: none,
-  page_image_height: none,
-  page_image_dx: none,
-  page_image_dy: none,
 ) = {
   let author_line = render_comma_list(authors)
   let affiliation_lines = render_lines(affiliations)
@@ -439,17 +586,9 @@
   let has_degree_line = degree != none and degree != ""
   let has_institution_line = institution != none and institution != ""
   let has_program_line = program != none and program != ""
+  let has_track_line = track != none and track != ""
   let has_faculty_line = faculty != none and faculty != ""
   let has_defense_line = defense_date != none and defense_date != ""
-
-  render_title_page_image(
-    image_path: page_image,
-    anchor: page_image_anchor,
-    width: page_image_width,
-    height: page_image_height,
-    dx: page_image_dx,
-    dy: page_image_dy,
-  )
 
   align(center, text(24pt, weight: "bold", title))
 
@@ -470,7 +609,7 @@
     align(center, text(10.5pt, fill: rgb("#555555"), affiliation_lines))
   }
 
-  if has_degree_line or has_institution_line or has_program_line or has_faculty_line or has_defense_line {
+  if has_degree_line or has_institution_line or has_program_line or has_track_line or has_faculty_line or has_defense_line {
     v(1.2em)
   }
 
@@ -480,6 +619,10 @@
 
   if has_program_line {
     align(center, program)
+  }
+
+  if has_track_line {
+    align(center, track)
   }
 
   if has_faculty_line {
@@ -496,12 +639,7 @@
 
   v(2.1em)
 
-  table(
-    columns: (auto, 1fr),
-    align: (left, left),
-    stroke: none,
-    ..info_cells,
-  )
+  render_title_page_info_table(info_cells)
 
   render_title_page_footer_notes(
     show_cover_description: show_cover_description,
@@ -516,9 +654,11 @@
   subtitle: none,
   authors: (),
   affiliations: (),
+  isbn: none,
   date: none,
   degree: none,
   program: none,
+  track: none,
   faculty: none,
   institution: none,
   defense_date: none,
@@ -529,12 +669,6 @@
   cover_description: none,
   show_confidentiality_statement: false,
   confidentiality_statement: none,
-  page_image: none,
-  page_image_anchor: none,
-  page_image_width: none,
-  page_image_height: none,
-  page_image_dx: none,
-  page_image_dy: none,
 ) = {
   // Custom entry point: replace this with your own title-page implementation.
   title_page_formal_variant(
@@ -542,9 +676,11 @@
     subtitle: subtitle,
     authors: authors,
     affiliations: affiliations,
+    isbn: isbn,
     date: date,
     degree: degree,
     program: program,
+    track: track,
     faculty: faculty,
     institution: institution,
     defense_date: defense_date,
@@ -555,12 +691,6 @@
     cover_description: cover_description,
     show_confidentiality_statement: show_confidentiality_statement,
     confidentiality_statement: confidentiality_statement,
-    page_image: page_image,
-    page_image_anchor: page_image_anchor,
-    page_image_width: page_image_width,
-    page_image_height: page_image_height,
-    page_image_dx: page_image_dx,
-    page_image_dy: page_image_dy,
   )
 }
 
@@ -569,9 +699,11 @@
   subtitle: none,
   authors: (),
   affiliations: (),
+  isbn: none,
   date: none,
   degree: none,
   program: none,
+  track: none,
   faculty: none,
   institution: none,
   defense_date: none,
@@ -585,12 +717,10 @@
   cover_description: none,
   show_confidentiality_statement: false,
   confidentiality_statement: "This thesis is confidential and cannot be made public.",
-  page_image: none,
-  page_image_anchor: none,
-  page_image_width: none,
-  page_image_height: none,
-  page_image_dx: none,
-  page_image_dy: none,
+  basic_title_alignment: "center",
+  basic_table_alignment: "left",
+  basic_bottom_block_alignment: "left",
+  logo_alignment: "center",
 ) = {
   let mode = resolve_title_page_variant(variant)
 
@@ -599,7 +729,12 @@
   }
 
   if logo != none {
-    place(bottom + center, dy: -0.9cm, image(logo, width: 1.9cm))
+    let logo_anchor = if str(logo_alignment) == "left" {
+      bottom + left
+    } else {
+      bottom + center
+    }
+    place(logo_anchor, dy: -0.9cm, image(logo, width: 1.9cm))
   }
 
   if mode == "basic" {
@@ -608,9 +743,11 @@
       subtitle: subtitle,
       authors: authors,
       affiliations: affiliations,
+      isbn: isbn,
       date: date,
       degree: degree,
       program: program,
+      track: track,
       faculty: faculty,
       institution: institution,
       defense_date: defense_date,
@@ -621,12 +758,9 @@
       cover_description: cover_description,
       show_confidentiality_statement: show_confidentiality_statement,
       confidentiality_statement: confidentiality_statement,
-      page_image: page_image,
-      page_image_anchor: page_image_anchor,
-      page_image_width: page_image_width,
-      page_image_height: page_image_height,
-      page_image_dx: page_image_dx,
-      page_image_dy: page_image_dy,
+      title_alignment: basic_title_alignment,
+      table_alignment: basic_table_alignment,
+      bottom_block_alignment: basic_bottom_block_alignment,
     )
   } else if mode == "formal" {
     title_page_formal_variant(
@@ -634,9 +768,11 @@
       subtitle: subtitle,
       authors: authors,
       affiliations: affiliations,
+      isbn: isbn,
       date: date,
       degree: degree,
       program: program,
+      track: track,
       faculty: faculty,
       institution: institution,
       defense_date: defense_date,
@@ -647,12 +783,6 @@
       cover_description: cover_description,
       show_confidentiality_statement: show_confidentiality_statement,
       confidentiality_statement: confidentiality_statement,
-      page_image: page_image,
-      page_image_anchor: page_image_anchor,
-      page_image_width: page_image_width,
-      page_image_height: page_image_height,
-      page_image_dx: page_image_dx,
-      page_image_dy: page_image_dy,
     )
   } else {
     title_page_custom(
@@ -660,9 +790,11 @@
       subtitle: subtitle,
       authors: authors,
       affiliations: affiliations,
+      isbn: isbn,
       date: date,
       degree: degree,
       program: program,
+      track: track,
       faculty: faculty,
       institution: institution,
       defense_date: defense_date,
@@ -673,12 +805,6 @@
       cover_description: cover_description,
       show_confidentiality_statement: show_confidentiality_statement,
       confidentiality_statement: confidentiality_statement,
-      page_image: page_image,
-      page_image_anchor: page_image_anchor,
-      page_image_width: page_image_width,
-      page_image_height: page_image_height,
-      page_image_dx: page_image_dx,
-      page_image_dy: page_image_dy,
     )
   }
 

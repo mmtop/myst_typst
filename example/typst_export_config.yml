@@ -11,7 +11,6 @@ project:
 # Template options for Typst export      
       show_cover_full: true
       show_title_page: true
-      show_title_page_image: false
       show_contributor_affiliations: true
 
 # Table of contents and lists of figures/tables options
@@ -155,18 +154,24 @@ project:
 # Title page options:      
       # Title-page variant: basic | formal | custom
       title_page_variant: basic
-      # Optional title-page footer notes for both detailed variants:
+
+      ## Simple variant options:
+      # Alignment of the basic/simple title and subtitle block: left | center
+      title_page_basic_title_alignment: center
+      # Alignment of the metadata table in the basic/simple title page: left | center
+      title_page_basic_table_alignment: center
+      # Alignment of the basic/simple title-page bottom block: left | center
+      title_page_basic_bottom_block_alignment: center
+      # Alignment of the title-page logo: left | center
+      title_page_logo_alignment: center
+
+
+
+      ## Optional title-page notes:
       show_title_page_cover_description: true
-      # title_page_cover_description: A short description of the cover image.
+      title_page_cover_description: The cover image is a template demonstration background.
       show_title_page_confidentiality_statement: true
       title_page_confidentiality_statement: This thesis is confidential and cannot be made public.
-      
-      ## Title-page image settings:
-      title_page_image: config/template_assets/figures/defaultcover.jpg
-      # title_page_image_anchor: bottom
-      # title_page_image_width_cm: 3
-      # title_page_image_dx_cm: 0
-      # title_page_image_dy_cm: 0
 
 
 # Options:

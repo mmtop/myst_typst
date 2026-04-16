@@ -3,7 +3,6 @@
 ## Layout options
 - `show_cover_full` (boolean): Render a cover page.
 - `show_title_page` (boolean): Render a title page.
-- `show_title_page_image` (boolean): Enable or disable title-page image rendering.
 - `show_contributor_affiliations` (boolean): Show supervisor/committee affiliations on the detailed title-page layouts (dark gray italic line under each name).
 - `show_toc` (boolean): Render the table of contents.
 - `show_list_of_figures` (boolean): Render list of figures.
@@ -68,18 +67,16 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 
 ## Title page options
 - `title_page_variant` (string): `basic`, `formal`, or `custom`. The legacy value `simple` is still accepted as an alias for `basic`.
-- `show_title_page_cover_description` (boolean): Show the optional cover description line near the bottom of the title page.
-- `title_page_cover_description` (string): Text for the optional cover description line on the title page.
-- `show_title_page_confidentiality_statement` (boolean): Show the optional confidentiality statement near the bottom of the title page.
+- `title_page_basic_title_alignment` (string): Alignment of the title and subtitle block in the basic/simple title-page layout: `left` or `center`.
+- `title_page_basic_table_alignment` (string): Alignment of the metadata table in the basic/simple title-page layout: `left` or `center`.
+- `title_page_basic_bottom_block_alignment` (string): Alignment of the bottom block in the basic/simple title-page layout: `left` or `center`.
+- `title_page_logo_alignment` (string): Alignment of the title-page logo: `left` or `center`.
+- `show_title_page_cover_description` (boolean): Show the optional cover description on the title page. In the basic/simple layout it appears as its own section above the bottom block; in the formal/custom path it remains a footer note.
+- `title_page_cover_description` (string): Text for the optional cover description on the title page.
+- `show_title_page_confidentiality_statement` (boolean): Show the optional confidentiality statement on the title page. In the basic/simple layout it appears in the bottom block; in the formal/custom path it remains a footer note.
 - `title_page_confidentiality_statement` (string): Text for the optional confidentiality statement. Default is `This thesis is confidential and cannot be made public.`
-- `title_page_image` (file): Optional image on title page.
-- `title_page_image_anchor` (string, optional): `top-right`, `top`, `top-left`, `center`, `bottom`, `bottom-right`, or `bottom-left`.
-- `title_page_image_width_cm` (number, optional): Image width in cm. Default is `5`.
-- `title_page_image_height_cm` (number, optional): Image height in cm. If omitted, image height is automatic.
-- `title_page_image_dx_cm` (number, optional): Horizontal offset in cm for placed title-page image. Default is `0`.
-- `title_page_image_dy_cm` (number, optional): Vertical offset in cm for placed title-page image. Default is `0`.
 - `logo` (file): Shared logo path used on the title page and as a fallback for the graphical cover when no cover-specific logo file is available.
-- `isbn` (string, optional): Shared project option used as the canonical ISBN source for the graphical cover.
+- `isbn` (string, optional): Shared project option used as the canonical ISBN source for the graphical cover and the basic/simple title-page bottom block.
 
 ## Path handling
 - File paths are normalized to forward slashes before Typst loads them, which keeps Windows, macOS, Linux, and CI builds aligned.
@@ -90,6 +87,7 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 These fields are semantic metadata and should stay in shared config:
 - `project.options.thesis_degree`
 - `project.options.thesis_program`
+- `project.options.thesis_track`
 - `project.options.thesis_faculty`
 - `project.options.thesis_institution`
 - `project.options.thesis_defense_date`

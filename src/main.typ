@@ -27,6 +27,7 @@
 
   thesis_degree: none,
   thesis_program: none,
+  thesis_track: none,
   thesis_faculty: none,
   thesis_institution: none,
   thesis_defense_date: none,
@@ -39,7 +40,6 @@
 
   show_cover_full: true,
   show_title_page: true,
-  show_title_page_image: true,
   show_contributor_affiliations: true,
   show_toc: true,
   show_list_of_figures: false,
@@ -93,12 +93,10 @@
   cover_bottom_text_dy_cm: 0cm,
 
   title_page_variant: "basic",
-  title_page_image: "src/assets/template_figures/defaultcover.jpg",
-  title_page_image_anchor: "bottom",
-  title_page_image_width_cm: none,
-  title_page_image_height_cm: none,
-  title_page_image_dx_cm: none,
-  title_page_image_dy_cm: none,
+  title_page_basic_title_alignment: "center",
+  title_page_basic_table_alignment: "left",
+  title_page_basic_bottom_block_alignment: "left",
+  title_page_logo_alignment: "center",
   show_title_page_cover_description: false,
   title_page_cover_description: none,
   show_title_page_confidentiality_statement: false,
@@ -248,11 +246,10 @@
     if resolved_cover_logo_white != none { resolved_cover_logo_white } else { resolved_logo_for_layout }
   }
   let resolved_cover_isbn_position = resolve_cover_isbn_position(cover_isbn_position)
-  let resolved_title_page_image = if show_title_page_image {
-    resolve_asset_path(title_page_image, levels_up: 2)
-  } else {
-    none
-  }
+  let resolved_title_page_basic_title_alignment = resolve_left_center_choice(title_page_basic_title_alignment, "title_page_basic_title_alignment")
+  let resolved_title_page_basic_table_alignment = resolve_left_center_choice(title_page_basic_table_alignment, "title_page_basic_table_alignment")
+  let resolved_title_page_basic_bottom_block_alignment = resolve_left_center_choice(title_page_basic_bottom_block_alignment, "title_page_basic_bottom_block_alignment")
+  let resolved_title_page_logo_alignment = resolve_left_center_choice(title_page_logo_alignment, "title_page_logo_alignment")
 
   // Global page setup for the front matter.
   // Change the numbering here if you want a different front-matter page style.
@@ -341,10 +338,12 @@
       resolved_title,
       subtitle: subtitle,
       authors: authors,
+      isbn: isbn,
       affiliations: affiliations,
       date: date,
       degree: thesis_degree,
       program: thesis_program,
+      track: thesis_track,
       faculty: thesis_faculty,
       institution: thesis_institution,
       defense_date: thesis_defense_date,
@@ -353,17 +352,15 @@
       show_contributor_affiliations: show_contributor_affiliations,
       logo: resolved_logo_for_layout,
       variant: title_page_variant,
+      basic_title_alignment: resolved_title_page_basic_title_alignment,
+      basic_table_alignment: resolved_title_page_basic_table_alignment,
+      basic_bottom_block_alignment: resolved_title_page_basic_bottom_block_alignment,
+      logo_alignment: resolved_title_page_logo_alignment,
       start_on_new_page: show_cover_full,
       show_cover_description: show_title_page_cover_description,
       cover_description: title_page_cover_description,
       show_confidentiality_statement: show_title_page_confidentiality_statement,
       confidentiality_statement: title_page_confidentiality_statement,
-      page_image: resolved_title_page_image,
-      page_image_anchor: title_page_image_anchor,
-      page_image_width: title_page_image_width_cm,
-      page_image_height: title_page_image_height_cm,
-      page_image_dx: title_page_image_dx_cm,
-      page_image_dy: title_page_image_dy_cm,
     )
   }
 

@@ -159,7 +159,7 @@ options:
     description: "Shared logo used on the title page and as a fallback on the graphical cover. If omitted, the bundled template logo is used."
   - id: isbn
     type: string
-    description: "Optional ISBN project option. Used on the graphical cover when enabled."
+    description: "Optional ISBN project option. Used on the graphical cover and in the basic/simple title-page bottom block when enabled."
 
   # Cover page
   - id: cover_page_variant
@@ -236,39 +236,30 @@ options:
   - id: title_page_variant
     type: string
     description: "Title-page layout. Accepted values: 1/basic, 2/formal, 3/custom. Default: basic. The legacy value simple is still accepted as an alias for basic."
-  - id: show_title_page_image
-    type: boolean
-    description: "Show the optional decorative image on the title page. Default: true."
+  - id: title_page_basic_title_alignment
+    type: string
+    description: "Alignment of the title and subtitle block in the basic/simple title-page layout. Accepted values: left or center. Default: center."
+  - id: title_page_basic_table_alignment
+    type: string
+    description: "Alignment of the metadata table in the basic/simple title-page layout. Accepted values: left or center. Default: left."
+  - id: title_page_basic_bottom_block_alignment
+    type: string
+    description: "Alignment of the bottom block in the basic/simple title-page layout. Accepted values: left or center. Default: left."
+  - id: title_page_logo_alignment
+    type: string
+    description: "Alignment of the title-page logo. Accepted values: left or center. Default: center."
   - id: show_title_page_cover_description
     type: boolean
-    description: "Show the optional cover description line near the bottom of the title page. Default: false."
+    description: "Show the optional cover description text on the title page. In the basic/simple layout it appears as its own section above the bottom block; in the formal/custom path it remains a footer note. Default: false."
   - id: title_page_cover_description
     type: string
-    description: "Text used for the optional cover description line on the title page, for example a short note about the cover image."
+    description: "Text used for the optional cover description on the title page, for example a short note about the cover image."
   - id: show_title_page_confidentiality_statement
     type: boolean
-    description: "Show the optional confidentiality statement near the bottom of the title page. Default: false."
+    description: "Show the optional confidentiality statement on the title page. In the basic/simple layout it appears in the bottom block; in the formal/custom path it remains a footer note. Default: false."
   - id: title_page_confidentiality_statement
     type: string
     description: "Text used for the optional confidentiality statement on the title page. Default: This thesis is confidential and cannot be made public."
-  - id: title_page_image
-    type: file
-    description: "Image file shown on the title page when title-page images are enabled. If omitted, the bundled template image is used."
-  - id: title_page_image_anchor
-    type: string
-    description: "Placement anchor for the title-page image. Accepted values: top-right, top, top-left, center, bottom, bottom-right, bottom-left. Default: bottom."
-  - id: title_page_image_width_cm
-    type: number
-    description: "Width of the title-page image in centimeters. Default: 5."
-  - id: title_page_image_height_cm
-    type: number
-    description: "Optional height of the title-page image in centimeters. If omitted, the image keeps its aspect ratio."
-  - id: title_page_image_dx_cm
-    type: number
-    description: "Horizontal offset for the title-page image in centimeters. Default: 0."
-  - id: title_page_image_dy_cm
-    type: number
-    description: "Vertical offset for the title-page image in centimeters. Default: 0."
 
   # Formal title-page metadata
   - id: thesis_degree
@@ -277,6 +268,9 @@ options:
   - id: thesis_program
     type: string
     description: "Program or department line shown on the detailed title-page layouts."
+  - id: thesis_track
+    type: string
+    description: "Optional track or specialization line shown on the title page."
   - id: thesis_faculty
     type: string
     description: "Faculty line shown on the detailed title-page layouts."

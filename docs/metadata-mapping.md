@@ -14,6 +14,7 @@ This template keeps semantic metadata in shared MyST config files and maps those
 - `project.options.isbn` -> `options.isbn` -> `isbn`
 - `project.options.thesis_degree` -> `options.thesis_degree` -> `thesis_degree`
 - `project.options.thesis_program` -> `options.thesis_program` -> `thesis_program`
+- `project.options.thesis_track` -> `options.thesis_track` -> `thesis_track`
 - `project.options.thesis_faculty` -> `options.thesis_faculty` -> `thesis_faculty`
 - `project.options.thesis_institution` -> `options.thesis_institution` -> `thesis_institution`
 - `project.options.thesis_defense_date` -> `options.thesis_defense_date` -> `thesis_defense_date`
@@ -36,7 +37,6 @@ All PDF-only options are read from `config/exports/typst_config.yml` and mapped 
 Examples of PDF-only options:
 - `options.show_cover_full`
 - `options.show_title_page`
-- `options.show_title_page_image`
 - `options.show_contributor_affiliations`
 - `options.show_toc`
 - `options.paper_size`
@@ -65,13 +65,11 @@ Examples of PDF-only options:
 - `options.cover_bottom_text_dx_cm`
 - `options.cover_bottom_text_dy_cm`
 - `options.title_page_variant`
+- `options.title_page_basic_title_alignment`
+- `options.title_page_basic_table_alignment`
+- `options.title_page_basic_bottom_block_alignment`
+- `options.title_page_logo_alignment`
 - `options.show_title_page_cover_description`
 - `options.title_page_cover_description`
 - `options.show_title_page_confidentiality_statement`
 - `options.title_page_confidentiality_statement`
-- `options.title_page_image`
-- `options.title_page_image_anchor`
-- `options.title_page_image_width_cm`
-- `options.title_page_image_height_cm`
-- `options.title_page_image_dx_cm`
-- `options.title_page_image_dy_cm`

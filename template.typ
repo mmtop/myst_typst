@@ -146,6 +146,9 @@
 [# if options.thesis_program #]
   thesis_program: "[-options.thesis_program-]",
 [# endif #]
+[# if options.thesis_track #]
+  thesis_track: "[-options.thesis_track-]",
+[# endif #]
 [# if options.thesis_faculty #]
   thesis_faculty: "[-options.thesis_faculty-]",
 [# endif #]
@@ -332,8 +335,17 @@
 [# if options.title_page_variant #]
   title_page_variant: "[-options.title_page_variant-]",
 [# endif #]
-[# if options.show_title_page_image is defined #]
-  show_title_page_image: [-options.show_title_page_image-],
+[# if options.title_page_basic_title_alignment is defined and options.title_page_basic_title_alignment != none and options.title_page_basic_title_alignment != "" #]
+  title_page_basic_title_alignment: "[-options.title_page_basic_title_alignment-]",
+[# endif #]
+[# if options.title_page_basic_table_alignment is defined and options.title_page_basic_table_alignment != none and options.title_page_basic_table_alignment != "" #]
+  title_page_basic_table_alignment: "[-options.title_page_basic_table_alignment-]",
+[# endif #]
+[# if options.title_page_basic_bottom_block_alignment is defined and options.title_page_basic_bottom_block_alignment != none and options.title_page_basic_bottom_block_alignment != "" #]
+  title_page_basic_bottom_block_alignment: "[-options.title_page_basic_bottom_block_alignment-]",
+[# endif #]
+[# if options.title_page_logo_alignment is defined and options.title_page_logo_alignment != none and options.title_page_logo_alignment != "" #]
+  title_page_logo_alignment: "[-options.title_page_logo_alignment-]",
 [# endif #]
 [# if options.show_title_page_cover_description is defined #]
   show_title_page_cover_description: [-options.show_title_page_cover_description-],
@@ -346,24 +358,6 @@
 [# endif #]
 [# if options.title_page_confidentiality_statement #]
   title_page_confidentiality_statement: "[-options.title_page_confidentiality_statement-]",
-[# endif #]
-[# if options.title_page_image #]
-  title_page_image: "[-options.title_page_image-]",
-[# endif #]
-[# if options.title_page_image_anchor is defined and options.title_page_image_anchor != none and options.title_page_image_anchor != "" #]
-  title_page_image_anchor: "[-options.title_page_image_anchor-]",
-[# endif #]
-[# if options.title_page_image_width_cm is defined and options.title_page_image_width_cm != none #]
-  title_page_image_width_cm: [-options.title_page_image_width_cm-]cm,
-[# endif #]
-[# if options.title_page_image_height_cm is defined and options.title_page_image_height_cm != none #]
-  title_page_image_height_cm: [-options.title_page_image_height_cm-]cm,
-[# endif #]
-[# if options.title_page_image_dx_cm is defined and options.title_page_image_dx_cm != none #]
-  title_page_image_dx_cm: [-options.title_page_image_dx_cm-]cm,
-[# endif #]
-[# if options.title_page_image_dy_cm is defined and options.title_page_image_dy_cm != none #]
-  title_page_image_dy_cm: [-options.title_page_image_dy_cm-]cm,
 [# endif #]
 )
 
