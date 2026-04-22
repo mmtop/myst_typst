@@ -275,7 +275,7 @@
     leading: line_spacing_em,
     spacing: 0.7em,
     justify: true,
-    first-line-indent: 1.2em,
+    first-line-indent: 1em,
   )
 
   // Shared component styling.
