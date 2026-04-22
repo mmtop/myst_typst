@@ -283,6 +283,8 @@
   show math.equation: set block(spacing: 1em)
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
   show link: set text(fill: blue.darken(30%))
+  set enum(indent: 2em)
+  set list(indent: 2em)
 
   // Global numbering and component rules.
   show: body => setup-numbering(body)
