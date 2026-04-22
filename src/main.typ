@@ -382,6 +382,9 @@
     toc_depth: toc_depth,
   )
 
+  // Ensures the main matter starts on an odd page, which is standard for printed books.
+  pagebreak(to: "odd", weak: true)
+
   // Main matter uses arabic page numbers.
   set page(
     paper: paper_size,
