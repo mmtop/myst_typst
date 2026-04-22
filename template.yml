@@ -107,6 +107,12 @@ options:
   - id: show_list_of_tables
     type: boolean
     description: "Render a list of tables in the front matter. Default: false."
+  - id: show_verso_blank_page_statement
+    type: boolean
+    description: "When an extra verso page is needed before the main matter, print a conventional blank-page statement instead of leaving it empty. Default: false."
+  - id: verso_blank_page_statement
+    type: string
+    description: "Statement printed on the inserted verso page when show_verso_blank_page_statement is true. Default: This page is intentionally left blank."
 
   # Bibliography
   - id: show_bibliography

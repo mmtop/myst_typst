@@ -16,7 +16,7 @@ project:
       # Order of fixed front-matter part pages before the table of contents.
       # Part files are still declared in myst.yml under project.parts; this
       # option only controls their PDF order. Empty or missing parts are skipped.
-      frontmatter_order: acknowledgements, preface, abstract, dedication, colophon
+      frontmatter_order: abstract, acknowledgements, dedication, colophon, preface
 
 # Table of contents and lists of figures/tables options
       show_toc: true
@@ -24,6 +24,14 @@ project:
       
       show_list_of_figures: false
       show_list_of_tables: false
+
+# Verso page options for the main matter chapters:
+      # Option for verso blank page that is **always** inserted automatically 
+      # when required to ensure the main matter chapters start on recto page:
+      # When the page statement is enabled, the inserted verso page displays
+      # the statement below instead of remaining fully blank.
+      show_verso_blank_page_statement: true
+      verso_blank_page_statement: This page is intentionally left blank.
 
 
 # Bibliography options 

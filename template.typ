@@ -210,6 +210,12 @@
 [# if options.toc_depth is defined and options.toc_depth != none #]
   toc_depth: [-options.toc_depth-],
 [# endif #]
+[# if options.show_verso_blank_page_statement is defined #]
+  show_verso_blank_page_statement: [-options.show_verso_blank_page_statement-],
+[# endif #]
+[# if options.verso_blank_page_statement is defined and options.verso_blank_page_statement != none and options.verso_blank_page_statement != "" #]
+  verso_blank_page_statement: "[-options.verso_blank_page_statement-]",
+[# endif #]
 
   // Page layout
 [# if options.paper_size is defined and options.paper_size != none and options.paper_size != "" #]

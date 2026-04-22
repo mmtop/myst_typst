@@ -46,6 +46,8 @@
   show_list_of_figures: false,
   show_list_of_tables: false,
   toc_depth: 2,
+  show_verso_blank_page_statement: false,
+  verso_blank_page_statement: "This page is intentionally left blank.",
 
   paper_size: "a4",
   margin_top_cm: 2.5cm,
@@ -174,6 +176,24 @@
       black
     } else {
       rgb(normalized)
+    }
+  }
+
+  let start_mainmatter_on_recto = (
+    show_blank_statement: false,
+    blank_statement: "This page is intentionally left blank.",
+  ) => {
+    if show_blank_statement {
+      context {
+        if calc.rem(here().page(), 2) == 0 {
+          align(center + horizon)[
+            #text(size: 9pt, fill: gray)[#blank_statement]
+          ]
+          pagebreak()
+        }
+      }
+    } else {
+      pagebreak(to: "odd", weak: true)
     }
   }
 
@@ -383,7 +403,10 @@
   )
 
   // Ensures the main matter starts on an odd page, which is standard for printed books.
-  pagebreak(to: "odd", weak: true)
+  start_mainmatter_on_recto(
+    show_blank_statement: show_verso_blank_page_statement,
+    blank_statement: verso_blank_page_statement,
+  )
 
   // Main matter uses arabic page numbers.
   set page(

@@ -8,6 +8,8 @@
 - `show_toc` (boolean): Render the table of contents.
 - `show_list_of_figures` (boolean): Render list of figures.
 - `show_list_of_tables` (boolean): Render list of tables.
+- `show_verso_blank_page_statement` (boolean): Print a conventional blank-page statement on the inserted verso page before main matter. Default: `false`.
+- `verso_blank_page_statement` (string): Text used for that statement. Default: `This page is intentionally left blank.`
 - `show_bibliography` (boolean): Render the bibliography chapter.
 - `bibliography_title` (string): Title for the bibliography chapter. Default is `Bibliography`.
 - `bibliography_style` (string): Typst bibliography style. Default is `ieee`.

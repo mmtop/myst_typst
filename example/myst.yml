@@ -10,7 +10,7 @@ project:
   parts:
     acknowledgements: content/parts/acknowledgements.md
     abstract: content/parts/abstract.md
-    # preface: content/parts/preface.md
+    #preface: content/parts/preface.md
     # dedication: content/parts/dedication.md
     # colophon: content/parts/colophon.md
   keywords: [myst, typst, thesis template, front matter, metadata mapping, academic writing workflow, document automation]
