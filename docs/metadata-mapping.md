@@ -38,6 +38,7 @@ Examples of PDF-only options:
 - `options.show_cover_full`
 - `options.show_title_page`
 - `options.show_contributor_affiliations`
+- `options.frontmatter_order`
 - `options.show_toc`
 - `options.paper_size`
 - `options.logo`

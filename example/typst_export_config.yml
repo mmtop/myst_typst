@@ -13,6 +13,11 @@ project:
       show_title_page: true
       show_contributor_affiliations: true
 
+      # Order of fixed front-matter part pages before the table of contents.
+      # Part files are still declared in myst.yml under project.parts; this
+      # option only controls their PDF order. Empty or missing parts are skipped.
+      frontmatter_order: acknowledgements, preface, abstract, dedication, colophon
+
 # Table of contents and lists of figures/tables options
       show_toc: true
       toc_depth: 2
@@ -171,7 +176,7 @@ project:
       title_page_formal_statement: |
         submitted in partial fulfillment of the requirements for the degree of $thesis_degree
         in $thesis_program
-        at $thesis_institution, 
+        at $thesis_institution,
         to be defended on $thesis_defense_date.
 
       ## Basic/simple variant options (ignored by the centered formal variant):

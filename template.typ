@@ -187,6 +187,17 @@
 [# if options.show_contributor_affiliations is defined #]
   show_contributor_affiliations: [-options.show_contributor_affiliations-],
 [# endif #]
+[# if options.frontmatter_order is defined and options.frontmatter_order != none and options.frontmatter_order != "" #]
+[# if options.frontmatter_order is string #]
+  frontmatter_order: "[-options.frontmatter_order-]",
+[# else #]
+  frontmatter_order: (
+[# for item in options.frontmatter_order #]
+    "[-item-]",
+[# endfor #]
+  ),
+[# endif #]
+[# endif #]
 [# if options.show_toc is defined #]
   show_toc: [-options.show_toc-],
 [# endif #]

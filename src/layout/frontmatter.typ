@@ -74,6 +74,83 @@
   }
 }
 
+#let default_frontmatter_order = (
+  "abstract",
+  "preface",
+  "acknowledgements",
+  "dedication",
+  "colophon",
+)
+
+#let frontmatter_order_contains(items, value) = {
+  let found = false
+  for item in items {
+    if item == value {
+      found = true
+    }
+  }
+  found
+}
+
+#let normalize_frontmatter_part_id(value) = {
+  let item = str(value).trim()
+  if item == "abstract" or item == "preface" or item == "dedication" or item == "colophon" {
+    item
+  } else if item == "acknowledgements" or item == "acknowledgments" {
+    "acknowledgements"
+  } else {
+    panic("Invalid frontmatter_order item '" + item + "'. Use abstract, preface, acknowledgements, dedication, or colophon.")
+  }
+}
+
+#let normalize_frontmatter_order(order) = {
+  let raw_items = if order == none {
+    default_frontmatter_order
+  } else if type(order) == str {
+    str(order).split(",")
+  } else {
+    order
+  }
+
+  let items = ()
+  for item in raw_items {
+    let normalized = normalize_frontmatter_part_id(item)
+    if not frontmatter_order_contains(items, normalized) {
+      items += (normalized,)
+    }
+  }
+
+  for item in default_frontmatter_order {
+    if not frontmatter_order_contains(items, item) {
+      items += (item,)
+    }
+  }
+
+  items
+}
+
+#let render_frontmatter_part(
+  part_id,
+  abstract: none,
+  keywords: (),
+  preface: none,
+  acknowledgements: none,
+  dedication: none,
+  colophon: none,
+) = {
+  if part_id == "abstract" {
+    render_abstract_page(abstract, keywords)
+  } else if part_id == "preface" {
+    render_optional_frontmatter_page("Preface", preface)
+  } else if part_id == "acknowledgements" {
+    render_optional_frontmatter_page("Acknowledgements", acknowledgements)
+  } else if part_id == "dedication" {
+    render_optional_frontmatter_page("Dedication", dedication)
+  } else if part_id == "colophon" {
+    render_optional_frontmatter_page("Colophon", colophon)
+  }
+}
+
 // Renders the table of contents page.
 #let render_table_of_contents(depth: 1) = {
   pagebreak()
@@ -113,19 +190,24 @@
   acknowledgements: none,
   dedication: none,
   colophon: none,
+  frontmatter_order: default_frontmatter_order,
   show_toc: true,
   show_list_of_figures: false,
   show_list_of_tables: false,
   toc_depth: 2,
 ) = {
-  render_abstract_page(abstract, keywords)
-
-  // These sections already exist as optional (but default) MyST front-matter parts in the template.
-  // If empty, they are skipped automatically.
-  render_optional_frontmatter_page("Preface", preface)
-  render_optional_frontmatter_page("Acknowledgements", acknowledgements)
-  render_optional_frontmatter_page("Dedication", dedication)
-  render_optional_frontmatter_page("Colophon", colophon)
+  for part_id in normalize_frontmatter_order(frontmatter_order) {
+    render_frontmatter_part(
+      part_id,
+      abstract: abstract,
+      keywords: keywords,
+      preface: preface,
+      acknowledgements: acknowledgements,
+      dedication: dedication,
+      colophon: colophon,
+    )
+  }
+  
   // Example for a truly custom section you may want to add later:
   // render_optional_frontmatter_page("Abbreviations", abbreviations)
   // To make that work, you would also need to add `abbreviations` as a new part

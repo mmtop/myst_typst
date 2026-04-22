@@ -4,6 +4,7 @@
 - `show_cover_full` (boolean): Render a cover page.
 - `show_title_page` (boolean): Render a title page.
 - `show_contributor_affiliations` (boolean): Show supervisor/committee affiliations on the detailed title-page layouts (dark gray italic line under each name).
+- `frontmatter_order` (string): Comma-separated order for fixed front-matter part pages before the table of contents. Accepted values: `abstract`, `preface`, `acknowledgements`, `dedication`, and `colophon`.
 - `show_toc` (boolean): Render the table of contents.
 - `show_list_of_figures` (boolean): Render list of figures.
 - `show_list_of_tables` (boolean): Render list of tables.
@@ -97,6 +98,12 @@ These fields are semantic metadata and should stay in shared config:
 
 At render time, MyST injects `project.options.*` into template `options.*`.
 The formal statement can use placeholders for the mapped values: `$thesis_degree`, `$thesis_program`, `$thesis_track`, `$thesis_faculty`, `$thesis_institution`, `$thesis_defense_date`, and `$isbn`. New arbitrary `options.yml` keys need to be registered in `template.yml` and mapped in `template.typ` before they can be used as placeholders.
+
+Front-matter part order is controlled by the PDF export option rather than by the order of keys in `project.parts`:
+```yaml
+frontmatter_order: acknowledgements, abstract, preface, dedication, colophon
+```
+Any omitted fixed parts are appended in the default order, and empty/missing parts are skipped.
 
 Example:
 ```yaml

@@ -92,6 +92,9 @@ options:
   - id: show_contributor_affiliations
     type: boolean
     description: "Show affiliation lines under supervisor and committee names on the detailed title-page layouts. Default: true."
+  - id: frontmatter_order
+    type: string
+    description: "Comma-separated order for fixed front-matter part pages before the table of contents. Accepted values: abstract, preface, acknowledgements, dedication, and colophon. Omitted values are appended in the default order."
   - id: show_toc
     type: boolean
     description: "Render the table of contents in the front matter. Default: true."
