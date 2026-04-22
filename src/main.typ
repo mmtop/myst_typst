@@ -101,6 +101,7 @@
   title_page_cover_description: none,
   show_title_page_confidentiality_statement: false,
   title_page_confidentiality_statement: "This thesis is confidential and cannot be made public.",
+  title_page_formal_statement: none,
   body,
 ) = {
   // Asset paths may be used from this file or from nested layout files.
@@ -361,6 +362,7 @@
       cover_description: title_page_cover_description,
       show_confidentiality_statement: show_title_page_confidentiality_statement,
       confidentiality_statement: title_page_confidentiality_statement,
+      formal_statement: title_page_formal_statement,
     )
   }
 

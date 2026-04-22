@@ -262,6 +262,75 @@
   }
 }
 
+#let title_page_statement_value(value) = {
+  if value == none or str(value) == "" {
+    ""
+  } else {
+    no_break_string(value)
+  }
+}
+
+#let title_page_formal_statement_fields(
+  isbn: none,
+  degree: none,
+  program: none,
+  track: none,
+  faculty: none,
+  institution: none,
+  defense_date: none,
+) = {
+  let isbn_text = title_page_statement_value(isbn)
+  let degree_text = title_page_statement_value(degree)
+  let program_text = title_page_statement_value(program)
+  let track_text = title_page_statement_value(track)
+  let faculty_text = title_page_statement_value(faculty)
+  let institution_text = title_page_statement_value(institution)
+  let defense_date_text = title_page_statement_value(defense_date)
+
+  (
+    (name: "thesis_defense_date", value: defense_date_text),
+    (name: "thesis_institution", value: institution_text),
+    (name: "thesis_faculty", value: faculty_text),
+    (name: "thesis_program", value: program_text),
+    (name: "thesis_track", value: track_text),
+    (name: "thesis_degree", value: degree_text),
+    (name: "isbn", value: isbn_text),
+  )
+}
+
+#let title_page_replace_statement_placeholders(template, fields) = {
+  let output = str(template)
+  for field in fields {
+    output = output.replace("${" + field.name + "}", field.value)
+    output = output.replace("$" + field.name, field.value)
+    output = output.replace("{" + field.name + "}", field.value)
+  }
+  output
+}
+
+#let title_page_normalize_statement_text(value) = {
+  let output = str(value).replace("\r\n", "\n").replace("\r", "\n").trim()
+  while output.contains(" \n") {
+    output = output.replace(" \n", "\n")
+  }
+  while output.contains("\n ") {
+    output = output.replace("\n ", "\n")
+  }
+  output
+}
+
+#let render_title_page_multiline_text(value) = {
+  let lines = str(value).split("\n")
+  let output = []
+  for (index, line) in lines.enumerate() {
+    if index > 0 {
+      output += [#linebreak()]
+    }
+    output += [#line]
+  }
+  output
+}
+
 #let render_title_page_label_cell(label) = {
   text(weight: "semibold", fill: rgb("#555555"), label + ":")
 }
@@ -344,66 +413,30 @@
 }
 
 #let render_title_page_formal_statement(
+  isbn: none,
   degree: none,
   program: none,
   track: none,
   faculty: none,
   institution: none,
   defense_date: none,
+  statement: none,
 ) = {
-  let sentence = ""
-  let degree_text = no_break_string(degree)
-  let program_text = no_break_string(program)
-  let track_text = no_break_string(track)
-  let faculty_text = no_break_string(faculty)
-  let institution_text = no_break_string(institution)
-  let defense_date_text = no_break_string(defense_date)
-
-  if degree != none and str(degree) != "" {
-    sentence = "to obtain the degree of " + degree_text
+  let fields = title_page_formal_statement_fields(
+    isbn: isbn,
+    degree: degree,
+    program: program,
+    track: track,
+    faculty: faculty,
+    institution: institution,
+    defense_date: defense_date,
+  )
+  let sentence = if statement != none and str(statement) != "" {
+    title_page_replace_statement_placeholders(statement, fields)
+  } else {
+    ""
   }
-
-  if program != none and str(program) != "" {
-    if sentence == "" {
-      sentence = program_text
-    } else {
-      sentence += " in " + program_text
-    }
-  }
-
-  if track != none and str(track) != "" {
-    if program != none and str(program) != "" {
-      sentence += ", on the track " + track_text
-    } else if sentence == "" {
-      sentence = "on the track " + track_text
-    } else {
-      sentence += ", on the track " + track_text
-    }
-  }
-
-  if faculty != none and str(faculty) != "" {
-    if sentence == "" {
-      sentence = faculty_text
-    } else {
-      sentence += ", at the " + faculty_text
-    }
-  }
-
-  if institution != none and str(institution) != "" {
-    if sentence == "" {
-      sentence = institution_text
-    } else {
-      sentence += ", " + institution_text
-    }
-  }
-
-  if defense_date != none and str(defense_date) != "" {
-    if sentence == "" {
-      sentence = "to be defended on " + defense_date_text
-    } else {
-      sentence += ", to be defended on " + defense_date_text
-    }
-  }
+  sentence = title_page_normalize_statement_text(sentence)
 
   if sentence == "" {
     none
@@ -411,7 +444,7 @@
     align(center, block(width: 72%, [
       #set par(justify: false)
       #set text(hyphenate: false)
-      #text(size: 10.5pt, fill: rgb("#555555"), sentence)
+      #text(size: 10.5pt, fill: rgb("#555555"), render_title_page_multiline_text(sentence))
     ]))
   }
 }
@@ -599,6 +632,7 @@
   cover_description: none,
   show_confidentiality_statement: false,
   confidentiality_statement: none,
+  formal_statement: none,
 ) = {
   let author_line = render_comma_list(authors)
   let supervisor_cell = render_contributor_entries(
@@ -627,13 +661,15 @@
   } else {
     none
   }
-  let formal_statement = render_title_page_formal_statement(
+  let formal_statement_block = render_title_page_formal_statement(
+    isbn: isbn,
     degree: degree,
     program: program,
     track: track,
     faculty: faculty,
     institution: institution,
     defense_date: defense_date,
+    statement: formal_statement,
   )
 
   render_title_page_basic_heading_line(
@@ -659,9 +695,9 @@
     )
   }
 
-  if formal_statement != none {
+  if formal_statement_block != none {
     v(1.4em)
-    formal_statement
+    formal_statement_block
   }
 
   if people_rows != () {
@@ -710,6 +746,7 @@
   cover_description: none,
   show_confidentiality_statement: false,
   confidentiality_statement: none,
+  formal_statement: none,
 ) = {
   // Custom entry point: replace this with your own title-page implementation.
   title_page_formal_variant(
@@ -732,6 +769,7 @@
     cover_description: cover_description,
     show_confidentiality_statement: show_confidentiality_statement,
     confidentiality_statement: confidentiality_statement,
+    formal_statement: formal_statement,
   )
 }
 
@@ -758,6 +796,7 @@
   cover_description: none,
   show_confidentiality_statement: false,
   confidentiality_statement: "This thesis is confidential and cannot be made public.",
+  formal_statement: none,
   basic_title_alignment: "center",
   basic_table_alignment: "left",
   basic_bottom_block_alignment: "left",
@@ -824,6 +863,7 @@
       cover_description: cover_description,
       show_confidentiality_statement: show_confidentiality_statement,
       confidentiality_statement: confidentiality_statement,
+      formal_statement: formal_statement,
     )
   } else {
     title_page_custom(
@@ -846,6 +886,7 @@
       cover_description: cover_description,
       show_confidentiality_statement: show_confidentiality_statement,
       confidentiality_statement: confidentiality_statement,
+      formal_statement: formal_statement,
     )
   }
 

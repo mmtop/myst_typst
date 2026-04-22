@@ -113,8 +113,8 @@ project:
       cover_graphical_alignment: center
       
       # Graphical-cover contrast preset: white-on-dark | black-on-light
-      cover_graphical_appearance: black-on-light
-      # cover_title_box_opacity_pct: 55
+      cover_graphical_appearance: white-on-dark
+      # cover_title_box_opacity_pct: 60
       
       
       # Optional per-element overrides for the graphical cover:
@@ -123,7 +123,7 @@ project:
       # cover_title_weight: regular
       # cover_subtitle_weight: regular
       # cover_author_weight: regular
-      # cover_bottom_text_color: white
+      # cover_bottom_text_color: black
       # cover_title_box_color: black
       # cover_title_box_color: "#101820"
 
@@ -154,6 +154,25 @@ project:
 # Title page options:      
       # Title-page variant: basic | formal | custom
       title_page_variant: formal
+
+      # Formal title-page statement text. This behaves like the cover text
+      # fields, but placeholders can be replaced from mapped project.options values
+      # in options.yml:
+      # $thesis_degree, $thesis_program, $thesis_track, $thesis_faculty,
+      # $thesis_institution, $thesis_defense_date, and $isbn.
+      # Curly braces are also accepted, e.g. {thesis_degree}.
+      #
+      # title_page_formal_statement: |
+      #   to obtain the degree of $thesis_degree in $thesis_program
+      #   at the $thesis_faculty, $thesis_institution,
+      #   to be defended on $thesis_defense_date
+
+      # Alternative wording example:
+      title_page_formal_statement: |
+        submitted in partial fulfillment of the requirements for the degree of $thesis_degree
+        in $thesis_program
+        at $thesis_institution, 
+        to be defended on $thesis_defense_date.
 
       ## Basic/simple variant options (ignored by the centered formal variant):
       # Alignment of the basic/simple title and subtitle block: left | center

@@ -359,6 +359,9 @@
 [# if options.title_page_confidentiality_statement #]
   title_page_confidentiality_statement: "[-options.title_page_confidentiality_statement-]",
 [# endif #]
+[# if options.title_page_formal_statement is defined and options.title_page_formal_statement != none and options.title_page_formal_statement != "" #]
+  title_page_formal_statement: "[-options.title_page_formal_statement-]",
+[# endif #]
 )
 
 // MyST adds helper imports here.

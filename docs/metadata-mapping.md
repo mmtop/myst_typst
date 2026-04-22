@@ -73,3 +73,4 @@ Examples of PDF-only options:
 - `options.title_page_cover_description`
 - `options.show_title_page_confidentiality_statement`
 - `options.title_page_confidentiality_statement`
+- `options.title_page_formal_statement`

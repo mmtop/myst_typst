@@ -75,6 +75,7 @@ The `paper_size` setting is passed directly to Typst's page setup and applies to
 - `title_page_cover_description` (string): Text for the optional cover description on the title page. In the formal/custom path it is rendered in the same centered two-column grid as the publication date.
 - `show_title_page_confidentiality_statement` (boolean): Show the optional confidentiality statement on the title page. In both the basic/simple and formal/custom layouts it appears in the bottom block.
 - `title_page_confidentiality_statement` (string): Text for the optional confidentiality statement. Default is `This thesis is confidential and cannot be made public.`
+- `title_page_formal_statement` (string): Full statement text for the formal title page. Use placeholders such as `$thesis_degree` or `{thesis_degree}` to insert mapped metadata. If omitted, no formal statement is rendered.
 - `logo` (file): Shared logo path used on the title page and as a fallback for the graphical cover when no cover-specific logo file is available.
 - `isbn` (string, optional): Shared project option used as the canonical ISBN source for the graphical cover and the title-page bottom block.
 
@@ -95,6 +96,14 @@ These fields are semantic metadata and should stay in shared config:
 - `project.contributors` (supervisors/committee keyed by contributor `id` prefix, recommended: `supervisor-1`, `committee-1`, ...)
 
 At render time, MyST injects `project.options.*` into template `options.*`.
+The formal statement can use placeholders for the mapped values: `$thesis_degree`, `$thesis_program`, `$thesis_track`, `$thesis_faculty`, `$thesis_institution`, `$thesis_defense_date`, and `$isbn`. New arbitrary `options.yml` keys need to be registered in `template.yml` and mapped in `template.typ` before they can be used as placeholders.
+
+Example:
+```yaml
+title_page_formal_statement: |
+  submitted in partial fulfillment of the requirements for the degree of $thesis_degree
+  in $thesis_program at $thesis_institution
+```
 
 ## Bibliography placement
 The bibliography is currently rendered after the MyST content stream. In the current template structure, appendices are part of that same stream, so the bibliography appears after them.
