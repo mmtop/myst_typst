@@ -44,6 +44,12 @@
   isbn: "[-options.isbn-]",
 [# endif #]
 
+[# if project.doi #]
+  doi: "[-project.doi-]",
+[# elif doc.doi #]
+  doi: "[-doc.doi-]",
+[# endif #]
+
   // Keep contributor ids so the title page can group entries such as
   // supervisor-1 and committee-1.
 [# if project.contributors or doc.contributors #]

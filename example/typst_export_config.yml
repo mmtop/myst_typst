@@ -170,9 +170,9 @@ project:
 
       # Formal title-page statement text. This behaves like the cover text
       # fields, but placeholders can be replaced from mapped project.options values
-      # in options.yml:
+      # in options.yml and shared project metadata in myst.yml:
       # $thesis_degree, $thesis_program, $thesis_track, $thesis_faculty,
-      # $thesis_institution, $thesis_defense_date, and $isbn.
+      # $thesis_institution, $thesis_defense_date, $isbn, and $doi.
       # Curly braces are also accepted, e.g. {thesis_degree}.
       #
       # title_page_formal_statement: |

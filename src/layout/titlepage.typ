@@ -272,6 +272,7 @@
 
 #let title_page_formal_statement_fields(
   isbn: none,
+  doi: none,
   degree: none,
   program: none,
   track: none,
@@ -280,6 +281,7 @@
   defense_date: none,
 ) = {
   let isbn_text = title_page_statement_value(isbn)
+  let doi_text = title_page_statement_value(doi)
   let degree_text = title_page_statement_value(degree)
   let program_text = title_page_statement_value(program)
   let track_text = title_page_statement_value(track)
@@ -295,6 +297,7 @@
     (name: "thesis_track", value: track_text),
     (name: "thesis_degree", value: degree_text),
     (name: "isbn", value: isbn_text),
+    (name: "doi", value: doi_text),
   )
 }
 
@@ -392,6 +395,7 @@
   block_alignment: "left",
   confidentiality_statement: none,
   isbn: none,
+  doi: none,
 ) = {
   let block_items = ()
   if confidentiality_statement != none and str(confidentiality_statement) != "" {
@@ -399,6 +403,9 @@
   }
   if isbn != none and isbn != "" {
     block_items += ([#text(size: 10pt, [ISBN: #isbn])],)
+  }
+  if doi != none and doi != "" {
+    block_items += ([#text(size: 10pt, [DOI: #doi])],)
   }
 
   if block_items.len() > 0 {
@@ -414,6 +421,7 @@
 
 #let render_title_page_formal_statement(
   isbn: none,
+  doi: none,
   degree: none,
   program: none,
   track: none,
@@ -424,6 +432,7 @@
 ) = {
   let fields = title_page_formal_statement_fields(
     isbn: isbn,
+    doi: doi,
     degree: degree,
     program: program,
     track: track,
@@ -462,11 +471,13 @@
 #let render_title_page_formal_bottom_block(
   confidentiality_statement: none,
   isbn: none,
+  doi: none,
 ) = {
   render_title_page_basic_bottom_block(
     block_alignment: "center",
     confidentiality_statement: confidentiality_statement,
     isbn: isbn,
+    doi: doi,
   )
 }
 
@@ -476,6 +487,7 @@
   authors: (),
   affiliations: (),
   isbn: none,
+  doi: none,
   date: none,
   degree: none,
   program: none,
@@ -609,6 +621,7 @@
     block_alignment: bottom_block_alignment,
     confidentiality_statement: bottom_confidentiality,
     isbn: isbn,
+    doi: doi,
   )
 }
 
@@ -618,6 +631,7 @@
   authors: (),
   affiliations: (),
   isbn: none,
+  doi: none,
   date: none,
   degree: none,
   program: none,
@@ -663,6 +677,7 @@
   }
   let formal_statement_block = render_title_page_formal_statement(
     isbn: isbn,
+    doi: doi,
     degree: degree,
     program: program,
     track: track,
@@ -723,6 +738,7 @@
   render_title_page_formal_bottom_block(
     confidentiality_statement: formal_confidentiality_statement,
     isbn: isbn,
+    doi: doi,
   )
 }
 
@@ -732,6 +748,7 @@
   authors: (),
   affiliations: (),
   isbn: none,
+  doi: none,
   date: none,
   degree: none,
   program: none,
@@ -755,6 +772,7 @@
     authors: authors,
     affiliations: affiliations,
     isbn: isbn,
+    doi: doi,
     date: date,
     degree: degree,
     program: program,
@@ -779,6 +797,7 @@
   authors: (),
   affiliations: (),
   isbn: none,
+  doi: none,
   date: none,
   degree: none,
   program: none,
@@ -824,6 +843,7 @@
       authors: authors,
       affiliations: affiliations,
       isbn: isbn,
+      doi: doi,
       date: date,
       degree: degree,
       program: program,
@@ -849,6 +869,7 @@
       authors: authors,
       affiliations: affiliations,
       isbn: isbn,
+      doi: doi,
       date: date,
       degree: degree,
       program: program,
@@ -872,6 +893,7 @@
       authors: authors,
       affiliations: affiliations,
       isbn: isbn,
+      doi: doi,
       date: date,
       degree: degree,
       program: program,

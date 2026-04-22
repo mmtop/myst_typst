@@ -95,11 +95,12 @@ These fields are semantic metadata and should stay in shared config:
 - `project.options.thesis_faculty`
 - `project.options.thesis_institution`
 - `project.options.thesis_defense_date`
+- `project.doi`
 - `project.authors` (students only)
 - `project.contributors` (supervisors/committee keyed by contributor `id` prefix, recommended: `supervisor-1`, `committee-1`, ...)
 
 At render time, MyST injects `project.options.*` into template `options.*`.
-The formal statement can use placeholders for the mapped values: `$thesis_degree`, `$thesis_program`, `$thesis_track`, `$thesis_faculty`, `$thesis_institution`, `$thesis_defense_date`, and `$isbn`. New arbitrary `options.yml` keys need to be registered in `template.yml` and mapped in `template.typ` before they can be used as placeholders.
+The formal statement can use placeholders for the mapped values: `$thesis_degree`, `$thesis_program`, `$thesis_track`, `$thesis_faculty`, `$thesis_institution`, `$thesis_defense_date`, `$isbn`, and `$doi`. New arbitrary `options.yml` keys need to be registered in `template.yml` and mapped in `template.typ` before they can be used as placeholders.
 
 Front-matter part order is controlled by the PDF export option rather than by the order of keys in `project.parts`:
 ```yaml

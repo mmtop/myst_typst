@@ -10,6 +10,7 @@ This template keeps semantic metadata in shared MyST config files and maps those
 - `project.affiliations` (fallback `doc.affiliations`) -> `affiliation_catalog` (for contributor affiliation resolution)
 - `project.affiliations` (fallback `doc.affiliations`) -> `affiliations`
 - `project.date` (fallback `doc.date`) -> `date`
+- `project.doi` (fallback `doc.doi`) -> `doi` (shown in the title-page bottom block)
 - `project.keywords` (fallback `doc.keywords`) -> `keywords`
 - `project.options.isbn` -> `options.isbn` -> `isbn`
 - `project.options.thesis_degree` -> `options.thesis_degree` -> `thesis_degree`

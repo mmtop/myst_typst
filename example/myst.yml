@@ -18,7 +18,7 @@ project:
   #   - typst
   #   - thesis
   license: CC-BY-4.0
-  doi: null
+  doi: doi:10.5281/zenodo.12345678
   bibliography:
     - reference.bib
 

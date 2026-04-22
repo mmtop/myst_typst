@@ -65,6 +65,8 @@ doc:
     description: "Optional affiliation list. Also used to resolve affiliation names for contributors on the title page."
   - id: date
     description: "Optional document date shown on the title page when provided."
+  - id: doi
+    description: "Optional document DOI shown in the title-page bottom block when provided."
   - id: keywords
     description: "Optional keyword list shown below the abstract."
 

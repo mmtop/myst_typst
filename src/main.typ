@@ -23,6 +23,7 @@
   affiliation_catalog: (),
   affiliations: (),
   date: none,
+  doi: none,
   keywords: (),
 
   thesis_degree: none,
@@ -361,6 +362,7 @@
       subtitle: subtitle,
       authors: authors,
       isbn: isbn,
+      doi: doi,
       affiliations: affiliations,
       date: date,
       degree: thesis_degree,
