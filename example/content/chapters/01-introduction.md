@@ -16,6 +16,19 @@ With huge caption?
 
 Just to test toc depth.
 
+### another subsection
+
+To test numbered and unsorted list
+
+1. First item sorted
+2. Second item sorted
+3. Third item sorted
+
+
+- first item unsorted
+- second item unsorted
+- third item unsorted
+  
 ## Research Problem
 The main research problem addressed in this thesis is [insert research problem]. This problem is significant because [insert reasons for significance]. Addressing this problem will contribute to a better understanding of [insert related field or topic].
 
