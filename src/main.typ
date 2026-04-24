@@ -405,9 +405,11 @@
     leading: line_spacing_em,
     spacing: 0.7em,
     justify: true,
-    first-line-indent: 1.2em,
+    first-line-indent: 1em,
   )
 
+  set list(indent: 2em, body-indent: 0em, spacing: 0.45em)
+  set enum(indent: 2em, body-indent: 0em, spacing: 0.45em)
 
   // Shared component styling.
   show math.equation: set text(font: font_math)
