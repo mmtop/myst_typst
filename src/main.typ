@@ -8,59 +8,6 @@
 // applies the global page and text styling, and then assembles the cover page,
 // title page, front matter, main content, and bibliography.
 
-#let setup-numbering(body) = {
-  set heading(numbering: (..args) => {
-    let nums = args.pos()
-    let level = nums.len()
-    if level == 1 {
-      [#numbering("1.", ..nums)]
-    } else {
-      [#numbering("1.1.1", ..nums)]
-    }
-  })
-
-  // Reset counters at each new chapter. (I am not sure about that one!)
-  show heading.where(level: 1): it => {
-    counter(figure).update(0)
-    counter(figure.where(kind: table)).update(0)
-    counter(math.equation).update(0)
-    it
-  }
-
-  // Equation and figure numbering use the current chapter as a prefix. (I might want to add an option for tables too)
-  set math.equation(numbering: (..args) => {
-    let chapter = counter(heading).display((..nums) => nums.pos().at(0))
-    [(#chapter.#numbering("1)", ..args.pos())]
-  })
-
-  set figure(numbering: (..args) => {
-    let chapter = counter(heading).display((..nums) => nums.pos().at(0))
-    [#chapter.#numbering("1", ..args.pos())]
-  })
-
-  body
-}
-
-// Helper function for headings style
-#let configure_headings(body) = {
-  show heading: set text(fill: rgb("#0F172A"), weight: "semibold")
-  show heading.where(level: 1): set block(above: 1.5em, below: 0.8em)
-  show heading.where(level: 2): set block(above: 1.1em, below: 0.6em)
-  body
-}
-
-// Helper function for figure styling
-#let configure_figures(body) = {
-  show figure.caption: it => {
-    set text(size: 9pt)
-    set align(left)
-    set par(justify: true)
-    it
-  }
-
-  body
-}
-
 ////////////////////////////////////////////////////////////////////////
 // This is the main template function that assembles the whole document.
 ////////////////////////////////////////////////////////////////////////
@@ -117,7 +64,7 @@
   font_mono: "DejaVu Sans Mono",
   font_math: "New Computer Modern Math",
   font_size_pt: 11pt,
-  line_spacing_em: 0.6em,
+  line_spacing_em: 0.7em,
 
 
   // This is an example how a shared assets (branding) can be defined in the main template and then used in multiple layout files, including the cover page and the title page.
@@ -403,19 +350,81 @@
 
   set par(
     leading: line_spacing_em,
-    spacing: 0.7em,
+    spacing: 1.3*line_spacing_em,
     justify: true,
     first-line-indent: 1em,
   )
 
-  set list(indent: 2em, body-indent: 0em, spacing: 0.45em)
-  set enum(indent: 2em, body-indent: 0em, spacing: 0.45em)
+  set list(
+    indent: 1em,
+    body-indent: 0.5em,
+    spacing: line_spacing_em,
+  )
+
+  set enum(
+    indent: 1em,
+    body-indent: 0.5em,
+    spacing: line_spacing_em,
+  )
 
   // Shared component styling.
   show math.equation: set text(font: font_math)
   show math.equation: set block(spacing: 1em)
   show raw: set text(font: font_mono, size: font_size_pt - 1pt)
   show link: set text(fill: blue.darken(30%))
+
+  let setup-numbering(body) = {
+    set heading(numbering: (..args) => {
+      let nums = args.pos()
+      let level = nums.len()
+      if level == 1 {
+        [#numbering("1.", ..nums)]
+      } else {
+        [#numbering("1.1.1", ..nums)]
+      }
+    })
+
+    // Reset counters at each new chapter. (I am not sure about that one!)
+    show heading.where(level: 1): it => {
+      counter(figure).update(0)
+      counter(figure.where(kind: table)).update(0)
+      counter(math.equation).update(0)
+      it
+    }
+
+    // Equation and figure numbering use the current chapter as a prefix. (I might want to add an option for tables too)
+    set math.equation(numbering: (..args) => {
+      let chapter = counter(heading).display((..nums) => nums.pos().at(0))
+      [(#chapter.#numbering("1)", ..args.pos())]
+    })
+
+    set figure(numbering: (..args) => {
+      let chapter = counter(heading).display((..nums) => nums.pos().at(0))
+      [#chapter.#numbering("1", ..args.pos())]
+    })
+
+    body
+  }
+
+  // Helper function for headings style.
+  let configure_headings(body) = {
+    show heading: set text(fill: rgb("#0F172A"), weight: "semibold")
+    show heading.where(level: 1): set block(above: 1.5em, below: 0.8em)
+    show heading.where(level: 2): set block(above: 1.1em, below: 0.6em)
+    body
+  }
+
+  // Helper function for figure styling.
+  let configure_figures(body) = {
+    show figure.caption: it => {
+      set text(size: 9pt)
+      set align(left)
+      set par(justify: true)
+      it
+    }
+
+    body
+  }
 
   // Global numbering and component rules.
   show: body => setup-numbering(body)
