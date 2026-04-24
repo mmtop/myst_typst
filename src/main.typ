@@ -409,8 +409,37 @@
   // Helper function for headings style.
   let configure_headings(body) = {
     show heading: set text(fill: rgb("#0F172A"), weight: "semibold")
-    show heading.where(level: 1): set block(above: 1.5em, below: 0.8em)
-    show heading.where(level: 2): set block(above: 1.1em, below: 0.6em)
+
+    show heading.where(level: 1): set block(
+      above: 4.2 * line_spacing_em,
+      below: 2.1 * line_spacing_em,
+    )
+    // show heading.where(level: 1): set text(size: font_size_pt * 1.8)
+
+    show heading.where(level: 2): set block(
+      above: 3.3 * line_spacing_em,
+      below: 1.6 * line_spacing_em,
+    )
+    // show heading.where(level: 2): set text(size: font_size_pt * 1.45)
+
+    show heading.where(level: 3): set block(
+      above: 2.6 * line_spacing_em,
+      below: 1.25 * line_spacing_em,
+    )
+    // show heading.where(level: 3): set text(size: font_size_pt * 1.2)
+
+    show heading.where(level: 4): set block(
+      above: 2.0 * line_spacing_em,
+      below: 0.95 * line_spacing_em,
+    )
+    // show heading.where(level: 4): set text(size: font_size_pt * 1.05)
+
+    show heading.where(level: 5): set block(
+      above: 1.6 * line_spacing_em,
+      below: 0.8 * line_spacing_em,
+    )
+    // show heading.where(level: 5): set text(size: font_size_pt)
+
     body
   }
 
