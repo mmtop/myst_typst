@@ -345,7 +345,7 @@
   set text(
     font: font_body,
     size: font_size_pt,
-    fill: rgb("#1E293B"),
+    fill: black,
   )
 
   set par(
@@ -408,7 +408,7 @@
 
   // Helper function for headings style.
   let configure_headings(body) = {
-    show heading: set text(fill: rgb("#0F172A"), weight: "semibold")
+    show heading: set text(fill: black, weight: "semibold")
 
     show heading.where(level: 1): set block(
       above: 4.2 * line_spacing_em,
