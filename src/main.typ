@@ -3,18 +3,70 @@
 #import "layout/frontmatter.typ": render_frontmatter
 #import "layout/bibliography.typ": render_bibliography
 
-#import "components/headings.typ": configure_headings
-#import "components/figures.typ": configure_figures
-
-#import "theme/colors.typ": default_text_color, default_heading_color
-#import "theme/numbering.typ": setup-numbering
-
 // Use this file as the main Typst layout entry point for the template.
 // It receives normalized metadata, part files, and export options from template.typ,
 // applies the global page and text styling, and then assembles the cover page,
 // title page, front matter, main content, and bibliography.
 
+#let setup-numbering(body) = {
+  set heading(numbering: (..args) => {
+    let nums = args.pos()
+    let level = nums.len()
+    if level == 1 {
+      [#numbering("1.", ..nums)]
+    } else {
+      [#numbering("1.1.1", ..nums)]
+    }
+  })
+
+  // Reset counters at each new chapter. (I am not sure about that one!)
+  show heading.where(level: 1): it => {
+    counter(figure).update(0)
+    counter(figure.where(kind: table)).update(0)
+    counter(math.equation).update(0)
+    it
+  }
+
+  // Equation and figure numbering use the current chapter as a prefix. (I might want to add an option for tables too)
+  set math.equation(numbering: (..args) => {
+    let chapter = counter(heading).display((..nums) => nums.pos().at(0))
+    [(#chapter.#numbering("1)", ..args.pos())]
+  })
+
+  set figure(numbering: (..args) => {
+    let chapter = counter(heading).display((..nums) => nums.pos().at(0))
+    [#chapter.#numbering("1", ..args.pos())]
+  })
+
+  body
+}
+
+// Helper function for headings style
+#let configure_headings(body) = {
+  show heading: set text(fill: rgb("#0F172A"), weight: "semibold")
+  show heading.where(level: 1): set block(above: 1.5em, below: 0.8em)
+  show heading.where(level: 2): set block(above: 1.1em, below: 0.6em)
+  body
+}
+
+// Helper function for figure styling
+#let configure_figures(body) = {
+  show figure.caption: it => {
+    set text(size: 9pt)
+    set align(left)
+    set par(justify: true)
+    it
+  }
+
+  body
+}
+
+////////////////////////////////////////////////////////////////////////
+// This is the main template function that assembles the whole document.
+////////////////////////////////////////////////////////////////////////
+
 #let thesis_template(
+  // Shared document metadata.
   title: "Untitled Report",
   subtitle: none,
   authors: (),
@@ -26,6 +78,8 @@
   doi: none,
   keywords: (),
 
+  // Template options for layout and content control. 
+  // These are all optional and they are specified in the options.yml file, and they have to be routed via other template files to get here - they are all documented in the template.yml file where they are defined as part of the template configuration.
   thesis_degree: none,
   thesis_program: none,
   thesis_track: none,
@@ -33,12 +87,43 @@
   thesis_institution: none,
   thesis_defense_date: none,
 
+  // Optional front-matter part files.
   abstract: none,
   preface: none,
   acknowledgements: none,
   dedication: none,
   colophon: none,
 
+ 
+  /////////////////////////////////////////////////////////
+  // This section defines global defaults for the document.
+  /////////////////////////////////////////////////////////
+
+  // Page layout.
+  paper_size: "a4",
+  margin_top_cm: 2.5cm,
+  margin_bottom_cm: 2.5cm,
+  margin_left_cm: 2.5cm,
+  margin_right_cm: 2.5cm,
+
+  // Typography.
+  // The template default to Typst's built-in font stack deliberately as a typographic choice.
+  // Also, it ensures that fresh installs work without extra setup. 
+  // Bundled recommendations live in src/assets/fonts:
+  // STIX Two Text + STIX Two Math for legacy serif and math, known from TeX documents,
+  // Atkinson Hyperlegible Next and Atkinson Hyperlegible Mono for accessible sans serif body and code fonts - recommended for documents that may be read by people with dyslexia and visual impairments.
+  // JetBrains Mono is the recommended code font in all cases for its readability and aesthetics, and it is used as the default monospace font for all documents.
+  font_body: "Libertinus Serif",
+  font_mono: "DejaVu Sans Mono",
+  font_math: "New Computer Modern Math",
+  font_size_pt: 11pt,
+  line_spacing_em: 0.6em,
+
+
+  // This is an example how a shared assets (branding) can be defined in the main template and then used in multiple layout files, including the cover page and the title page.
+  logo: "src/assets/brand_assets/logo.svg",
+
+ // This section defines defaults decisions for some export toggles for the front matter design.
   show_cover_full: true,
   show_title_page: true,
   show_contributor_affiliations: true,
@@ -50,29 +135,7 @@
   show_verso_blank_page_statement: false,
   verso_blank_page_statement: "This page is intentionally left blank.",
 
-  paper_size: "a4",
-  margin_top_cm: 2.5cm,
-  margin_bottom_cm: 2.5cm,
-  margin_left_cm: 2.5cm,
-  margin_right_cm: 2.5cm,
-
-  // Keep the template default on Typst's built-in font stack so fresh installs
-  // work without extra setup. Bundled alternatives live in src/assets/fonts:
-  // STIX Two Text + STIX Two Math, JetBrains Mono, Atkinson Hyperlegible Next,
-  // and Atkinson Hyperlegible Mono. JetBrains Mono is the recommended code font.
-  font_body: "Libertinus Serif",
-  font_mono: "DejaVu Sans Mono",
-  font_math: "New Computer Modern Math",
-  font_size_pt: 11pt,
-  line_spacing_em: 0.6em,
-
-  bibliography_file: none,
-  show_bibliography: true,
-  bibliography_title: "Bibliography",
-  bibliography_style: "ieee",
-  bibliography_numbered_heading: false,
-
-  logo: "src/assets/brand_assets/logo.svg",
+  // Cover page options.
   cover_page_variant: "simple",
   show_cover_subtitle: true,
   cover_background_image: "src/assets/template_figures/defaultcover.jpg",
@@ -96,6 +159,7 @@
   cover_bottom_text_dx_cm: 0cm,
   cover_bottom_text_dy_cm: 0cm,
 
+  // Title page.
   title_page_variant: "basic",
   title_page_basic_title_alignment: "center",
   title_page_basic_table_alignment: "left",
@@ -107,10 +171,23 @@
   title_page_confidentiality_statement: "This thesis is confidential and cannot be made public.",
   title_page_formal_statement: none,
   body,
+
+  // Default bibliography options.
+  bibliography_file: none,
+  show_bibliography: true,
+  bibliography_title: "Bibliography",
+  bibliography_style: "chicago-author-date",
+  bibliography_numbered_heading: false,
+
 ) = {
+
+
+  // The resolve_* helpers interpret user deciscions(toggles, options and imports) and turn them into values that can be used in the layout blocks.
+  
+  // This resolve_asset_path helper normalizes Windows separators 
+  // and relative paths so the same config values keep working locally 
+  // and in GitHub template bundles. 
   // Asset paths may be used from this file or from nested layout files.
-  // This helper normalizes Windows separators and rebases bare relative paths
-  // so the same config values keep working locally and in exported template bundles.
   let resolve_asset_path = (path, levels_up: 1) => {
     if path == none {
       none
@@ -130,6 +207,8 @@
     }
   }
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // The following group of helpers resolves cover page, title page and front matter design options.
   let resolve_cover_appearance = appearance => {
     let normalized = str(appearance)
     if normalized == "white-on-dark" or normalized == "black-on-light" {
@@ -180,24 +259,6 @@
     }
   }
 
-  let start_mainmatter_on_recto = (
-    show_blank_statement: false,
-    blank_statement: "This page is intentionally left blank.",
-  ) => {
-    if show_blank_statement {
-      context {
-        if calc.rem(here().page(), 2) == 0 {
-          align(center + horizon)[
-            #text(size: 9pt, fill: gray)[#blank_statement]
-          ]
-          pagebreak()
-        }
-      }
-    } else {
-      pagebreak(to: "odd", weak: true)
-    }
-  }
-
   let resolve_left_center_choice = (value, option_name) => {
     let normalized = str(value)
     if normalized == "left" or normalized == "center" {
@@ -216,8 +277,8 @@
     }
   }
 
+  ////////////////////////////////////////////////////////////////////////////////////
   // Some values are reused in multiple layout blocks, so they are resolved once here.
-  // Bundled fallback assets also live here so template.typ can stay a thin mapping layer.
   let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
   let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
   let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
@@ -227,6 +288,9 @@
   let resolved_cover_logo_black = resolve_asset_path(cover_logo_black, levels_up: 2)
   let resolved_cover_appearance = resolve_cover_appearance(cover_graphical_appearance)
   let resolved_cover_alignment = resolve_left_center_choice(cover_graphical_alignment, "cover_graphical_alignment")
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  // This group of helpers resolves the logic around the color scheme of the cover page variants.
   let resolved_cover_box_opacity_pct = if cover_title_box_opacity_pct < 0 {
     0
   } else if cover_title_box_opacity_pct > 100 {
@@ -234,6 +298,7 @@
   } else {
     cover_title_box_opacity_pct
   }
+
   let resolved_cover_title_text_color_value = if cover_title_text_color != none and cover_title_text_color != "" {
     resolve_cover_color_choice(cover_title_text_color, "cover_title_text_color")
   } else if resolved_cover_appearance == "black-on-light" {
@@ -241,6 +306,7 @@
   } else {
     "white"
   }
+
   let resolved_cover_title_box_color_value = if cover_title_box_color != none and cover_title_box_color != "" {
     resolve_cover_color_choice(cover_title_box_color, "cover_title_box_color")
   } else if resolved_cover_appearance == "black-on-light" {
@@ -248,6 +314,7 @@
   } else {
     "black"
   }
+
   let resolved_cover_logo_tone = if cover_logo_variant != none and cover_logo_variant != "" {
     resolve_black_white_choice(cover_logo_variant, "cover_logo_variant")
   } else if resolved_cover_appearance == "black-on-light" {
@@ -255,28 +322,69 @@
   } else {
     "white"
   }
+
   let resolved_cover_title_text_fill = resolve_cover_color_fill(resolved_cover_title_text_color_value, "cover_title_text_color")
+  
   let resolved_cover_bottom_text_color_value = if cover_bottom_text_color != none and cover_bottom_text_color != "" {
     resolve_cover_color_choice(cover_bottom_text_color, "cover_bottom_text_color")
   } else {
     resolved_cover_title_text_color_value
   }
+
   let resolved_cover_bottom_text_fill = resolve_cover_color_fill(resolved_cover_bottom_text_color_value, "cover_bottom_text_color")
+
   let resolved_cover_title_box_fill = resolve_cover_color_fill(resolved_cover_title_box_color_value, "cover_title_box_color").transparentize((100 - resolved_cover_box_opacity_pct) * 1%)
+
   let resolved_cover_logo_for_layout = if resolved_cover_logo_tone == "black" {
     if resolved_cover_logo_black != none { resolved_cover_logo_black } else { resolved_logo_for_layout }
   } else {
     if resolved_cover_logo_white != none { resolved_cover_logo_white } else { resolved_logo_for_layout }
   }
+
   let resolved_cover_isbn_position = resolve_cover_isbn_position(cover_isbn_position)
   let resolved_title_page_basic_title_alignment = resolve_left_center_choice(title_page_basic_title_alignment, "title_page_basic_title_alignment")
   let resolved_title_page_basic_table_alignment = resolve_left_center_choice(title_page_basic_table_alignment, "title_page_basic_table_alignment")
   let resolved_title_page_basic_bottom_block_alignment = resolve_left_center_choice(title_page_basic_bottom_block_alignment, "title_page_basic_bottom_block_alignment")
   let resolved_title_page_logo_alignment = resolve_left_center_choice(title_page_logo_alignment, "title_page_logo_alignment")
 
-  // Global page setup for the front matter.
-  // Change the numbering here if you want a different front-matter page style.
-  set page(
+
+  /////////////////////////////////////////////////////////////////////////////////
+  // This helper ensures that the main matter "always" starts on a right-hand page. 
+  // If the option to show a blank page statement is enabled, 
+  // it adds a usual "intentinally blank" statement on the verso page 
+  // instead of leaving it completely blank.
+  let start_mainmatter_on_recto = (
+    show_blank_statement: false,
+    blank_statement: "This page is intentionally left blank.",
+  ) => {
+    if show_blank_statement {
+      context {
+        if calc.rem(here().page(), 2) == 0 {
+          align(center + horizon)[
+            #text(
+              size: 9pt,
+              fill: gray,
+            )[#blank_statement]
+          ]
+          pagebreak()
+        }
+      }
+    } else {
+      pagebreak(to: "odd", weak: true)
+    }
+  }   
+
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  // Global page setup.
+  // Keep in mind that some of these settings are overridden later for the main matter, 
+  // but it is easier to set them here as a default for the whole document 
+  // and then change them back for the main matter.
+
+
+   // For example, the page numbering starts as roman for the front matter and then it is switched to arabic when the main matter starts.
+   set page(
     paper: paper_size,
     margin: (
       top: margin_top_cm,
@@ -287,11 +395,10 @@
     numbering: "i",
   )
 
-  // Global text defaults for the document body.
   set text(
     font: font_body,
     size: font_size_pt,
-    fill: default_text_color,
+    fill: rgb("#1E293B"),
   )
 
   set par(
@@ -301,6 +408,7 @@
     first-line-indent: 1.2em,
   )
 
+
   // Shared component styling.
   show math.equation: set text(font: font_math)
   show math.equation: set block(spacing: 1em)
@@ -309,10 +417,17 @@
 
   // Global numbering and component rules.
   show: body => setup-numbering(body)
-  show: body => configure_headings(default_heading_color, body)
+  show: body => configure_headings(body)
   show: body => configure_figures(body)
 
-  // Optional cover page.
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+  // Document assembly and rendering starts here.
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+
+  // Cover page assembly.
   if show_cover_full {
     cover_page(
       resolved_title,
@@ -355,7 +470,7 @@
     )
   }
 
-  // Optional title page.
+  // Title page assembly.
   if show_title_page {
     title_page(
       resolved_title,
@@ -389,7 +504,7 @@
     )
   }
 
-  // Front matter between the title page and the main chapters.
+  // Front matter between the title page and the main chapters assembly.
   render_frontmatter(
     abstract: abstract,
     keywords: keywords,
@@ -404,13 +519,15 @@
     toc_depth: toc_depth,
   )
 
-  // Ensures the main matter starts on an odd page, which is standard for printed books.
+  // Ensures the main matter starts on an odd page.
   start_mainmatter_on_recto(
     show_blank_statement: show_verso_blank_page_statement,
     blank_statement: verso_blank_page_statement,
   )
 
-  // Main matter uses arabic page numbers.
+  ///////////////////////////////////////////////////////////////////////////////////
+  // Main matter uses arabic page numbers, 
+  // so the page numbering is reset here with the new format.
   set page(
     paper: paper_size,
     margin: (
@@ -421,14 +538,16 @@
     ),
     numbering: "1",
   )
-
   // Restart page numbering when the main matter begins.
   counter(page).update(1)
 
+  ///////////////////////////////////////////////////////////
   // MyST adds the ordered chapter and appendix content here.
+  // Currently, appendices are considered a part of the main matter and they follow the same layout rules, but I want to add an option later to customize them separately.
+
   [#body]
 
-  // Optional bibliography after the document content.
+  // (Optional) bibliography assembly after the document content.
   render_bibliography(
     bibliography_file: bibliography_file,
     show_bibliography: show_bibliography,
