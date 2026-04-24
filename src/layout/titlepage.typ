@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// This file defines the title page design with two variants: simple and formal.
+// It is intentionally isolated from the main.typ file to keep the complexity of the title page
+// separate from the main layout logic.
+//
+// The `title_page` function is the main entry point that is called from the main layout file.
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Utility function to render a list of items as a comma-separated string.
 #let render_comma_list(items) = {
   if items == none {
     ""
@@ -16,6 +25,12 @@
     output
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// The following group of functions are used to process the contributors 
+// and affiliations for display on the title page.
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // Checks whether a contributor belongs to the supervisor or committee group.
 #let contributor_group_matches(contributor_id, group) = {
@@ -94,6 +109,7 @@
   }
 }
 
+// Normalizes a string or list of strings into one newline-separated text block.
 #let render_lines(items, fallback: none) = {
   if items == none {
     if fallback == none { "" } else { str(fallback) }
@@ -113,6 +129,7 @@
   }
 }
 
+// Counts how many logical items a value contains for singular/plural labels.
 #let count_items(items) = {
   if items == none {
     0
@@ -123,6 +140,7 @@
   }
 }
 
+// Checks whether a value is non-empty enough to be rendered on the title page.
 #let has_renderable_content(value) = {
   if value == none {
     false
@@ -137,6 +155,7 @@
   }
 }
 
+// Formats contributor entries into stacked name rows, optionally with affiliations below each name.
 #let render_contributor_entries(entries, show_affiliations: true) = {
   if entries == none {
     none
@@ -184,6 +203,10 @@
   }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function resolves the title page variant.
 #let resolve_title_page_variant(variant) = {
   // Supported variants: "1"/"basic"/"simple", "2"/"formal", and "3"/"custom".
   let normalized = str(variant)
@@ -198,6 +221,8 @@
   }
 }
 
+// Formats a raw date string into the title page's written month-day-year style.
+// Remark: It is hard-coded to English month names for now.
 #let format_title_page_date(value) = {
   if value == none or str(value) == "" {
     none
@@ -254,6 +279,7 @@
   }
 }
 
+// Normalizes a string for the formal statement at the bottom of the title page, replacing newlines and trimming whitespace.
 #let no_break_string(value) = {
   if value == none {
     ""
@@ -262,6 +288,7 @@
   }
 }
 
+// This function absorbs the optional statement for the title pagefrom the export config.
 #let title_page_statement_value(value) = {
   if value == none or str(value) == "" {
     ""
@@ -270,6 +297,26 @@
   }
 }
 
+// This is a small utility function to automated positioning of the logo on the title page based on how many lines the bottom block will take, which depends on whether the optional confidentiality statement, ISBN, and DOI are used.
+#let title_page_bottom_block_line_count(
+  confidentiality_statement: none,
+  isbn: none,
+  doi: none,
+) = {
+  let count = 0
+  if confidentiality_statement != none and str(confidentiality_statement) != "" {
+    count += 1
+  }
+  if isbn != none and str(isbn) != "" {
+    count += 1
+  }
+  if doi != none and str(doi) != "" {
+    count += 1
+  }
+  count
+}
+
+// This function prepares the fields that can be used in the title page.
 #let title_page_formal_statement_fields(
   isbn: none,
   doi: none,
@@ -301,6 +348,7 @@
   )
 }
 
+// This function replaces placeholders in the formal statement with the actual field values, allowing for dynamic content in the statement based on the export config.
 #let title_page_replace_statement_placeholders(template, fields) = {
   let output = str(template)
   for field in fields {
@@ -310,6 +358,7 @@
   }
   output
 }
+
 
 #let title_page_normalize_statement_text(value) = {
   let output = str(value).replace("\r\n", "\n").replace("\r", "\n").trim()
@@ -321,6 +370,7 @@
   }
   output
 }
+
 
 #let render_title_page_multiline_text(value) = {
   let lines = str(value).split("\n")
@@ -481,6 +531,8 @@
   )
 }
 
+
+// 
 #let title_page_basic_variant(
   title,
   subtitle: none,
@@ -822,6 +874,16 @@
   logo_alignment: "center",
 ) = {
   let mode = resolve_title_page_variant(variant)
+  let bottom_block_line_count = title_page_bottom_block_line_count(
+    confidentiality_statement: if show_confidentiality_statement {
+      confidentiality_statement
+    } else {
+      none
+    },
+    isbn: isbn,
+    doi: doi,
+  )
+  let logo_bottom_offset = 0.5cm + bottom_block_line_count * 0.3cm
 
   if start_on_new_page {
     pagebreak()
@@ -833,7 +895,7 @@
     } else {
       bottom + center
     }
-    place(logo_anchor, dy: -0.9cm, image(logo, width: 1.9cm))
+    place(logo_anchor, dy: -logo_bottom_offset, image(logo, width: 1.9cm))
   }
 
   if mode == "basic" {

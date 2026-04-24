@@ -74,6 +74,11 @@
   }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// The following functions control the order and rendering of the optional front-matter sections.
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+// The default order of the front-matter sections. You can change this by passing a different order to the `frontmatter_order` in the export config.
 #let default_frontmatter_order = (
   "abstract",
   "preface",
@@ -94,10 +99,8 @@
 
 #let normalize_frontmatter_part_id(value) = {
   let item = str(value).trim()
-  if item == "abstract" or item == "preface" or item == "dedication" or item == "colophon" {
+  if item == "abstract" or item == "preface" or item == "acknowledgements" or item == "dedication" or item == "colophon" {
     item
-  } else if item == "acknowledgements" or item == "acknowledgments" {
-    "acknowledgements"
   } else {
     panic("Invalid frontmatter_order item '" + item + "'. Use abstract, preface, acknowledgements, dedication, or colophon.")
   }
@@ -128,6 +131,10 @@
 
   items
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// The main function that renders the front-matter sections in the specified order.
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 #let render_frontmatter_part(
   part_id,
@@ -208,10 +215,13 @@
     )
   }
   
+  ////////////////////////////////////////////////////////////////
   // Example for a truly custom section you may want to add later:
   // render_optional_frontmatter_page("Abbreviations", abbreviations)
   // To make that work, you would also need to add `abbreviations` as a new part
   // in template.yml, pass it through template.typ and main.typ, and then call it here.
+  /////////////////////////////////////////////////////////////////////////////////////
+
 
   // Navigation pages for the document.
   if show_toc { render_table_of_contents(depth: toc_depth) }

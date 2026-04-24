@@ -1,3 +1,14 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// This file defines the cover page design with multiple variants 
+// (simple, graphical, and a placeholder for a custom design).
+// It is intentionally isolated from the main.typ file to keep the complexity of the cover page
+// separate from the main layout logic.
+//
+// The `cover_page` function is the main entry point that is called from the main layout file.
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Utility function to render a list of items as a comma-separated string.
 #let render_comma_list(items) = {
   if items == none {
     ""
@@ -17,6 +28,7 @@
   }
 }
 
+// Resolves the cover page variant from a user-friendly string or number to a normalized string used internally.
 #let resolve_cover_page_variant(variant) = {
   let normalized = str(variant)
   if normalized == "1" or normalized == "simple" {
@@ -30,6 +42,7 @@
   }
 }
 
+// Utility function to render multiline text on the cover page, splitting by newline characters.
 #let render_multiline_cover_text(value) = {
   if value == none or value == "" {
     []
@@ -46,6 +59,7 @@
   }
 }
 
+// This function defines the simple cover page variant, which consists of a title, optional subtitle, and authors on a plain background.
 #let cover_page_simple(title, subtitle: none, authors: (), show_subtitle: true) = {
   set page(numbering: none)
   set par(first-line-indent: 0pt, justify: false)
@@ -66,6 +80,13 @@
   ])
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// This function defines the graphical cover page variant,
+// which allows for a background image and more advanced styling options.
+//
+// Some helper functions are defined in the main.typ
+////////////////////////////////////////////////////////////////////////////////////////////////
 #let cover_page_graphical(
   title,
   subtitle: none,
@@ -184,6 +205,10 @@
   }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function blob is a placeholder for a fully custom cover page implementation. You can replace the contents of this function with your own code to create a completely custom cover page layout that doesn't fit the simple or graphical variants.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #let cover_page_custom(
   title,
   subtitle: none,
@@ -213,6 +238,11 @@
   cover_page_simple(title, subtitle: subtitle, authors: authors, show_subtitle: show_subtitle)
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// This is the main cover_page function that is called from the main layout file. 
+// It resolves the variant and dispatches to the appropriate cover page implementation function. 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #let cover_page(
   title,
   subtitle: none,
