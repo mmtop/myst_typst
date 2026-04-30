@@ -16,6 +16,7 @@ files:
   - src/main.typ
 
   # Default bundled assets
+  - src/assets/assets.typ
   - src/assets/brand_assets/logo.svg
   - src/assets/brand_assets/international-logo_black_rgb.svg
   - src/assets/brand_assets/international-logo_white_rgb.svg
@@ -38,6 +39,7 @@ files:
   - src/layout/cover.typ
   - src/layout/titlepage.typ
   - src/layout/frontmatter.typ
+  - src/layout/colophon.typ
   - src/layout/bibliography.typ
 
   # Template license file
@@ -58,9 +60,11 @@ doc:
   - id: affiliations
     description: "Optional affiliation list. Also used to resolve affiliation names for contributors on the title page."
   - id: date
-    description: "Optional document date shown on the title page when provided."
+    description: "Optional document/publication date shown in the colophon when provided."
   - id: doi
-    description: "Optional document DOI shown in the title-page bottom block when provided."
+    description: "Optional document DOI shown in the colophon publication table when provided."
+  - id: license
+    description: "Optional document license shown in the colophon publication table when provided."
   - id: keywords
     description: "Optional keyword list shown below the abstract."
 
@@ -75,7 +79,7 @@ parts:
   - id: dedication
     description: "Optional dedication page rendered before the main chapters."
   - id: colophon
-    description: "Optional colophon page rendered before the main chapters."
+    description: "Optional custom text rendered at the top of the colophon page before the automated publication block."
 
 options:
   # Document structure and front matter
@@ -90,7 +94,7 @@ options:
     description: "Show affiliation lines under supervisor and committee names on the detailed title-page layouts. Default: true."
   - id: frontmatter_order
     type: string
-    description: "Comma-separated order for fixed front-matter part pages before the table of contents. Accepted values: abstract, preface, acknowledgements, dedication, and colophon. Omitted values are appended in the default order."
+    description: "Comma-separated order for fixed front-matter part pages before the table of contents. Accepted values: colophon, abstract, preface, acknowledgements, and dedication. Omitted values are appended in the default order, which starts with colophon."
   - id: show_toc
     type: boolean
     description: "Render the table of contents in the front matter. Default: true."
@@ -119,7 +123,7 @@ options:
     description: "Title used for the bibliography section. Default: Bibliography."
   - id: bibliography_style
     type: string
-    description: "Bibliography style passed to Typst, for example ieee, apa, mla, chicago-author-date, or chicago-notes. Default: ieee."
+    description: "Bibliography style passed to Typst, for example ieee, apa, mla, chicago-author-date, or chicago-notes. Default: chicago-author-date."
   - id: bibliography_numbered_heading
     type: boolean
     description: "Number the bibliography as a top-level heading. Default: false."
@@ -156,15 +160,15 @@ options:
     description: "Base text size in points. Default: 11."
   - id: line_spacing_em
     type: number
-    description: "Paragraph leading in em units. Default: 0.6."
+    description: "Paragraph leading in em units. Default: 0.7."
 
   # Branding and shared assets
   - id: logo
     type: file
-    description: "Shared logo used on the title page and as a fallback on the graphical cover. If omitted, the bundled template logo is used."
+    description: "Shared TU logo used on the title page, colophon, and as a fallback on the graphical cover. If omitted, the bundled template logo is used."
   - id: isbn
     type: string
-    description: "Optional ISBN project option. Used on the graphical cover and in the title-page bottom block when enabled."
+    description: "Optional ISBN project option shown in the colophon publication table when provided."
 
   # Cover page
   - id: cover_page_variant
@@ -199,7 +203,7 @@ options:
     description: "Optional font weight for the graphical-cover author line. Passed directly to Typst, for example regular, medium, bold, light, or extralight."
   - id: cover_bottom_text_color
     type: string
-    description: "Optional override for graphical-cover text shown outside the title box, such as logo text or a bottom ISBN. Accepted values: white, black, or a hex color like #f5f5f5."
+    description: "Optional override for graphical-cover text shown outside the title box, such as logo text or the institution line. Accepted values: white, black, or a hex color like #f5f5f5."
   - id: cover_title_box_color
     type: string
     description: "Optional override for the graphical-cover translucent title-box base color. Accepted values: black, white, or a hex color like #f5f5f5."
@@ -209,9 +213,15 @@ options:
   - id: cover_title_box_opacity_pct
     type: number
     description: "Opacity of the title box on the graphical cover, from 0 to 100. Default: 55."
-  - id: cover_isbn_position
+  - id: show_cover_bottom_ribbon
+    type: boolean
+    description: "Show a translucent ribbon behind the graphical-cover bottom logo/text cluster. Default: false."
+  - id: cover_bottom_ribbon_color
     type: string
-    description: "Placement of the optional graphical-cover ISBN field. Accepted values: titlebox or logo. Default: titlebox."
+    description: "Optional base color for the graphical-cover bottom ribbon. Accepted values: black, white, or a hex color like #101820. Defaults to the title-box color."
+  - id: cover_bottom_ribbon_opacity_pct
+    type: number
+    description: "Opacity of the graphical-cover bottom ribbon, from 0 to 100. Default: 55."
   - id: cover_logo_variant
     type: string
     description: "Optional override for the bundled graphical-cover logo variant. Accepted values: white or black."
@@ -224,18 +234,9 @@ options:
   - id: cover_logo_text
     type: string
     description: "Optional small text shown below the graphical-cover logo. Newlines are preserved."
-  - id: cover_logo_dx_cm
+  - id: cover_bottom_block_dy_cm
     type: number
-    description: "Optional horizontal offset for the graphical-cover logo in centimeters. Default: 0."
-  - id: cover_logo_dy_cm
-    type: number
-    description: "Optional vertical offset for the graphical-cover logo in centimeters. Default: 0."
-  - id: cover_bottom_text_dx_cm
-    type: number
-    description: "Optional horizontal offset for the graphical-cover text block below the logo in centimeters. Default: 0."
-  - id: cover_bottom_text_dy_cm
-    type: number
-    description: "Optional vertical offset for the graphical-cover text block below the logo in centimeters. Default: 0."
+    description: "Optional vertical offset for the graphical-cover bottom logo/text block in centimeters. Default: -1.2."
 
   # Title page
   - id: title_page_variant
@@ -247,27 +248,59 @@ options:
   - id: title_page_basic_table_alignment
     type: string
     description: "Alignment of the metadata table in the basic/simple title-page layout. Accepted values: left or center. Default: left."
-  - id: title_page_basic_bottom_block_alignment
-    type: string
-    description: "Alignment of the bottom block in the basic/simple title-page layout. Accepted values: left or center. Default: left."
   - id: title_page_logo_alignment
     type: string
-    description: "Alignment of the title-page logo in the basic/simple layout. Accepted values: left or center. Default: center. The formal/custom path stays centered."
+    description: "Alignment of the title-page logo in the basic/simple layout. Accepted values: left or center. Default: center. The formal layout stays centered; the custom stub ignores this option."
   - id: show_title_page_cover_description
     type: boolean
-    description: "Show the optional cover description text on the title page. In the basic/simple layout it appears as its own section above the bottom block; in the formal/custom path it appears as a centered metadata row below the supervisor and committee table. Default: false."
+    description: "Legacy alias for show_colophon_cover_description. The cover description is now rendered in the colophon publication table."
   - id: title_page_cover_description
     type: string
-    description: "Text used for the optional cover description on the title page, for example a short note about the cover image. In the formal/custom path it is rendered in the same centered two-column grid as the publication date."
+    description: "Legacy alias for colophon_cover_description."
   - id: show_title_page_confidentiality_statement
     type: boolean
-    description: "Show the optional confidentiality statement on the title page. In both the basic/simple and formal/custom layouts it appears in the bottom block. Default: false."
+    description: "Legacy alias for show_colophon_confidentiality_statement. The confidentiality statement is now rendered in the colophon."
   - id: title_page_confidentiality_statement
     type: string
-    description: "Text used for the optional confidentiality statement on the title page. Default: This thesis is confidential and cannot be made public."
+    description: "Legacy alias for colophon_confidentiality_statement."
   - id: title_page_formal_statement
     type: string
     description: "Full statement text for the formal title-page layout. Supports placeholders like $thesis_degree or {thesis_degree}; placeholders are replaced from mapped thesis metadata fields. If omitted, no formal statement is rendered."
+
+  # Colophon
+  - id: show_colophon_publication_info
+    type: boolean
+    description: "Show the automated colophon publication table when publication values are present. Default: true."
+  - id: show_colophon_cover_description
+    type: boolean
+    description: "Show the optional cover description row in the colophon publication table. Default: false."
+  - id: colophon_cover_description
+    type: string
+    description: "Text used for the optional cover row in the colophon publication table, for example a short note about the cover image."
+  - id: show_colophon_confidentiality_statement
+    type: boolean
+    description: "Show the optional confidentiality statement above the colophon publication table. Default: false."
+  - id: colophon_confidentiality_statement
+    type: string
+    description: "Text used for the optional colophon confidentiality statement. Default: This thesis is confidential and cannot be made public."
+  - id: colophon_printer
+    type: string
+    description: "Optional printer line shown in the colophon publication table."
+  - id: colophon_publisher
+    type: string
+    description: "Optional publisher line shown in the colophon publication table."
+  - id: colophon_copyright
+    type: string
+    description: "Optional copyright line shown in the colophon publication table."
+  - id: colophon_custom_text
+    type: string
+    description: "Optional custom text shown below the colophon publication table and above the template watermark."
+  - id: colophon_company_logo
+    type: file
+    description: "Optional company logo shown opposite the shared TU logo above the colophon publication table."
+  - id: show_colophon_watermark
+    type: boolean
+    description: "Show the MyST/Typst/JBOS template watermark note at the bottom of the colophon. Default: true."
 
   # Formal title-page metadata
   - id: thesis_degree
@@ -284,7 +317,7 @@ options:
     description: "Faculty line shown on the detailed title-page layouts."
   - id: thesis_institution
     type: string
-    description: "Institution line shown on the cover and on the detailed title-page layouts."
+    description: "Institution line shown on the detailed title-page layouts."
   - id: thesis_defense_date
     type: string
     description: "Full defense date line shown on the detailed title-page layouts."

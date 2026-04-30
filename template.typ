@@ -41,13 +41,27 @@
 [# endif #]
 
 [# if options.isbn is defined and options.isbn != none and options.isbn != "" #]
-  isbn: "[-options.isbn-]",
+  isbn: "[-options.isbn | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
 
 [# if project.doi #]
-  doi: "[-project.doi-]",
+  doi: "[-project.doi | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# elif doc.doi #]
-  doi: "[-doc.doi-]",
+  doi: "[-doc.doi | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+
+[# if project.license is string #]
+  document_license: "[-project.license | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif project.license.content is defined and project.license.content.id #]
+  document_license: "[-project.license.content.id | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif project.license.content is defined and project.license.content.name #]
+  document_license: "[-project.license.content.name | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif doc.license is string #]
+  document_license: "[-doc.license | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif doc.license.content is defined and doc.license.content.id #]
+  document_license: "[-doc.license.content.id | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif doc.license.content is defined and doc.license.content.name #]
+  document_license: "[-doc.license.content.name | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
 
   // Keep contributor ids so the title page can group entries such as
@@ -168,19 +182,29 @@
   // Optional front-matter part files
   // These come from separate MyST part files and are rendered before the main chapters.
 [# if parts.abstract #]
-  abstract: "[-parts.abstract-]",
+  abstract: [
+[-parts.abstract-]
+  ],
 [# endif #]
 [# if parts.preface #]
-  preface: "[-parts.preface-]",
+  preface: [
+[-parts.preface-]
+  ],
 [# endif #]
 [# if parts.acknowledgements #]
-  acknowledgements: "[-parts.acknowledgements-]",
+  acknowledgements: [
+[-parts.acknowledgements-]
+  ],
 [# endif #]
 [# if parts.dedication #]
-  dedication: "[-parts.dedication-]",
+  dedication: [
+[-parts.dedication-]
+  ],
 [# endif #]
 [# if parts.colophon #]
-  colophon: "[-parts.colophon-]",
+  colophon: [
+[-parts.colophon-]
+  ],
 [# endif #]
 
   // Document structure and front matter
@@ -326,8 +350,14 @@
 [# if options.cover_title_box_opacity_pct is defined #]
   cover_title_box_opacity_pct: [-options.cover_title_box_opacity_pct-],
 [# endif #]
-[# if options.cover_isbn_position is defined and options.cover_isbn_position != none and options.cover_isbn_position != "" #]
-  cover_isbn_position: "[-options.cover_isbn_position-]",
+[# if options.show_cover_bottom_ribbon is defined #]
+  show_cover_bottom_ribbon: [-options.show_cover_bottom_ribbon-],
+[# endif #]
+[# if options.cover_bottom_ribbon_color is defined and options.cover_bottom_ribbon_color != none and options.cover_bottom_ribbon_color != "" #]
+  cover_bottom_ribbon_color: "[-options.cover_bottom_ribbon_color-]",
+[# endif #]
+[# if options.cover_bottom_ribbon_opacity_pct is defined #]
+  cover_bottom_ribbon_opacity_pct: [-options.cover_bottom_ribbon_opacity_pct-],
 [# endif #]
 [# if options.cover_logo_variant is defined and options.cover_logo_variant != none and options.cover_logo_variant != "" #]
   cover_logo_variant: "[-options.cover_logo_variant-]",
@@ -341,17 +371,8 @@
 [# if options.cover_logo_text is defined and options.cover_logo_text != none and options.cover_logo_text != "" #]
   cover_logo_text: "[-options.cover_logo_text-]",
 [# endif #]
-[# if options.cover_logo_dx_cm is defined and options.cover_logo_dx_cm != none #]
-  cover_logo_dx_cm: [-options.cover_logo_dx_cm-]cm,
-[# endif #]
-[# if options.cover_logo_dy_cm is defined and options.cover_logo_dy_cm != none #]
-  cover_logo_dy_cm: [-options.cover_logo_dy_cm-]cm,
-[# endif #]
-[# if options.cover_bottom_text_dx_cm is defined and options.cover_bottom_text_dx_cm != none #]
-  cover_bottom_text_dx_cm: [-options.cover_bottom_text_dx_cm-]cm,
-[# endif #]
-[# if options.cover_bottom_text_dy_cm is defined and options.cover_bottom_text_dy_cm != none #]
-  cover_bottom_text_dy_cm: [-options.cover_bottom_text_dy_cm-]cm,
+[# if options.cover_bottom_block_dy_cm is defined and options.cover_bottom_block_dy_cm != none #]
+  cover_bottom_block_dy_cm: [-options.cover_bottom_block_dy_cm-]cm,
 [# endif #]
 
   // Title-page options
@@ -364,26 +385,54 @@
 [# if options.title_page_basic_table_alignment is defined and options.title_page_basic_table_alignment != none and options.title_page_basic_table_alignment != "" #]
   title_page_basic_table_alignment: "[-options.title_page_basic_table_alignment-]",
 [# endif #]
-[# if options.title_page_basic_bottom_block_alignment is defined and options.title_page_basic_bottom_block_alignment != none and options.title_page_basic_bottom_block_alignment != "" #]
-  title_page_basic_bottom_block_alignment: "[-options.title_page_basic_bottom_block_alignment-]",
-[# endif #]
 [# if options.title_page_logo_alignment is defined and options.title_page_logo_alignment != none and options.title_page_logo_alignment != "" #]
   title_page_logo_alignment: "[-options.title_page_logo_alignment-]",
 [# endif #]
-[# if options.show_title_page_cover_description is defined #]
-  show_title_page_cover_description: [-options.show_title_page_cover_description-],
-[# endif #]
-[# if options.title_page_cover_description #]
-  title_page_cover_description: "[-options.title_page_cover_description-]",
-[# endif #]
-[# if options.show_title_page_confidentiality_statement is defined #]
-  show_title_page_confidentiality_statement: [-options.show_title_page_confidentiality_statement-],
-[# endif #]
-[# if options.title_page_confidentiality_statement #]
-  title_page_confidentiality_statement: "[-options.title_page_confidentiality_statement-]",
-[# endif #]
 [# if options.title_page_formal_statement is defined and options.title_page_formal_statement != none and options.title_page_formal_statement != "" #]
-  title_page_formal_statement: "[-options.title_page_formal_statement-]",
+  title_page_formal_statement: "[-options.title_page_formal_statement | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+
+  // Colophon options
+[# if options.show_colophon_publication_info is defined #]
+  show_colophon_publication_info: [-options.show_colophon_publication_info-],
+[# endif #]
+[# if options.show_colophon_cover_description is defined #]
+  show_colophon_cover_description: [-options.show_colophon_cover_description-],
+[# elif options.show_title_page_cover_description is defined #]
+  show_colophon_cover_description: [-options.show_title_page_cover_description-],
+[# endif #]
+[# if options.colophon_cover_description is defined and options.colophon_cover_description != none and options.colophon_cover_description != "" #]
+  colophon_cover_description: "[-options.colophon_cover_description | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.title_page_cover_description #]
+  colophon_cover_description: "[-options.title_page_cover_description | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+[# if options.show_colophon_confidentiality_statement is defined #]
+  show_colophon_confidentiality_statement: [-options.show_colophon_confidentiality_statement-],
+[# elif options.show_title_page_confidentiality_statement is defined #]
+  show_colophon_confidentiality_statement: [-options.show_title_page_confidentiality_statement-],
+[# endif #]
+[# if options.colophon_confidentiality_statement is defined and options.colophon_confidentiality_statement != none and options.colophon_confidentiality_statement != "" #]
+  colophon_confidentiality_statement: "[-options.colophon_confidentiality_statement | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.title_page_confidentiality_statement #]
+  colophon_confidentiality_statement: "[-options.title_page_confidentiality_statement | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+[# if options.colophon_printer is defined and options.colophon_printer != none and options.colophon_printer != "" #]
+  colophon_printer: "[-options.colophon_printer | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+[# if options.colophon_publisher is defined and options.colophon_publisher != none and options.colophon_publisher != "" #]
+  colophon_publisher: "[-options.colophon_publisher | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+[# if options.colophon_copyright is defined and options.colophon_copyright != none and options.colophon_copyright != "" #]
+  colophon_copyright: "[-options.colophon_copyright | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+[# if options.colophon_custom_text is defined and options.colophon_custom_text != none and options.colophon_custom_text != "" #]
+  colophon_custom_text: "[-options.colophon_custom_text | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+[# if options.colophon_company_logo #]
+  colophon_company_logo: "[-options.colophon_company_logo | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+[# if options.show_colophon_watermark is defined #]
+  show_colophon_watermark: [-options.show_colophon_watermark-],
 [# endif #]
 )
 

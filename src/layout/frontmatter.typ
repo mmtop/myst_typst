@@ -1,14 +1,20 @@
-// This file controls the pages that come after the title page
-// and before the main chapters. That includes the abstract,
-// the keyword line, optional front-matter sections, and the
-// navigation pages such as the table of contents, including the
-// list of figures and the list of tables.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#import "colophon.typ": render_colophon_page
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Front-matter pages for the template.
+//
+// Edit this file when you want to change the pages between the title page and
+// the main chapters: abstract, keywords, preface, acknowledgements, dedication,
+// colophon, table of contents, list of figures, or list of tables.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Shared front-matter helpers.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Creates a full front-matter section with a centered heading above the text.
-// It is used for longer pieces such as the abstract, preface, acknowledgements,
-// dedication, or colophon. If no content is provided, the whole section is skipped.
+// Renders one named section such as Abstract, Preface, or Acknowledgements.
 #let render_frontmatter_section(title, content) = {
   if content != none and content != "" {
     align(center, text(15pt, weight: "bold", title))
@@ -17,8 +23,7 @@
   }
 }
 
-// Starts a new page and renders one optional front-matter section on it.
-// If the section is empty, nothing is added.
+// Starts a new page only when the section has content.
 #let render_optional_frontmatter_page(title, content) = {
   if content != none and content != "" {
     pagebreak()
@@ -26,26 +31,28 @@
   }
 }
 
-// Turns the MyST keyword list into one printable line such as:
-// "myst, typst, thesis".
+// Turns MyST keywords into one printable line, such as "myst, typst, thesis".
 #let format_keywords(keywords) = {
-       if keywords == none {   ""   }
-  else if type(keywords) == str {    keywords   }
-  else if keywords.len() == 0 {     ""  }
+  if keywords == none {
+    ""
+  } else if type(keywords) == str {
+    keywords
+  } else if keywords.len() == 0 {
+    ""
+  }
   else {
     let output = ""
     for (index, item) in keywords.enumerate() {
-      if index > 0 { output += ", "  }
+      if index > 0 {
+        output += ", "
+      }
       output += str(item)
     }
     output
   }
 }
 
-// Places the keyword label on the left and the keyword list on the right.
-// If the keywords wrap, the next line stays under the keyword text rather than
-// starting again under the label.
-// Keywords are optional and come from MyST metadata rather than from a part file.
+// Keeps wrapped keywords aligned under the keyword text, not under the label.
 #let render_keywords_box(keyword_text) = {
   if keyword_text != "" {
     align(left, table(
@@ -60,13 +67,22 @@
   }
 }
 
-// Renders the opening abstract page.
-// If both the abstract and keywords are empty, this page is skipped.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Abstract and optional front-matter sections.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Renders the abstract page, including optional keywords from MyST metadata.
 #let render_abstract_page(abstract, keywords) = {
   let keyword_text = format_keywords(keywords)
-  if (abstract != none and abstract != "") or keyword_text != "" {
+  let has_abstract = abstract != none and abstract != ""
+  if has_abstract or keyword_text != "" {
     pagebreak()
-    render_frontmatter_section("Abstract", abstract)
+    if has_abstract {
+      render_frontmatter_section("Abstract", abstract)
+    } else {
+      align(center, text(15pt, weight: "bold", "Abstract"))
+    }
     if keyword_text != "" {
       v(1.5em)
       render_keywords_box(keyword_text)
@@ -74,19 +90,16 @@
   }
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// The following functions control the order and rendering of the optional front-matter sections.
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-// The default order of the front-matter sections. You can change this by passing a different order to the `frontmatter_order` in the export config.
+// Default page order when no frontmatter_order option is set.
 #let default_frontmatter_order = (
+  "colophon",
   "abstract",
   "preface",
   "acknowledgements",
   "dedication",
-  "colophon",
 )
 
+// Checks whether an item is already in the normalized order list.
 #let frontmatter_order_contains(items, value) = {
   let found = false
   for item in items {
@@ -97,15 +110,17 @@
   found
 }
 
+// Allows only known fixed front-matter page ids.
 #let normalize_frontmatter_part_id(value) = {
   let item = str(value).trim()
   if item == "abstract" or item == "preface" or item == "acknowledgements" or item == "dedication" or item == "colophon" {
     item
   } else {
-    panic("Invalid frontmatter_order item '" + item + "'. Use abstract, preface, acknowledgements, dedication, or colophon.")
+    panic("Invalid frontmatter_order item '" + item + "'. Use colophon, abstract, preface, acknowledgements, or dedication.")
   }
 }
 
+// Accepts a comma-separated string or list, removes duplicates, and appends omitted pages.
 #let normalize_frontmatter_order(order) = {
   let raw_items = if order == none {
     default_frontmatter_order
@@ -132,10 +147,7 @@
   items
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-// The main function that renders the front-matter sections in the specified order.
-////////////////////////////////////////////////////////////////////////////////////////////////
-
+// Renders one fixed front-matter page by id.
 #let render_frontmatter_part(
   part_id,
   abstract: none,
@@ -144,6 +156,22 @@
   acknowledgements: none,
   dedication: none,
   colophon: none,
+  publication_date: none,
+  doi: none,
+  isbn: none,
+  document_license: none,
+  colophon_cover_description: none,
+  colophon_printer: none,
+  colophon_publisher: none,
+  colophon_copyright: none,
+  colophon_custom_text: none,
+  colophon_tu_logo: none,
+  colophon_company_logo: none,
+  show_colophon_publication_info: true,
+  show_colophon_cover_description: false,
+  show_colophon_confidentiality_statement: false,
+  colophon_confidentiality_statement: "This thesis is confidential and cannot be made public.",
+  show_colophon_watermark: true,
 ) = {
   if part_id == "abstract" {
     render_abstract_page(abstract, keywords)
@@ -154,11 +182,34 @@
   } else if part_id == "dedication" {
     render_optional_frontmatter_page("Dedication", dedication)
   } else if part_id == "colophon" {
-    render_optional_frontmatter_page("Colophon", colophon)
+    render_colophon_page(
+      content: colophon,
+      publication_date: publication_date,
+      cover_description: colophon_cover_description,
+      doi: doi,
+      isbn: isbn,
+      printer: colophon_printer,
+      publisher: colophon_publisher,
+      document_license: document_license,
+      copyright: colophon_copyright,
+      custom_text: colophon_custom_text,
+      tu_logo: colophon_tu_logo,
+      company_logo: colophon_company_logo,
+      show_publication_info: show_colophon_publication_info,
+      show_cover_description: show_colophon_cover_description,
+      show_confidentiality_statement: show_colophon_confidentiality_statement,
+      confidentiality_statement: colophon_confidentiality_statement,
+      show_watermark: show_colophon_watermark,
+    )
   }
 }
 
-// Renders the table of contents page.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Navigation pages.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Table of contents.
 #let render_table_of_contents(depth: 1) = {
   pagebreak()
   outline(
@@ -168,17 +219,18 @@
   )
 }
 
-// Renders the list of figures page.
+// List of figures.
 #let render_list_of_figures() = {
   pagebreak()
   outline(
     title: strong("List of Figures"),
-    target: figure.where(kind: "figure"), // MyST labels image figures with kind "figure".
+    // MyST labels image figures with kind "figure".
+    target: figure.where(kind: "figure"),
     indent: auto,
   )
 }
 
-// Renders the list of tables page.
+// List of tables.
 #let render_list_of_tables() = {
   pagebreak()
   outline(
@@ -188,8 +240,11 @@
   )
 }
 
-// Collects everything that appears before the main chapters.
-// This keeps the front matter settings in one place and it is called from the main layout file.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Front-matter function used by main.typ.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #let render_frontmatter(
   abstract: none,
   keywords: (),
@@ -197,6 +252,22 @@
   acknowledgements: none,
   dedication: none,
   colophon: none,
+  publication_date: none,
+  doi: none,
+  isbn: none,
+  document_license: none,
+  colophon_cover_description: none,
+  colophon_printer: none,
+  colophon_publisher: none,
+  colophon_copyright: none,
+  colophon_custom_text: none,
+  colophon_tu_logo: none,
+  colophon_company_logo: none,
+  show_colophon_publication_info: true,
+  show_colophon_cover_description: false,
+  show_colophon_confidentiality_statement: false,
+  colophon_confidentiality_statement: "This thesis is confidential and cannot be made public.",
+  show_colophon_watermark: true,
   frontmatter_order: default_frontmatter_order,
   show_toc: true,
   show_list_of_figures: false,
@@ -212,22 +283,32 @@
       acknowledgements: acknowledgements,
       dedication: dedication,
       colophon: colophon,
+      publication_date: publication_date,
+      doi: doi,
+      isbn: isbn,
+      document_license: document_license,
+      colophon_cover_description: colophon_cover_description,
+      colophon_printer: colophon_printer,
+      colophon_publisher: colophon_publisher,
+      colophon_copyright: colophon_copyright,
+      colophon_custom_text: colophon_custom_text,
+      colophon_tu_logo: colophon_tu_logo,
+      colophon_company_logo: colophon_company_logo,
+      show_colophon_publication_info: show_colophon_publication_info,
+      show_colophon_cover_description: show_colophon_cover_description,
+      show_colophon_confidentiality_statement: show_colophon_confidentiality_statement,
+      colophon_confidentiality_statement: colophon_confidentiality_statement,
+      show_colophon_watermark: show_colophon_watermark,
     )
   }
   
-  ////////////////////////////////////////////////////////////////
-  // Example for a truly custom section you may want to add later:
+  // Example for a custom section you may want to add later:
   // render_optional_frontmatter_page("Abbreviations", abbreviations)
-  // To make that work, you would also need to add `abbreviations` as a new part
-  // in template.yml, pass it through template.typ and main.typ, and then call it here.
-  /////////////////////////////////////////////////////////////////////////////////////
 
-
-  // Navigation pages for the document.
   if show_toc { render_table_of_contents(depth: toc_depth) }
   if show_list_of_figures { render_list_of_figures() }
   if show_list_of_tables { render_list_of_tables() }
 
-  // End the front matter before switching to the main content layout.
+  // End the roman-numbered front matter before the main chapters begin.
   pagebreak()
 }

@@ -1,7 +1,8 @@
 #import "layout/cover.typ": cover_page
-#import "layout/titlepage.typ": title_page, contributors_by_group
+#import "layout/titlepage.typ": title_page
 #import "layout/frontmatter.typ": render_frontmatter
 #import "layout/bibliography.typ": render_bibliography
+#import "assets/assets.typ": resolve_logo_for_layout
 
 // Use this file as the main Typst layout entry point for the template.
 // It receives normalized metadata, part files, and export options from template.typ,
@@ -23,10 +24,12 @@
   affiliations: (),
   date: none,
   doi: none,
+  document_license: none,
   keywords: (),
 
   // Template options for layout and content control. 
-  // These are all optional and they are specified in the options.yml file, and they have to be routed via other template files to get here - they are all documented in the template.yml file where they are defined as part of the template configuration.
+  // These are all optional export settings routed from template.typ.
+  // They are documented in template.yml as part of the template configuration.
   thesis_degree: none,
   thesis_program: none,
   thesis_track: none,
@@ -74,7 +77,7 @@
   show_cover_full: true,
   show_title_page: true,
   show_contributor_affiliations: true,
-  frontmatter_order: ("abstract", "preface", "acknowledgements", "dedication", "colophon"),
+  frontmatter_order: ("colophon", "abstract", "preface", "acknowledgements", "dedication"),
   show_toc: true,
   show_list_of_figures: false,
   show_list_of_tables: false,
@@ -83,7 +86,7 @@
   verso_blank_page_statement: "This page is intentionally left blank.",
 
   // Cover page options.
-  cover_page_variant: "simple",
+  cover_page_variant: "graphical",
   show_cover_subtitle: true,
   cover_background_image: "src/assets/template_figures/defaultcover.jpg",
   cover_graphical_appearance: "white-on-dark",
@@ -96,27 +99,34 @@
   cover_title_box_color: none,
   cover_title_box_text: none,
   cover_title_box_opacity_pct: 55,
-  cover_isbn_position: "titlebox",
+  show_cover_bottom_ribbon: false,
+  cover_bottom_ribbon_color: none,
+  cover_bottom_ribbon_opacity_pct: 55,
   cover_logo_variant: none,
   cover_logo_white: "src/assets/brand_assets/international-logo_white_rgb.svg",
   cover_logo_black: "src/assets/brand_assets/international-logo_black_rgb.svg",
   cover_logo_text: none,
-  cover_logo_dx_cm: 0cm,
-  cover_logo_dy_cm: 0cm,
-  cover_bottom_text_dx_cm: 0cm,
-  cover_bottom_text_dy_cm: 0cm,
+  cover_bottom_block_dy_cm: -1.5cm,
 
   // Title page.
-  title_page_variant: "basic",
-  title_page_basic_title_alignment: "center",
+  title_page_variant: "formal",
+  title_page_basic_title_alignment: "left",
   title_page_basic_table_alignment: "left",
-  title_page_basic_bottom_block_alignment: "left",
   title_page_logo_alignment: "center",
-  show_title_page_cover_description: false,
-  title_page_cover_description: none,
-  show_title_page_confidentiality_statement: false,
-  title_page_confidentiality_statement: "This thesis is confidential and cannot be made public.",
   title_page_formal_statement: none,
+
+  // Colophon.
+  show_colophon_publication_info: true,
+  show_colophon_cover_description: false,
+  colophon_cover_description: none,
+  show_colophon_confidentiality_statement: false,
+  colophon_confidentiality_statement: "This thesis is confidential and cannot be made public.",
+  colophon_printer: none,
+  colophon_publisher: none,
+  colophon_copyright: none,
+  colophon_custom_text: none,
+  colophon_company_logo: none,
+  show_colophon_watermark: true,
   body,
 
   // Default bibliography options.
@@ -127,178 +137,10 @@
   bibliography_numbered_heading: false,
 
 ) = {
-
-
-  // The resolve_* helpers interpret user deciscions(toggles, options and imports) and turn them into values that can be used in the layout blocks.
-  
-  // This resolve_asset_path helper normalizes Windows separators 
-  // and relative paths so the same config values keep working locally 
-  // and in GitHub template bundles. 
-  // Asset paths may be used from this file or from nested layout files.
-  let resolve_asset_path = (path, levels_up: 1) => {
-    if path == none {
-      none
-    } else if type(path) != str {
-      path
-    } else {
-      let normalized = str(path).replace("\\", "/")
-      if normalized.starts-with("/") or normalized.starts-with("./") or normalized.starts-with("../") or normalized.contains(":/") {
-        normalized
-      } else if levels_up == 2 {
-        "../../" + normalized
-      } else if levels_up == 1 {
-        "../" + normalized
-      } else {
-        normalized
-      }
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  // The following group of helpers resolves cover page, title page and front matter design options.
-  let resolve_cover_appearance = appearance => {
-    let normalized = str(appearance)
-    if normalized == "white-on-dark" or normalized == "black-on-light" {
-      normalized
-    } else {
-      panic("Invalid cover_graphical_appearance '" + normalized + "'. Use 'white-on-dark' or 'black-on-light'.")
-    }
-  }
-
-  let resolve_black_white_choice = (value, option_name) => {
-    if value == none or value == "" {
-      panic("Option '" + option_name + "' must be 'white' or 'black'.")
-    } else {
-      let normalized = str(value)
-      if normalized == "white" or normalized == "black" {
-        normalized
-      } else {
-        panic("Invalid " + option_name + " '" + normalized + "'. Use 'white' or 'black'.")
-      }
-    }
-  }
-
-  let resolve_cover_color_choice = (value, option_name) => {
-    if value == none or value == "" {
-      panic("Option '" + option_name + "' must be 'white', 'black', or a hex color like '#f5f5f5'.")
-    } else {
-      let normalized = str(value)
-      if normalized == "white" or normalized == "black" {
-        normalized
-      } else if normalized.starts-with("#") and (normalized.len() == 4 or normalized.len() == 7) {
-        normalized
-      } else if normalized.len() == 3 or normalized.len() == 6 {
-        "#" + normalized
-      } else {
-        panic("Invalid " + option_name + " '" + normalized + "'. Use 'white', 'black', or a hex color like '#f5f5f5'.")
-      }
-    }
-  }
-
-  let resolve_cover_color_fill = (value, option_name) => {
-    let normalized = resolve_cover_color_choice(value, option_name)
-    if normalized == "white" {
-      white
-    } else if normalized == "black" {
-      black
-    } else {
-      rgb(normalized)
-    }
-  }
-
-  let resolve_left_center_choice = (value, option_name) => {
-    let normalized = str(value)
-    if normalized == "left" or normalized == "center" {
-      normalized
-    } else {
-      panic("Invalid " + option_name + " '" + normalized + "'. Use 'left' or 'center'.")
-    }
-  }
-
-  let resolve_cover_isbn_position = value => {
-    let normalized = str(value)
-    if normalized == "titlebox" or normalized == "logo" {
-      normalized
-    } else {
-      panic("Invalid cover_isbn_position '" + normalized + "'. Use 'titlebox' or 'logo'.")
-    }
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////////
-  // Some values are reused in multiple layout blocks, so they are resolved once here.
-  let resolved_title = if title == none or title == "" { "Untitled Report" } else { title }
-  let resolved_supervisors = contributors_by_group(contributors, "supervisor", affiliation_catalog)
-  let resolved_committee = contributors_by_group(contributors, "committee", affiliation_catalog)
-  let resolved_logo_for_layout = resolve_asset_path(logo, levels_up: 2)
-  let resolved_cover_background_image = resolve_asset_path(cover_background_image, levels_up: 2)
-  let resolved_cover_logo_white = resolve_asset_path(cover_logo_white, levels_up: 2)
-  let resolved_cover_logo_black = resolve_asset_path(cover_logo_black, levels_up: 2)
-  let resolved_cover_appearance = resolve_cover_appearance(cover_graphical_appearance)
-  let resolved_cover_alignment = resolve_left_center_choice(cover_graphical_alignment, "cover_graphical_alignment")
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  // This group of helpers resolves the logic around the color scheme of the cover page variants.
-  let resolved_cover_box_opacity_pct = if cover_title_box_opacity_pct < 0 {
-    0
-  } else if cover_title_box_opacity_pct > 100 {
-    100
-  } else {
-    cover_title_box_opacity_pct
-  }
-
-  let resolved_cover_title_text_color_value = if cover_title_text_color != none and cover_title_text_color != "" {
-    resolve_cover_color_choice(cover_title_text_color, "cover_title_text_color")
-  } else if resolved_cover_appearance == "black-on-light" {
-    "black"
-  } else {
-    "white"
-  }
-
-  let resolved_cover_title_box_color_value = if cover_title_box_color != none and cover_title_box_color != "" {
-    resolve_cover_color_choice(cover_title_box_color, "cover_title_box_color")
-  } else if resolved_cover_appearance == "black-on-light" {
-    "white"
-  } else {
-    "black"
-  }
-
-  let resolved_cover_logo_tone = if cover_logo_variant != none and cover_logo_variant != "" {
-    resolve_black_white_choice(cover_logo_variant, "cover_logo_variant")
-  } else if resolved_cover_appearance == "black-on-light" {
-    "black"
-  } else {
-    "white"
-  }
-
-  let resolved_cover_title_text_fill = resolve_cover_color_fill(resolved_cover_title_text_color_value, "cover_title_text_color")
-  
-  let resolved_cover_bottom_text_color_value = if cover_bottom_text_color != none and cover_bottom_text_color != "" {
-    resolve_cover_color_choice(cover_bottom_text_color, "cover_bottom_text_color")
-  } else {
-    resolved_cover_title_text_color_value
-  }
-
-  let resolved_cover_bottom_text_fill = resolve_cover_color_fill(resolved_cover_bottom_text_color_value, "cover_bottom_text_color")
-
-  let resolved_cover_title_box_fill = resolve_cover_color_fill(resolved_cover_title_box_color_value, "cover_title_box_color").transparentize((100 - resolved_cover_box_opacity_pct) * 1%)
-
-  let resolved_cover_logo_for_layout = if resolved_cover_logo_tone == "black" {
-    if resolved_cover_logo_black != none { resolved_cover_logo_black } else { resolved_logo_for_layout }
-  } else {
-    if resolved_cover_logo_white != none { resolved_cover_logo_white } else { resolved_logo_for_layout }
-  }
-
-  let resolved_cover_isbn_position = resolve_cover_isbn_position(cover_isbn_position)
-  let resolved_title_page_basic_title_alignment = resolve_left_center_choice(title_page_basic_title_alignment, "title_page_basic_title_alignment")
-  let resolved_title_page_basic_table_alignment = resolve_left_center_choice(title_page_basic_table_alignment, "title_page_basic_table_alignment")
-  let resolved_title_page_basic_bottom_block_alignment = resolve_left_center_choice(title_page_basic_bottom_block_alignment, "title_page_basic_bottom_block_alignment")
-  let resolved_title_page_logo_alignment = resolve_left_center_choice(title_page_logo_alignment, "title_page_logo_alignment")
-
-
   /////////////////////////////////////////////////////////////////////////////////
   // This helper ensures that the main matter "always" starts on a right-hand page. 
   // If the option to show a blank page statement is enabled, 
-  // it adds a usual "intentinally blank" statement on the verso page 
+  // it adds a usual "intentionally blank" statement on the verso page
   // instead of leaving it completely blank.
   let start_mainmatter_on_recto = (
     show_blank_statement: false,
@@ -470,29 +312,31 @@
   // Cover page assembly.
   if show_cover_full {
     cover_page(
-      resolved_title,
+      title,
       subtitle: subtitle,
       authors: authors,
       variant: cover_page_variant,
-      image_path: resolved_cover_background_image,
-      box_fill: resolved_cover_title_box_fill,
-      title_text_fill: resolved_cover_title_text_fill,
-      bottom_text_fill: resolved_cover_bottom_text_fill,
+      image_path: cover_background_image,
+      graphical_appearance: cover_graphical_appearance,
+      title_text_color: cover_title_text_color,
+      bottom_text_color: cover_bottom_text_color,
+      title_box_color: cover_title_box_color,
+      title_box_opacity_pct: cover_title_box_opacity_pct,
       title_weight: cover_title_weight,
       subtitle_weight: cover_subtitle_weight,
       author_weight: cover_author_weight,
       show_subtitle: show_cover_subtitle,
-      page_alignment: resolved_cover_alignment,
+      page_alignment: cover_graphical_alignment,
       title_box_text: cover_title_box_text,
-      isbn: isbn,
-      isbn_position: resolved_cover_isbn_position,
       logo_text: cover_logo_text,
-      logo_dx: cover_logo_dx_cm,
-      logo_dy: cover_logo_dy_cm,
-      bottom_text_dx: cover_bottom_text_dx_cm,
-      bottom_text_dy: cover_bottom_text_dy_cm,
-      institution_line: thesis_institution,
-      logo: resolved_cover_logo_for_layout,
+      show_bottom_ribbon: show_cover_bottom_ribbon,
+      bottom_ribbon_color: cover_bottom_ribbon_color,
+      bottom_ribbon_opacity_pct: cover_bottom_ribbon_opacity_pct,
+      logo_variant: cover_logo_variant,
+      logo_white: cover_logo_white,
+      logo_black: cover_logo_black,
+      bottom_block_dy: cover_bottom_block_dy_cm,
+      logo: resolve_logo_for_layout(logo),
     )
 
     // Reset the page background and keep roman numbering for the title page
@@ -513,33 +357,27 @@
   // Title page assembly.
   if show_title_page {
     title_page(
-      resolved_title,
+      title,
       subtitle: subtitle,
       authors: authors,
       isbn: isbn,
       doi: doi,
       affiliations: affiliations,
-      date: date,
       degree: thesis_degree,
       program: thesis_program,
       track: thesis_track,
       faculty: thesis_faculty,
       institution: thesis_institution,
       defense_date: thesis_defense_date,
-      supervisors: resolved_supervisors,
-      committee: resolved_committee,
+      contributors: contributors,
+      affiliation_catalog: affiliation_catalog,
       show_contributor_affiliations: show_contributor_affiliations,
-      logo: resolved_logo_for_layout,
+      logo: resolve_logo_for_layout(logo),
       variant: title_page_variant,
-      basic_title_alignment: resolved_title_page_basic_title_alignment,
-      basic_table_alignment: resolved_title_page_basic_table_alignment,
-      basic_bottom_block_alignment: resolved_title_page_basic_bottom_block_alignment,
-      logo_alignment: resolved_title_page_logo_alignment,
+      basic_title_alignment: title_page_basic_title_alignment,
+      basic_table_alignment: title_page_basic_table_alignment,
+      logo_alignment: title_page_logo_alignment,
       start_on_new_page: show_cover_full,
-      show_cover_description: show_title_page_cover_description,
-      cover_description: title_page_cover_description,
-      show_confidentiality_statement: show_title_page_confidentiality_statement,
-      confidentiality_statement: title_page_confidentiality_statement,
       formal_statement: title_page_formal_statement,
     )
   }
@@ -552,6 +390,22 @@
     acknowledgements: acknowledgements,
     dedication: dedication,
     colophon: colophon,
+    publication_date: date,
+    doi: doi,
+    isbn: isbn,
+    document_license: document_license,
+    colophon_cover_description: colophon_cover_description,
+    colophon_printer: colophon_printer,
+    colophon_publisher: colophon_publisher,
+    colophon_copyright: colophon_copyright,
+    colophon_custom_text: colophon_custom_text,
+    colophon_tu_logo: resolve_logo_for_layout(logo),
+    colophon_company_logo: resolve_logo_for_layout(colophon_company_logo),
+    show_colophon_publication_info: show_colophon_publication_info,
+    show_colophon_cover_description: show_colophon_cover_description,
+    show_colophon_confidentiality_statement: show_colophon_confidentiality_statement,
+    colophon_confidentiality_statement: colophon_confidentiality_statement,
+    show_colophon_watermark: show_colophon_watermark,
     frontmatter_order: frontmatter_order,
     show_toc: show_toc,
     show_list_of_figures: show_list_of_figures,

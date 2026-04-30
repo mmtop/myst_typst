@@ -21,7 +21,7 @@
   bibliography_file: none,
   show_bibliography: true,
   bibliography_title: "Bibliography",
-  bibliography_style: "ieee",
+  bibliography_style: "chicago-author-date",
   bibliography_numbered_heading: false,
 ) = {
   if show_bibliography and bibliography_file != none and bibliography_file != "" {

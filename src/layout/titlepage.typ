@@ -1,12 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// This file defines the title page design with two variants: simple and formal.
-// It is intentionally isolated from the main.typ file to keep the complexity of the title page
-// separate from the main layout logic.
+// Title page layouts for the template.
 //
-// The `title_page` function is the main entry point that is called from the main layout file.
+// Edit this file when you want to change the basic, formal, or custom title
+// page. Title-page-specific settings and contributor handling live here, close
+// to the layout code they affect.
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Utility function to render a list of items as a comma-separated string.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Shared title-page helpers.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Turns one item or many items into one printable line.
 #let render_comma_list(items) = {
   if items == none {
     ""
@@ -27,14 +32,17 @@
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// The following group of functions are used to process the contributors 
-// and affiliations for display on the title page.
+// Contributor and affiliation helpers.
+//
+// Edit this section when you want to change how supervisors, committee members,
+// or affiliations are read from MyST metadata.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Checks whether a contributor belongs to the supervisor or committee group.
+// Decides whether a contributor belongs to the supervisor or committee group.
 #let contributor_group_matches(contributor_id, group) = {
   let normalized = if contributor_id == none { "" } else { str(contributor_id) }
+  // Accepts ids such as supervisor, supervisor-1, advisor-2, committee-1, or examiner.
        if group == "supervisor" {normalized == "supervisor" or normalized.starts-with("supervisor") or normalized == "advisor" or normalized.starts-with("advisor") }
   else if group == "committee" { normalized == "committee" or normalized.starts-with("committee") or normalized == "examiner" or normalized.starts-with("examiner") }
   else { false }
@@ -59,7 +67,7 @@
   }
 }
 
-// Turns one or more affiliation ids into a printable line for the title page.
+// Turns one or more affiliation ids into a printable line.
 #let resolve_affiliation_line(affiliation_ids, affiliation_catalog) = {
   if affiliation_ids == none {
     none
@@ -68,6 +76,7 @@
     if direct == "" {
       none
     } else {
+      // If the id is not in the catalog, show the original value instead of hiding it.
       let resolved = resolve_affiliation_name(direct, affiliation_catalog)
       if resolved == none { direct } else { resolved }
     }
@@ -78,6 +87,7 @@
       if aff_name != none and aff_name != "" {
         names += (aff_name,)
       } else if aff_id != none and str(aff_id) != "" {
+        // Unknown affiliation ids are still useful to show during drafting.
         names += (str(aff_id),)
       }
     }
@@ -86,7 +96,7 @@
   }
 }
 
-// Collects contributors for one group and prepares their names and affiliations for display.
+// Collects contributors for one group and prepares them for display.
 #let contributors_by_group(contributors, group, affiliation_catalog) = {
   if contributors == none or type(contributors) == str {
     ()
@@ -109,7 +119,7 @@
   }
 }
 
-// Normalizes a string or list of strings into one newline-separated text block.
+// Turns one line or many lines into one newline-separated text block.
 #let render_lines(items, fallback: none) = {
   if items == none {
     if fallback == none { "" } else { str(fallback) }
@@ -129,7 +139,7 @@
   }
 }
 
-// Counts how many logical items a value contains for singular/plural labels.
+// Counts items for singular/plural labels.
 #let count_items(items) = {
   if items == none {
     0
@@ -140,7 +150,7 @@
   }
 }
 
-// Checks whether a value is non-empty enough to be rendered on the title page.
+// Checks whether a value is non-empty and can be rendered on the title page.
 #let has_renderable_content(value) = {
   if value == none {
     false
@@ -155,7 +165,7 @@
   }
 }
 
-// Formats contributor entries into stacked name rows, optionally with affiliations below each name.
+// Renders contributor names, with optional affiliation lines below them.
 #let render_contributor_entries(entries, show_affiliations: true) = {
   if entries == none {
     none
@@ -205,10 +215,11 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+// General title-page settings.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// This function resolves the title page variant.
+
+// Accepts friendly variant names from the export config.
 #let resolve_title_page_variant(variant) = {
-  // Supported variants: "1"/"basic"/"simple", "2"/"formal", and "3"/"custom".
   let normalized = str(variant)
   if normalized == "1" or normalized == "basic" or normalized == "simple" {
     "basic"
@@ -221,167 +232,18 @@
   }
 }
 
-// Formats a raw date string into the title page's written month-day-year style.
-// Remark: It is hard-coded to English month names for now.
-#let format_title_page_date(value) = {
-  if value == none or str(value) == "" {
-    none
+// Uses a readable fallback when MyST does not provide a title.
+#let resolve_title_page_title(title) = {
+  if title == none or title == "" { "Untitled Report" } else { title }
+}
+
+#let resolve_title_page_alignment(value, option_name) = {
+  let normalized = str(value)
+  if normalized == "left" or normalized == "center" {
+    normalized
   } else {
-    let raw = str(value)
-    let parts = raw.split("-")
-    if parts.len() == 3 {
-      let day = if parts.at(0).len() > 1 and parts.at(0).starts-with("0") {
-        parts.at(0).slice(1)
-      } else {
-        parts.at(0)
-      }
-      let month = if parts.at(1).len() > 1 and parts.at(1).starts-with("0") {
-        parts.at(1).slice(1)
-      } else {
-        parts.at(1)
-      }
-      let year = parts.at(2)
-      let month_name = if month == "1" {
-        "January"
-      } else if month == "2" {
-        "February"
-      } else if month == "3" {
-        "March"
-      } else if month == "4" {
-        "April"
-      } else if month == "5" {
-        "May"
-      } else if month == "6" {
-        "June"
-      } else if month == "7" {
-        "July"
-      } else if month == "8" {
-        "August"
-      } else if month == "9" {
-        "September"
-      } else if month == "10" {
-        "October"
-      } else if month == "11" {
-        "November"
-      } else if month == "12" {
-        "December"
-      } else {
-        none
-      }
-      if month_name == none {
-        raw
-      } else {
-        month_name + " " + day + ", " + year
-      }
-    } else {
-      raw
-    }
+    panic("Invalid " + option_name + " '" + normalized + "'. Use 'left' or 'center'.")
   }
-}
-
-// Normalizes a string for the formal statement at the bottom of the title page, replacing newlines and trimming whitespace.
-#let no_break_string(value) = {
-  if value == none {
-    ""
-  } else {
-    str(value).replace(" ", " ")
-  }
-}
-
-// This function absorbs the optional statement for the title pagefrom the export config.
-#let title_page_statement_value(value) = {
-  if value == none or str(value) == "" {
-    ""
-  } else {
-    no_break_string(value)
-  }
-}
-
-// This is a small utility function to automated positioning of the logo on the title page based on how many lines the bottom block will take, which depends on whether the optional confidentiality statement, ISBN, and DOI are used.
-#let title_page_bottom_block_line_count(
-  confidentiality_statement: none,
-  isbn: none,
-  doi: none,
-) = {
-  let count = 0
-  if confidentiality_statement != none and str(confidentiality_statement) != "" {
-    count += 1
-  }
-  if isbn != none and str(isbn) != "" {
-    count += 1
-  }
-  if doi != none and str(doi) != "" {
-    count += 1
-  }
-  count
-}
-
-// This function prepares the fields that can be used in the title page.
-#let title_page_formal_statement_fields(
-  isbn: none,
-  doi: none,
-  degree: none,
-  program: none,
-  track: none,
-  faculty: none,
-  institution: none,
-  defense_date: none,
-) = {
-  let isbn_text = title_page_statement_value(isbn)
-  let doi_text = title_page_statement_value(doi)
-  let degree_text = title_page_statement_value(degree)
-  let program_text = title_page_statement_value(program)
-  let track_text = title_page_statement_value(track)
-  let faculty_text = title_page_statement_value(faculty)
-  let institution_text = title_page_statement_value(institution)
-  let defense_date_text = title_page_statement_value(defense_date)
-
-  (
-    (name: "thesis_defense_date", value: defense_date_text),
-    (name: "thesis_institution", value: institution_text),
-    (name: "thesis_faculty", value: faculty_text),
-    (name: "thesis_program", value: program_text),
-    (name: "thesis_track", value: track_text),
-    (name: "thesis_degree", value: degree_text),
-    (name: "isbn", value: isbn_text),
-    (name: "doi", value: doi_text),
-  )
-}
-
-// This function replaces placeholders in the formal statement with the actual field values, allowing for dynamic content in the statement based on the export config.
-#let title_page_replace_statement_placeholders(template, fields) = {
-  let output = str(template)
-  for field in fields {
-    output = output.replace("${" + field.name + "}", field.value)
-    output = output.replace("$" + field.name, field.value)
-    output = output.replace("{" + field.name + "}", field.value)
-  }
-  output
-}
-
-
-#let title_page_normalize_statement_text(value) = {
-  let output = str(value).replace("\r\n", "\n").replace("\r", "\n").trim()
-  while output.contains(" \n") {
-    output = output.replace(" \n", "\n")
-  }
-  while output.contains("\n ") {
-    output = output.replace("\n ", "\n")
-  }
-  output
-}
-
-
-#let render_title_page_multiline_text(value) = {
-  let lines = str(value).split("\n")
-  let output = []
-  for (index, line) in lines.enumerate() {
-    if index > 0 {
-      output += [#linebreak()]
-    }
-    output += [#line]
-  }
-  output
 }
 
 #let render_title_page_label_cell(label) = {
@@ -396,7 +258,11 @@
   }
 }
 
-#let render_title_page_basic_heading_line(
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Reusable title-page building blocks.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#let render_title_page_heading_line(
   content,
   heading_alignment: "center",
 ) = {
@@ -423,6 +289,7 @@
   } else {
     left
   }
+  // The fixed content width keeps centered tables visually stable.
   let content_width = 8.8em + 1.3em + 24em
   let table_content = table(
     columns: (8.8em, 24em),
@@ -441,98 +308,15 @@
   }
 }
 
-#let render_title_page_basic_bottom_block(
-  block_alignment: "left",
-  confidentiality_statement: none,
-  isbn: none,
-  doi: none,
-) = {
-  let block_items = ()
-  if confidentiality_statement != none and str(confidentiality_statement) != "" {
-    block_items += ([#text(size: 10pt, smallcaps(str(confidentiality_statement)))],)
-  }
-  if isbn != none and isbn != "" {
-    block_items += ([#text(size: 10pt, [ISBN: #isbn])],)
-  }
-  if doi != none and doi != "" {
-    block_items += ([#text(size: 10pt, [DOI: #doi])],)
-  }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Basic title page.
+//
+// Edit this section for the structured title page with left or centered tables.
+// The page is built from top to bottom: title, optional subtitle, metadata
+// tables, and academic people/date information. Publication metadata now lives
+// in the colophon.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  if block_items.len() > 0 {
-    let stack_body = stack(dir: ttb, spacing: 0.8em, ..block_items)
-    v(1fr)
-    if str(block_alignment) == "center" {
-      align(center, stack_body)
-    } else {
-      align(left, block(width: 100%, stack_body))
-    }
-  }
-}
-
-#let render_title_page_formal_statement(
-  isbn: none,
-  doi: none,
-  degree: none,
-  program: none,
-  track: none,
-  faculty: none,
-  institution: none,
-  defense_date: none,
-  statement: none,
-) = {
-  let fields = title_page_formal_statement_fields(
-    isbn: isbn,
-    doi: doi,
-    degree: degree,
-    program: program,
-    track: track,
-    faculty: faculty,
-    institution: institution,
-    defense_date: defense_date,
-  )
-  let sentence = if statement != none and str(statement) != "" {
-    title_page_replace_statement_placeholders(statement, fields)
-  } else {
-    ""
-  }
-  sentence = title_page_normalize_statement_text(sentence)
-
-  if sentence == "" {
-    none
-  } else {
-    align(center, block(width: 72%, [
-      #set par(justify: false)
-      #set text(hyphenate: false)
-      #text(size: 10.5pt, fill: rgb("#555555"), render_title_page_multiline_text(sentence))
-    ]))
-  }
-}
-
-#let render_title_page_formal_info_rows(
-  publication_date: none,
-  cover_description: none,
-) = {
-  (
-    title_page_info_row("Publication date", publication_date) +
-    title_page_info_row("Cover", cover_description)
-  )
-}
-
-#let render_title_page_formal_bottom_block(
-  confidentiality_statement: none,
-  isbn: none,
-  doi: none,
-) = {
-  render_title_page_basic_bottom_block(
-    block_alignment: "center",
-    confidentiality_statement: confidentiality_statement,
-    isbn: isbn,
-    doi: doi,
-  )
-}
-
-
-// 
 #let title_page_basic_variant(
   title,
   subtitle: none,
@@ -540,7 +324,6 @@
   affiliations: (),
   isbn: none,
   doi: none,
-  date: none,
   degree: none,
   program: none,
   track: none,
@@ -550,13 +333,8 @@
   supervisors: (),
   committee: (),
   show_contributor_affiliations: true,
-  show_cover_description: false,
-  cover_description: none,
-  show_confidentiality_statement: false,
-  confidentiality_statement: none,
   title_alignment: "center",
   table_alignment: "left",
-  bottom_block_alignment: "left",
 ) = {
   let author_line = render_comma_list(authors)
   let author_affiliation_line = render_lines(affiliations)
@@ -566,7 +344,7 @@
     } else {
       ((name: author_line, affiliation: author_affiliation_line),)
     },
-    show_affiliations: true,
+    show_affiliations: false,
   )
   let supervisor_cell = render_contributor_entries(
     supervisors,
@@ -579,16 +357,6 @@
   let author_label = if count_items(authors) > 1 { "Authors" } else { "Author" }
   let supervisor_label = if count_items(supervisors) > 1 { "Supervisors" } else { "Supervisor" }
   let committee_label = "Committee"
-  let cover_cell = if show_cover_description and cover_description != none and str(cover_description) != "" {
-    str(cover_description)
-  } else {
-    none
-  }
-  let bottom_confidentiality = if show_confidentiality_statement and confidentiality_statement != none and str(confidentiality_statement) != "" {
-    confidentiality_statement
-  } else {
-    none
-  }
   let author_rows = title_page_info_row(author_label, author_cell)
   let academic_rows = (
     title_page_info_row("Degree", degree) +
@@ -601,20 +369,16 @@
     title_page_info_row(supervisor_label, supervisor_cell) +
     title_page_info_row(committee_label, committee_cell)
   )
-  let date_rows = (
-    title_page_info_row("Publication date", format_title_page_date(date)) +
-    title_page_info_row("Defense date", defense_date)
-  )
-  let cover_rows = title_page_info_row("Cover", cover_cell)
+  let date_rows = title_page_info_row("Defense date", defense_date)
 
-  render_title_page_basic_heading_line(
+  render_title_page_heading_line(
     text(22pt, weight: "bold", title),
     heading_alignment: title_alignment,
   )
 
   if subtitle != none and subtitle != "" {
     v(0.5em)
-    render_title_page_basic_heading_line(
+    render_title_page_heading_line(
       text(12pt, subtitle),
       heading_alignment: title_alignment,
     )
@@ -659,22 +423,141 @@
     )
   }
 
-  if cover_rows != () {
-    if author_rows != () or academic_rows != () or people_rows != () or date_rows != () {
-      v(1.8em)
-    }
-    render_title_page_info_table(
-      cover_rows,
-      table_alignment: table_alignment,
-    )
-  }
+  v(1fr)
+}
 
-  render_title_page_basic_bottom_block(
-    block_alignment: bottom_block_alignment,
-    confidentiality_statement: bottom_confidentiality,
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Formal title page.
+//
+// Edit this section for the centered title page with an optional formal
+// statement and compact supervisor/committee table.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Keeps substituted statement values on one visual line where possible.
+#let no_break_string(value) = {
+  if value == none {
+    ""
+  } else {
+    str(value).replace(" ", "\u{00a0}")
+  }
+}
+
+// Prepares a metadata value for use inside the formal statement.
+#let title_page_statement_value(value) = {
+  if value == none or str(value) == "" {
+    ""
+  } else {
+    no_break_string(value)
+  }
+}
+
+// Fields that can be inserted into the formal statement.
+#let title_page_formal_statement_fields(
+  isbn: none,
+  doi: none,
+  degree: none,
+  program: none,
+  track: none,
+  faculty: none,
+  institution: none,
+  defense_date: none,
+) = {
+  let isbn_text = title_page_statement_value(isbn)
+  let doi_text = title_page_statement_value(doi)
+  let degree_text = title_page_statement_value(degree)
+  let program_text = title_page_statement_value(program)
+  let track_text = title_page_statement_value(track)
+  let faculty_text = title_page_statement_value(faculty)
+  let institution_text = title_page_statement_value(institution)
+  let defense_date_text = title_page_statement_value(defense_date)
+
+  (
+    (name: "thesis_defense_date", value: defense_date_text),
+    (name: "thesis_institution", value: institution_text),
+    (name: "thesis_faculty", value: faculty_text),
+    (name: "thesis_program", value: program_text),
+    (name: "thesis_track", value: track_text),
+    (name: "thesis_degree", value: degree_text),
+    (name: "isbn", value: isbn_text),
+    (name: "doi", value: doi_text),
+  )
+}
+
+// Replaces placeholders such as $thesis_degree in the formal statement.
+#let title_page_replace_statement_placeholders(template, fields) = {
+  let output = str(template)
+  for field in fields {
+    // Accepts common placeholder styles: ${field}, $field, and {field}.
+    output = output.replace("${" + field.name + "}", field.value)
+    output = output.replace("$" + field.name, field.value)
+    output = output.replace("{" + field.name + "}", field.value)
+  }
+  output
+}
+
+// Normalizes user-entered statement text before it is rendered.
+#let title_page_normalize_statement_text(value) = {
+  let output = str(value).replace("\r\n", "\n").replace("\r", "\n").trim()
+  // Keeps intentional line breaks, but removes accidental spaces around them.
+  while output.contains(" \n") {
+    output = output.replace(" \n", "\n")
+  }
+  while output.contains("\n ") {
+    output = output.replace("\n ", "\n")
+  }
+  output
+}
+
+// Preserves line breaks in the formal statement.
+#let render_title_page_multiline_text(value) = {
+  let lines = str(value).split("\n")
+  let output = []
+  for (index, line) in lines.enumerate() {
+    if index > 0 {
+      output += [#linebreak()]
+    }
+    output += [#line]
+  }
+  output
+}
+
+#let render_title_page_formal_statement(
+  isbn: none,
+  doi: none,
+  degree: none,
+  program: none,
+  track: none,
+  faculty: none,
+  institution: none,
+  defense_date: none,
+  statement: none,
+) = {
+  let fields = title_page_formal_statement_fields(
     isbn: isbn,
     doi: doi,
+    degree: degree,
+    program: program,
+    track: track,
+    faculty: faculty,
+    institution: institution,
+    defense_date: defense_date,
   )
+  let sentence = if statement != none and str(statement) != "" {
+    title_page_replace_statement_placeholders(statement, fields)
+  } else {
+    ""
+  }
+  sentence = title_page_normalize_statement_text(sentence)
+
+  if sentence == "" {
+    none
+  } else {
+    align(center, block(width: 72%, [
+      #set par(justify: false)
+      #set text(hyphenate: false)
+      #text(size: 10.5pt, fill: rgb("#555555"), render_title_page_multiline_text(sentence))
+    ]))
+  }
 }
 
 #let title_page_formal_variant(
@@ -684,7 +567,6 @@
   affiliations: (),
   isbn: none,
   doi: none,
-  date: none,
   degree: none,
   program: none,
   track: none,
@@ -694,10 +576,6 @@
   supervisors: (),
   committee: (),
   show_contributor_affiliations: true,
-  show_cover_description: false,
-  cover_description: none,
-  show_confidentiality_statement: false,
-  confidentiality_statement: none,
   formal_statement: none,
 ) = {
   let author_line = render_comma_list(authors)
@@ -714,19 +592,6 @@
     title_page_info_row(supervisor_label, supervisor_cell) +
     title_page_info_row("Committee", committee_cell)
   )
-  let note_rows = render_title_page_formal_info_rows(
-    publication_date: format_title_page_date(date),
-    cover_description: if show_cover_description and cover_description != none and str(cover_description) != "" {
-      str(cover_description)
-    } else {
-      none
-    },
-  )
-  let formal_confidentiality_statement = if show_confidentiality_statement and confidentiality_statement != none and str(confidentiality_statement) != "" {
-    confidentiality_statement
-  } else {
-    none
-  }
   let formal_statement_block = render_title_page_formal_statement(
     isbn: isbn,
     doi: doi,
@@ -739,14 +604,14 @@
     statement: formal_statement,
   )
 
-  render_title_page_basic_heading_line(
+  render_title_page_heading_line(
     text(30pt, weight: "bold", title),
     heading_alignment: "center",
   )
 
   if subtitle != none and subtitle != "" {
     v(0.75em)
-    render_title_page_basic_heading_line(
+    render_title_page_heading_line(
       text(16pt, subtitle),
       heading_alignment: "center",
     )
@@ -756,7 +621,7 @@
     v(1.35em)
     align(center, text(10.5pt, fill: rgb("#666666"), "by"))
     v(0.3em)
-    render_title_page_basic_heading_line(
+    render_title_page_heading_line(
       text(16pt, weight: "medium", author_line),
       heading_alignment: "center",
     )
@@ -775,73 +640,28 @@
     )
   }
 
-  if note_rows != () {
-    if people_rows != () {
-      v(1.2em)
-    } else {
-      v(2.1em)
-    }
-    render_title_page_info_table(
-      note_rows,
-      table_alignment: "center",
-    )
-  }
-
-  render_title_page_formal_bottom_block(
-    confidentiality_statement: formal_confidentiality_statement,
-    isbn: isbn,
-    doi: doi,
-  )
+  v(1fr)
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Custom title page.
+//
+// This is a starting point for a custom design. Replace the body when you want
+// a title page that does not fit the basic or formal layout.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #let title_page_custom(
   title,
   subtitle: none,
   authors: (),
-  affiliations: (),
-  isbn: none,
-  doi: none,
-  date: none,
-  degree: none,
-  program: none,
-  track: none,
-  faculty: none,
-  institution: none,
-  defense_date: none,
-  supervisors: (),
-  committee: (),
-  show_contributor_affiliations: true,
-  show_cover_description: false,
-  cover_description: none,
-  show_confidentiality_statement: false,
-  confidentiality_statement: none,
-  formal_statement: none,
 ) = {
-  // Custom entry point: replace this with your own title-page implementation.
-  title_page_formal_variant(
-    title,
-    subtitle: subtitle,
-    authors: authors,
-    affiliations: affiliations,
-    isbn: isbn,
-    doi: doi,
-    date: date,
-    degree: degree,
-    program: program,
-    track: track,
-    faculty: faculty,
-    institution: institution,
-    defense_date: defense_date,
-    supervisors: supervisors,
-    committee: committee,
-    show_contributor_affiliations: show_contributor_affiliations,
-    show_cover_description: show_cover_description,
-    cover_description: cover_description,
-    show_confidentiality_statement: show_confidentiality_statement,
-    confidentiality_statement: confidentiality_statement,
-    formal_statement: formal_statement,
-  )
+  // Stub only: replace this body with your own title-page implementation.
+  title_page_basic_variant(title, subtitle: subtitle, authors: authors)
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Title page function used by main.typ.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #let title_page(
   title,
@@ -850,7 +670,6 @@
   affiliations: (),
   isbn: none,
   doi: none,
-  date: none,
   degree: none,
   program: none,
   track: none,
@@ -859,119 +678,91 @@
   defense_date: none,
   supervisors: (),
   committee: (),
+  contributors: (),
+  affiliation_catalog: (),
   show_contributor_affiliations: true,
   logo: none,
   variant: "basic",
   start_on_new_page: false,
-  show_cover_description: false,
-  cover_description: none,
-  show_confidentiality_statement: false,
-  confidentiality_statement: "This thesis is confidential and cannot be made public.",
   formal_statement: none,
   basic_title_alignment: "center",
   basic_table_alignment: "left",
-  basic_bottom_block_alignment: "left",
   logo_alignment: "center",
 ) = {
   let mode = resolve_title_page_variant(variant)
-  let bottom_block_line_count = title_page_bottom_block_line_count(
-    confidentiality_statement: if show_confidentiality_statement {
-      confidentiality_statement
-    } else {
-      none
-    },
-    isbn: isbn,
-    doi: doi,
-  )
-  let logo_bottom_offset = 0.5cm + bottom_block_line_count * 0.3cm
+  let resolved_title = resolve_title_page_title(title)
 
   if start_on_new_page {
     pagebreak()
   }
 
-  if logo != none {
-    let logo_anchor = if mode == "basic" and str(logo_alignment) == "left" {
-      bottom + left
-    } else {
-      bottom + center
-    }
-    place(logo_anchor, dy: -logo_bottom_offset, image(logo, width: 1.9cm))
-  }
-
-  if mode == "basic" {
-    title_page_basic_variant(
-      title,
-      subtitle: subtitle,
-      authors: authors,
-      affiliations: affiliations,
-      isbn: isbn,
-      doi: doi,
-      date: date,
-      degree: degree,
-      program: program,
-      track: track,
-      faculty: faculty,
-      institution: institution,
-      defense_date: defense_date,
-      supervisors: supervisors,
-      committee: committee,
-      show_contributor_affiliations: show_contributor_affiliations,
-      show_cover_description: show_cover_description,
-      cover_description: cover_description,
-      show_confidentiality_statement: show_confidentiality_statement,
-      confidentiality_statement: confidentiality_statement,
-      title_alignment: basic_title_alignment,
-      table_alignment: basic_table_alignment,
-      bottom_block_alignment: basic_bottom_block_alignment,
-    )
-  } else if mode == "formal" {
-    title_page_formal_variant(
-      title,
-      subtitle: subtitle,
-      authors: authors,
-      affiliations: affiliations,
-      isbn: isbn,
-      doi: doi,
-      date: date,
-      degree: degree,
-      program: program,
-      track: track,
-      faculty: faculty,
-      institution: institution,
-      defense_date: defense_date,
-      supervisors: supervisors,
-      committee: committee,
-      show_contributor_affiliations: show_contributor_affiliations,
-      show_cover_description: show_cover_description,
-      cover_description: cover_description,
-      show_confidentiality_statement: show_confidentiality_statement,
-      confidentiality_statement: confidentiality_statement,
-      formal_statement: formal_statement,
-    )
+  if mode == "custom" {
+    title_page_custom(resolved_title, subtitle: subtitle, authors: authors)
   } else {
-    title_page_custom(
-      title,
-      subtitle: subtitle,
-      authors: authors,
-      affiliations: affiliations,
-      isbn: isbn,
-      doi: doi,
-      date: date,
-      degree: degree,
-      program: program,
-      track: track,
-      faculty: faculty,
-      institution: institution,
-      defense_date: defense_date,
-      supervisors: supervisors,
-      committee: committee,
-      show_contributor_affiliations: show_contributor_affiliations,
-      show_cover_description: show_cover_description,
-      cover_description: cover_description,
-      show_confidentiality_statement: show_confidentiality_statement,
-      confidentiality_statement: confidentiality_statement,
-      formal_statement: formal_statement,
-    )
+    let resolved_supervisors = if supervisors != () {
+      supervisors
+    } else {
+      contributors_by_group(contributors, "supervisor", affiliation_catalog)
+    }
+    let resolved_committee = if committee != () {
+      committee
+    } else {
+      contributors_by_group(contributors, "committee", affiliation_catalog)
+    }
+    let resolved_basic_title_alignment = resolve_title_page_alignment(basic_title_alignment, "title_page_basic_title_alignment")
+    let resolved_basic_table_alignment = resolve_title_page_alignment(basic_table_alignment, "title_page_basic_table_alignment")
+    let resolved_logo_alignment = resolve_title_page_alignment(logo_alignment, "title_page_logo_alignment")
+    let logo_bottom_offset = 0.9cm
+
+    if logo != none {
+      let logo_anchor = if mode == "basic" and resolved_logo_alignment == "left" {
+        bottom + left
+      } else {
+        bottom + center
+      }
+      place(logo_anchor, dy: -logo_bottom_offset, image(logo, width: 1.9cm))
+    }
+
+    if mode == "basic" {
+      title_page_basic_variant(
+        resolved_title,
+        subtitle: subtitle,
+        authors: authors,
+        affiliations: affiliations,
+        isbn: isbn,
+        doi: doi,
+        degree: degree,
+        program: program,
+        track: track,
+        faculty: faculty,
+        institution: institution,
+        defense_date: defense_date,
+        supervisors: resolved_supervisors,
+        committee: resolved_committee,
+        show_contributor_affiliations: show_contributor_affiliations,
+        title_alignment: resolved_basic_title_alignment,
+        table_alignment: resolved_basic_table_alignment,
+      )
+    } else if mode == "formal" {
+      title_page_formal_variant(
+        resolved_title,
+        subtitle: subtitle,
+        authors: authors,
+        affiliations: affiliations,
+        isbn: isbn,
+        doi: doi,
+        degree: degree,
+        program: program,
+        track: track,
+        faculty: faculty,
+        institution: institution,
+        defense_date: defense_date,
+        supervisors: resolved_supervisors,
+        committee: resolved_committee,
+        show_contributor_affiliations: show_contributor_affiliations,
+        formal_statement: formal_statement,
+      )
+    }
   }
 
 }

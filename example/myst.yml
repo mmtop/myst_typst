@@ -8,17 +8,18 @@ project:
   subtitle: Shared Template for MyST and Typst for Thesis and Academic Writing Projects at TU Delft
   date: 2026-02-22
   parts:
+    # colophon: content/parts/colophon.md
     acknowledgements: content/parts/acknowledgements.md
     abstract: content/parts/abstract.md
-    #preface: content/parts/preface.md
+    # preface: content/parts/preface.md
     # dedication: content/parts/dedication.md
-    # colophon: content/parts/colophon.md
+
   keywords: [myst, typst, thesis template, front matter, metadata mapping, academic writing workflow, document automation]
   #   - myst
   #   - typst
   #   - thesis
   license: CC-BY-4.0
-  doi: doi:10.5281/zenodo.12345678
+  doi: doi:10.5181/typst.12345678
   bibliography:
     - reference.bib
 
