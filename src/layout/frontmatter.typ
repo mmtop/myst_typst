@@ -15,19 +15,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Renders one named section such as Abstract, Preface, or Acknowledgements.
-#let render_frontmatter_section(title, content) = {
+#let render_frontmatter_section(title, content, font_theme: none) = {
   if content != none and content != "" {
-    align(center, text(15pt, weight: "bold", title))
+    align(center, text(font: font_theme, size: 15pt, weight: "bold", title))
     v(1.2em)
     content
   }
 }
 
 // Starts a new page only when the section has content.
-#let render_optional_frontmatter_page(title, content) = {
+#let render_optional_frontmatter_page(title, content, font_theme: none) = {
   if content != none and content != "" {
     pagebreak()
-    render_frontmatter_section(title, content)
+    render_frontmatter_section(title, content, font_theme: font_theme)
   }
 }
 
@@ -73,15 +73,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Renders the abstract page, including optional keywords from MyST metadata.
-#let render_abstract_page(abstract, keywords) = {
+#let render_abstract_page(abstract, keywords, font_theme: none) = {
   let keyword_text = format_keywords(keywords)
   let has_abstract = abstract != none and abstract != ""
   if has_abstract or keyword_text != "" {
     pagebreak()
     if has_abstract {
-      render_frontmatter_section("Abstract", abstract)
+      render_frontmatter_section("Abstract", abstract, font_theme: font_theme)
     } else {
-      align(center, text(15pt, weight: "bold", "Abstract"))
+      align(center, text(font: font_theme, size: 15pt, weight: "bold", "Abstract"))
     }
     if keyword_text != "" {
       v(1.5em)
@@ -172,15 +172,16 @@
   show_colophon_confidentiality_statement: false,
   colophon_confidentiality_statement: "This thesis is confidential and cannot be made public.",
   show_colophon_watermark: true,
+  font_theme: none,
 ) = {
   if part_id == "abstract" {
-    render_abstract_page(abstract, keywords)
+    render_abstract_page(abstract, keywords, font_theme: font_theme)
   } else if part_id == "preface" {
-    render_optional_frontmatter_page("Preface", preface)
+    render_optional_frontmatter_page("Preface", preface, font_theme: font_theme)
   } else if part_id == "acknowledgements" {
-    render_optional_frontmatter_page("Acknowledgements", acknowledgements)
+    render_optional_frontmatter_page("Acknowledgements", acknowledgements, font_theme: font_theme)
   } else if part_id == "dedication" {
-    render_optional_frontmatter_page("Dedication", dedication)
+    render_optional_frontmatter_page("Dedication", dedication, font_theme: font_theme)
   } else if part_id == "colophon" {
     render_colophon_page(
       content: colophon,
@@ -210,20 +211,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Table of contents.
-#let render_table_of_contents(depth: 1) = {
+#let render_table_of_contents(depth: 1, font_theme: none) = {
   pagebreak()
   outline(
-    title: strong("Contents"),
+    title: text(font: font_theme, weight: "bold", "Contents"),
     depth: depth,
     indent: auto,
   )
 }
 
 // List of figures.
-#let render_list_of_figures() = {
+#let render_list_of_figures(font_theme: none) = {
   pagebreak()
   outline(
-    title: strong("List of Figures"),
+    title: text(font: font_theme, weight: "bold", "List of Figures"),
     // MyST labels image figures with kind "figure".
     target: figure.where(kind: "figure"),
     indent: auto,
@@ -231,10 +232,10 @@
 }
 
 // List of tables.
-#let render_list_of_tables() = {
+#let render_list_of_tables(font_theme: none) = {
   pagebreak()
   outline(
-    title: strong("List of Tables"),
+    title: text(font: font_theme, weight: "bold", "List of Tables"),
     target: figure.where(kind: table),
     indent: auto,
   )
@@ -273,6 +274,7 @@
   show_list_of_figures: false,
   show_list_of_tables: false,
   toc_depth: 2,
+  font_theme: none,
 ) = {
   for part_id in normalize_frontmatter_order(frontmatter_order) {
     render_frontmatter_part(
@@ -299,15 +301,16 @@
       show_colophon_confidentiality_statement: show_colophon_confidentiality_statement,
       colophon_confidentiality_statement: colophon_confidentiality_statement,
       show_colophon_watermark: show_colophon_watermark,
+      font_theme: font_theme,
     )
   }
   
   // Example for a custom section you may want to add later:
   // render_optional_frontmatter_page("Abbreviations", abbreviations)
 
-  if show_toc { render_table_of_contents(depth: toc_depth) }
-  if show_list_of_figures { render_list_of_figures() }
-  if show_list_of_tables { render_list_of_tables() }
+  if show_toc { render_table_of_contents(depth: toc_depth, font_theme: font_theme) }
+  if show_list_of_figures { render_list_of_figures(font_theme: font_theme) }
+  if show_list_of_tables { render_list_of_tables(font_theme: font_theme) }
 
   // End the roman-numbered front matter before the main chapters begin.
   pagebreak()

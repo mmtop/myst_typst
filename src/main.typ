@@ -64,6 +64,7 @@
   // Atkinson Hyperlegible Next and Atkinson Hyperlegible Mono for accessible sans serif body and code fonts - recommended for documents that may be read by people with dyslexia and visual impairments.
   // JetBrains Mono is the recommended code font in all cases for its readability and aesthetics, and it is used as the default monospace font for all documents.
   font_body: "Libertinus Serif",
+  font_theme: none,
   font_mono: "DejaVu Sans Mono",
   font_math: "New Computer Modern Math",
   font_size_pt: 11pt,
@@ -172,6 +173,8 @@
   // and then change them back for the main matter.
 
 
+  let resolved_font_theme = if font_theme == none { font_body } else { font_theme }
+
    // For example, the page numbering starts as roman for the front matter and then it is switched to arabic when the main matter starts.
    set page(
     paper: paper_size,
@@ -250,14 +253,19 @@
 
   // Helper function for headings style.
   let configure_headings(body) = {
-    show heading: set text(fill: black, weight: "semibold")
+    show heading: set text(
+      fill: black,
+      weight: "semibold",
+    )
 
+    show heading.where(level: 1): set text(font: resolved_font_theme)
     show heading.where(level: 1): set block(
       above: 4.2 * line_spacing_em,
       below: 2.1 * line_spacing_em,
     )
     // show heading.where(level: 1): set text(size: font_size_pt * 1.8)
 
+    show heading.where(level: 2): set text(font: resolved_font_theme)
     show heading.where(level: 2): set block(
       above: 3.3 * line_spacing_em,
       below: 1.6 * line_spacing_em,
@@ -325,6 +333,7 @@
       title_weight: cover_title_weight,
       subtitle_weight: cover_subtitle_weight,
       author_weight: cover_author_weight,
+      font_theme: resolved_font_theme,
       show_subtitle: show_cover_subtitle,
       page_alignment: cover_graphical_alignment,
       title_box_text: cover_title_box_text,
@@ -360,8 +369,6 @@
       title,
       subtitle: subtitle,
       authors: authors,
-      isbn: isbn,
-      doi: doi,
       affiliations: affiliations,
       degree: thesis_degree,
       program: thesis_program,
@@ -379,6 +386,7 @@
       logo_alignment: title_page_logo_alignment,
       start_on_new_page: show_cover_full,
       formal_statement: title_page_formal_statement,
+      font_theme: resolved_font_theme,
     )
   }
 
@@ -411,6 +419,7 @@
     show_list_of_figures: show_list_of_figures,
     show_list_of_tables: show_list_of_tables,
     toc_depth: toc_depth,
+    font_theme: resolved_font_theme,
   )
 
   // Ensures the main matter starts on an odd page.

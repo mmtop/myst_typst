@@ -1,3 +1,11 @@
+#######################################################################################################
+#######################################################################################################
+#
+# This file contains the configuration options for the Typst export template.
+#
+#######################################################################################################
+#######################################################################################################
+
 version: 1
 project:
   downloads:
@@ -5,12 +13,21 @@ project:
   exports:
     - id: thesis-pdf
       format: typst
+      # Make sure to change the path in the next line if you are using a local or a custom template!
       template: ../
       output: ./exports/typst_template_example.pdf
+
+######################################################################################################
+# Some lines are intentionally left commented out as examples or placeholders for optional settings.
+# If you want to enable or customize any of these options, 
+# simply uncomment (and perhaps also untabulate) the relevant lines and/or adjust the values as needed.
+######################################################################################################
+
 
 # ==============================================================================
 # Document Structure and Front Matter
 # ==============================================================================
+
       # Render a separate cover page before the title page. Default: true.
       show_cover_full: true
       
@@ -27,9 +44,11 @@ project:
       # Default: colophon, abstract, preface, acknowledgements, dedication.
       # frontmatter_order: colophon, abstract, acknowledgements, dedication, preface
 
+
 # ==============================================================================
 # Table of Contents and Lists of Figures/Tables
 # ==============================================================================
+
       # Render the table of contents in the front matter. Default: true.
       show_toc: true
       
@@ -45,6 +64,7 @@ project:
 # ==============================================================================
 # Verso Page Options (for main matter chapters)
 # ==============================================================================
+
       # Option for verso blank page that is **always** inserted automatically 
       # when required to ensure the main matter chapters start on recto page:
       # When the page statement is enabled, the inserted verso page displays
@@ -57,6 +77,7 @@ project:
 # ==============================================================================
 # Bibliography Options 
 # ==============================================================================
+
       # Render the bibliography section after the document content. Default: true.
       show_bibliography: true
            
@@ -74,6 +95,7 @@ project:
 # ==============================================================================
 # Page Layout and Styling
 # ==============================================================================
+
       # Paper size for the whole document. Default: a4.
       # Common alternatives: us-letter, b5
       paper_size: a4
@@ -87,6 +109,7 @@ project:
 # ==============================================================================
 # Typography / Font Options      
 # ==============================================================================
+
       # Base text size in points. Default: 11.
       font_size_pt: 11
       
@@ -98,8 +121,9 @@ project:
       # 
       # Defaults:
       # font_body: Libertinus Serif
+      # font_theme: Libertinus Serif
       # font_math: New Computer Modern Math
-      # font_mono: DejaVu Sans Mono
+      # font_mono: DejaVu Mono
       #
       # Bundled font families in ../src/assets/fonts:
       # - STIX Two Text + STIX Two Math:
@@ -131,11 +155,13 @@ project:
       #
       #    Serif preset:
       #    font_body: STIX Two Text
+      #    font_theme: STIX Two Text
       #    font_math: STIX Two Math
       #    font_mono: JetBrains Mono
       #
       #    Accessible Sans preset:
       #    font_body: Atkinson Hyperlegible Next
+      #    font_theme: Atkinson Hyperlegible Next
       #    font_math: New Computer Modern Math
       #    font_mono: JetBrains Mono
       #    Optional matching Atkinson mono variant:
@@ -146,21 +172,19 @@ project:
       # body and math and override only:
       # font_mono: JetBrains Mono
 
-
 # ==============================================================================
 # Branding and Shared Assets
 # ==============================================================================
+
       # Optional: override the shared fallback logo used on the title page
       # and on the graphical cover when no cover-specific logo file is set.
       # If omitted, the template's built-in logo is used.
       # logo: content/assets/logo.svg
-      
-      # Optional ISBN project option shown in the colophon publication table when provided.
-      # isbn: "978-3-16-148410-0"
 
 # ==============================================================================
 # Cover Page Options
 # ==============================================================================
+
       # Cover variant: simple | graphical | custom (or 1 | 2 | 3). Default: graphical.
       # cover_page_variant: simple
       
@@ -230,6 +254,7 @@ project:
 # ==============================================================================
 # Title Page Options
 # ==============================================================================
+
       # Title-page variant: basic (or "simple") | formal | custom (or 1 | 2 | 3). Default: formal.
       # title_page_variant: basic
 
@@ -237,7 +262,7 @@ project:
       # fields, but placeholders can be replaced from mapped project.options values
       # in options.yml and shared project metadata in myst.yml:
       # $thesis_degree, $thesis_program, $thesis_track, $thesis_faculty,
-      # $thesis_institution, $thesis_defense_date, $isbn, and $doi.
+      # $thesis_institution, and $thesis_defense_date.
       # Curly braces are also accepted, e.g. {thesis_degree}.
       #
       # title_page_formal_statement: |
@@ -269,6 +294,7 @@ project:
 # ==============================================================================
 # Colophon Options
 # ==============================================================================
+
       # The top of the colophon page comes from project.parts.colophon.
       # These settings control the automated bottom publication block.
       
@@ -287,6 +313,7 @@ project:
       colophon_company_logo: content/assets/JBlogo.svg
 
       # Optional fields shown in the colophon publication table:
+      # isbn: 978-3-16-148410-0
       # colophon_printer: Printer name
       # colophon_publisher: Publisher name
       colophon_copyright: © 2026 Student Name
@@ -299,3 +326,24 @@ project:
       # Show the MyST/Typst/JBOS template watermark note at the bottom of the colophon. Default: true.
       show_colophon_watermark: true
 
+
+##########################################################################################################
+##########################################################################################################
+#
+# If a feature is not sufficiently explained in the comments here, please refer to:
+#
+# 1. the template description in template.yml
+#    which can be also displayed using 'myst templates list <path-to-the-template>' 
+#    to see the available options and their descriptions when using local build in the terminal.
+#
+# 2. the template's source code, particularly in the main.typ 
+#    and its dependencies in the src/layout. 
+#           
+#           There might be cases where some settings are not exposed here, 
+#           and only defined in the template's source code.
+#           main.typ is the best place to start exploring how to enable or customize those features.
+#
+# 3. the offical MyST and Typst documentations for the relevant features.
+#
+#########################################################################################################
+#########################################################################################################

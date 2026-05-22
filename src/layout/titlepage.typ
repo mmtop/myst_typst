@@ -322,8 +322,6 @@
   subtitle: none,
   authors: (),
   affiliations: (),
-  isbn: none,
-  doi: none,
   degree: none,
   program: none,
   track: none,
@@ -335,6 +333,7 @@
   show_contributor_affiliations: true,
   title_alignment: "center",
   table_alignment: "left",
+  font_theme: none,
 ) = {
   let author_line = render_comma_list(authors)
   let author_affiliation_line = render_lines(affiliations)
@@ -372,14 +371,14 @@
   let date_rows = title_page_info_row("Defense date", defense_date)
 
   render_title_page_heading_line(
-    text(22pt, weight: "bold", title),
+    text(font: font_theme, size: 22pt, weight: "bold", title),
     heading_alignment: title_alignment,
   )
 
   if subtitle != none and subtitle != "" {
     v(0.5em)
     render_title_page_heading_line(
-      text(12pt, subtitle),
+      text(font: font_theme, size: 12pt, subtitle),
       heading_alignment: title_alignment,
     )
   }
@@ -453,8 +452,6 @@
 
 // Fields that can be inserted into the formal statement.
 #let title_page_formal_statement_fields(
-  isbn: none,
-  doi: none,
   degree: none,
   program: none,
   track: none,
@@ -462,8 +459,6 @@
   institution: none,
   defense_date: none,
 ) = {
-  let isbn_text = title_page_statement_value(isbn)
-  let doi_text = title_page_statement_value(doi)
   let degree_text = title_page_statement_value(degree)
   let program_text = title_page_statement_value(program)
   let track_text = title_page_statement_value(track)
@@ -478,8 +473,6 @@
     (name: "thesis_program", value: program_text),
     (name: "thesis_track", value: track_text),
     (name: "thesis_degree", value: degree_text),
-    (name: "isbn", value: isbn_text),
-    (name: "doi", value: doi_text),
   )
 }
 
@@ -522,8 +515,6 @@
 }
 
 #let render_title_page_formal_statement(
-  isbn: none,
-  doi: none,
   degree: none,
   program: none,
   track: none,
@@ -533,8 +524,6 @@
   statement: none,
 ) = {
   let fields = title_page_formal_statement_fields(
-    isbn: isbn,
-    doi: doi,
     degree: degree,
     program: program,
     track: track,
@@ -565,8 +554,6 @@
   subtitle: none,
   authors: (),
   affiliations: (),
-  isbn: none,
-  doi: none,
   degree: none,
   program: none,
   track: none,
@@ -577,6 +564,7 @@
   committee: (),
   show_contributor_affiliations: true,
   formal_statement: none,
+  font_theme: none,
 ) = {
   let author_line = render_comma_list(authors)
   let supervisor_cell = render_contributor_entries(
@@ -593,8 +581,6 @@
     title_page_info_row("Committee", committee_cell)
   )
   let formal_statement_block = render_title_page_formal_statement(
-    isbn: isbn,
-    doi: doi,
     degree: degree,
     program: program,
     track: track,
@@ -605,14 +591,14 @@
   )
 
   render_title_page_heading_line(
-    text(30pt, weight: "bold", title),
+    text(font: font_theme, size: 30pt, weight: "bold", title),
     heading_alignment: "center",
   )
 
   if subtitle != none and subtitle != "" {
     v(0.75em)
     render_title_page_heading_line(
-      text(16pt, subtitle),
+      text(font: font_theme, size: 16pt, subtitle),
       heading_alignment: "center",
     )
   }
@@ -654,9 +640,10 @@
   title,
   subtitle: none,
   authors: (),
+  font_theme: none,
 ) = {
   // Stub only: replace this body with your own title-page implementation.
-  title_page_basic_variant(title, subtitle: subtitle, authors: authors)
+  title_page_basic_variant(title, subtitle: subtitle, authors: authors, font_theme: font_theme)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -668,8 +655,6 @@
   subtitle: none,
   authors: (),
   affiliations: (),
-  isbn: none,
-  doi: none,
   degree: none,
   program: none,
   track: none,
@@ -688,6 +673,7 @@
   basic_title_alignment: "center",
   basic_table_alignment: "left",
   logo_alignment: "center",
+  font_theme: none,
 ) = {
   let mode = resolve_title_page_variant(variant)
   let resolved_title = resolve_title_page_title(title)
@@ -697,7 +683,7 @@
   }
 
   if mode == "custom" {
-    title_page_custom(resolved_title, subtitle: subtitle, authors: authors)
+    title_page_custom(resolved_title, subtitle: subtitle, authors: authors, font_theme: font_theme)
   } else {
     let resolved_supervisors = if supervisors != () {
       supervisors
@@ -729,8 +715,6 @@
         subtitle: subtitle,
         authors: authors,
         affiliations: affiliations,
-        isbn: isbn,
-        doi: doi,
         degree: degree,
         program: program,
         track: track,
@@ -742,6 +726,7 @@
         show_contributor_affiliations: show_contributor_affiliations,
         title_alignment: resolved_basic_title_alignment,
         table_alignment: resolved_basic_table_alignment,
+        font_theme: font_theme,
       )
     } else if mode == "formal" {
       title_page_formal_variant(
@@ -749,8 +734,6 @@
         subtitle: subtitle,
         authors: authors,
         affiliations: affiliations,
-        isbn: isbn,
-        doi: doi,
         degree: degree,
         program: program,
         track: track,
@@ -761,6 +744,7 @@
         committee: resolved_committee,
         show_contributor_affiliations: show_contributor_affiliations,
         formal_statement: formal_statement,
+        font_theme: font_theme,
       )
     }
   }

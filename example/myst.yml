@@ -1,10 +1,23 @@
+######################################################################################################
+######################################################################################################
+#
+# This is THE MAIN CONFIGURATION FILE for the MyST project. It defines:
+#
+#  - project metadata and extensions, 
+#  - list of files to be included in the table of contents, 
+#  - export configuration file(s) and the file with custom template options (options.yml).
+#
+######################################################################################################
+######################################################################################################
+
 version: 1
 extends:
   - people.yml
   - options.yml
   - typst_export_config.yml
 project:
-  title: Typst Template Example for Student End Projects made with MyST 
+  title: Typst Template Example for Student End Projects made with MyST
+  short_title: MyST+Typst Template Example
   subtitle: Shared Template for MyST and Typst for Thesis and Academic Writing Projects at TU Delft
   date: 2026-02-22
   parts:
@@ -15,9 +28,7 @@ project:
     # dedication: content/parts/dedication.md
 
   keywords: [myst, typst, thesis template, front matter, metadata mapping, academic writing workflow, document automation]
-  #   - myst
-  #   - typst
-  #   - thesis
+
   license: CC-BY-4.0
   doi: doi:10.5181/typst.12345678/exampledoi
   bibliography:
@@ -44,8 +55,8 @@ site:
 
   actions:
     - title: GitHub Repo
-      url: https://github.com/mmtop/myst_typst_V1
+      url: https://github.com/mmtop/myst_typst
     - title: Feedback
-      url: https://github.com/mmtop/myst_typst_V1/issues
+      url: https://github.com/mmtop/myst_typst/issues
     - title: Download PDF
       url: ./exports/typst_template_example.pdf

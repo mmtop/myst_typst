@@ -64,6 +64,7 @@
   subtitle: none,
   authors: (),
   show_subtitle: true,
+  font_theme: none,
 ) = {
   set page(numbering: none)
   set par(first-line-indent: 0pt, justify: false)
@@ -72,11 +73,11 @@
 
   v(5%)
   align(left, [
-    #text(size: 40pt, weight: "bold", title)
+    #text(font: font_theme, size: 40pt, weight: "bold", title)
 
     #if show_subtitle and subtitle != none and subtitle != "" [
       #v(0.35em)
-      #text(size: 18pt, weight: "medium", subtitle)
+      #text(font: font_theme, size: 18pt, weight: "medium", subtitle)
     ]
 
     // #v(0.7em)
@@ -271,9 +272,10 @@
   bottom_ribbon_fill: auto,
   bottom_block_dy: -1.2cm,
   logo: none,
+  font_theme: none,
 ) = context {
   if image_path == none {
-    cover_page_simple(title, subtitle: subtitle, authors: authors, show_subtitle: show_subtitle)
+    cover_page_simple(title, subtitle: subtitle, authors: authors, show_subtitle: show_subtitle, font_theme: font_theme)
   } else {
     let pw = page.width
     let ph = page.height
@@ -305,11 +307,11 @@
       fill: resolved_box_fill,
     )[
       #align(resolved_content_alignment, [
-        #text(fill: resolved_title_text_fill, size: 40pt, weight: title_weight, title)
+        #text(font: font_theme, fill: resolved_title_text_fill, size: 40pt, weight: title_weight, title)
 
         #if show_subtitle and subtitle != none and subtitle != "" [
           #v(0.5em)
-          #text(fill: resolved_title_text_fill, size: 20pt, weight: subtitle_weight, subtitle)
+          #text(font: font_theme, fill: resolved_title_text_fill, size: 20pt, weight: subtitle_weight, subtitle)
         ]
 
         #if author_line != "" [
@@ -370,9 +372,10 @@
   subtitle: none,
   authors: (),
   show_subtitle: true,
+  font_theme: none,
 ) = {
   // Stub only: replace this body with your own cover implementation.
-  cover_page_simple(title, subtitle: subtitle, authors: authors, show_subtitle: show_subtitle)
+  cover_page_simple(title, subtitle: subtitle, authors: authors, show_subtitle: show_subtitle, font_theme: font_theme)
 }
 
 
@@ -409,12 +412,13 @@
   logo_black: none,
   bottom_block_dy: -1.2cm,
   logo: none,
+  font_theme: none,
 ) = {
   let mode = resolve_cover_page_variant(variant)
   let resolved_title = resolve_cover_title(title)
 
   if mode == "simple" {
-    cover_page_simple(resolved_title, subtitle: subtitle, authors: authors, show_subtitle: show_subtitle)
+    cover_page_simple(resolved_title, subtitle: subtitle, authors: authors, show_subtitle: show_subtitle, font_theme: font_theme)
   } else if mode == "graphical" {
     let resolved_image_path = resolve_asset_path(image_path, levels_up: 2)
     let resolved_logo = resolve_asset_path(logo, levels_up: 2)
@@ -458,6 +462,7 @@
       bottom_ribbon_fill: resolved.bottom_ribbon_fill,
       bottom_block_dy: bottom_block_dy,
       logo: resolved.logo,
+      font_theme: font_theme,
     )
   } else {
     cover_page_custom(
@@ -465,6 +470,7 @@
       subtitle: subtitle,
       authors: authors,
       show_subtitle: show_subtitle,
+      font_theme: font_theme,
     )
   }
 }

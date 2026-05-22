@@ -1,3 +1,14 @@
+###########################################################################################################
+###########################################################################################################
+# This file defines the people involved in the project, such as authors, contributors, and their affiliations.
+# The categories:
+# `project.authors`,
+# `project.contributors`, 
+# and `project.affiliations` in MyST configuration are designed for this purpose.
+# Fields defined here can be used in both the MyST and the export templates.
+###########################################################################################################
+###########################################################################################################
+
 version: 1
 project:
   authors:

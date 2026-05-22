@@ -3,7 +3,7 @@ kind: typst
 title: Thesis Typst Template for MyST
 description: A modular Typst thesis template for MyST projects, with configurable cover, title page, front matter, and bibliography.
 template: template.typ
-version: 0.1.0
+version: 0.2.2
 license: MIT
 tags:
   - thesis
@@ -16,24 +16,11 @@ files:
   - src/main.typ
 
   # Default bundled assets
-  - src/assets/assets.typ
+  - src/assets/assets.typ 
   - src/assets/brand_assets/logo.svg
   - src/assets/brand_assets/international-logo_black_rgb.svg
   - src/assets/brand_assets/international-logo_white_rgb.svg
   - src/assets/template_figures/defaultcover.jpg
-
-  # Optional bundled STIX fonts
-  - src/assets/fonts/STIX_Two_Math/OFL.txt
-  - src/assets/fonts/STIX_Two_Math/static/STIXTwoMath-Regular.ttf
-  - src/assets/fonts/STIX_Two_Text/OFL.txt
-  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Bold.ttf
-  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-BoldItalic.ttf
-  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Italic.ttf
-  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Medium.ttf
-  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-MediumItalic.ttf
-  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-Regular.ttf
-  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-SemiBold.ttf
-  - src/assets/fonts/STIX_Two_Text/static/STIXTwoText-SemiBoldItalic.ttf
 
   # Layout modules
   - src/layout/cover.typ
@@ -149,6 +136,9 @@ options:
   - id: font_body
     type: string
     description: "Body font family. Default: Libertinus Serif."
+  - id: font_theme
+    type: string
+    description: "Heading font family. Defaults to the body font when unset."
   - id: font_mono
     type: string
     description: "Monospace font family for code and raw blocks. Default: DejaVu Sans Mono."
@@ -166,9 +156,6 @@ options:
   - id: logo
     type: file
     description: "Shared TU logo used on the title page, colophon, and as a fallback on the graphical cover. If omitted, the bundled template logo is used."
-  - id: isbn
-    type: string
-    description: "Optional ISBN project option shown in the colophon publication table when provided."
 
   # Cover page
   - id: cover_page_variant
@@ -271,6 +258,9 @@ options:
   - id: show_colophon_publication_info
     type: boolean
     description: "Show the automated colophon publication table when publication values are present. Default: true."
+  - id: isbn
+    type: string
+    description: "Optional ISBN shown in the colophon publication table when provided. This is a simple example of a custom project option passed through the template."
   - id: show_colophon_cover_description
     type: boolean
     description: "Show the optional cover description row in the colophon publication table. Default: false."

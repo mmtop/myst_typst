@@ -117,6 +117,36 @@
   }
 }
 
+#let colophon_doi_url(value) = {
+  if not colophon_has_renderable_content(value) {
+    none
+  } else {
+    let raw = str(value).trim()
+    let doi = if raw.starts-with("doi:") {
+      raw.slice(4).trim()
+    } else {
+      raw
+    }
+
+    if doi.starts-with("https://") or doi.starts-with("http://") {
+      doi
+    } else if doi.starts-with("doi.org/") {
+      "https://" + doi
+    } else {
+      "https://doi.org/" + doi
+    }
+  }
+}
+
+#let render_colophon_doi(value) = {
+  let url = colophon_doi_url(value)
+  if url == none {
+    none
+  } else {
+    link(url)[#underline(text(fill: rgb("#0645ad"), str(value)))]
+  }
+}
+
 #let render_colophon_info_table(info_cells) = {
   if info_cells != () {
     table(
@@ -144,7 +174,7 @@
   (
     colophon_info_row("Publication date", format_colophon_date(publication_date)) +
     colophon_info_row("Cover", cover_description) +
-    colophon_info_row("DOI", doi) +
+    colophon_info_row("DOI", render_colophon_doi(doi)) +
     colophon_info_row("ISBN", isbn) +
     colophon_info_row("Printer", printer) +
     colophon_info_row("Publisher", publisher) +

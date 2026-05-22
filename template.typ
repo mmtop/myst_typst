@@ -1,19 +1,51 @@
-#import "src/main.typ": thesis_template
-
-// Use this file as the mapping layer between MyST data and the Typst layout.
-// It should stay as thin as possible:
-// - read metadata, part files, and PDF export options from MyST
-// - map them to the argument names expected by src/main.typ
-// - leave layout defaults in src/main.typ whenever possible
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// This file serves as the mapping (translation layer) between MyST data and the Typst layout.
 //
-// Navigation notes:
-// - `project.*` values are preferred and `doc.*` values are used as fallbacks
+// It reads metadata, part files, and PDF export options from MyST
+// and maps them to the argument names expected by src/main.typ
+//
+// It consists mostly of conditional branches that check for the presence of MyST values and,
+// when present, maps them to the corresponding Typst argument with some light transformation as needed.
+// 
+// The mapping logic is intentionally kept in a separate file from the layout definitions in `src/main.typ`
+//
+// Keep in mind that each new feature added to the Typst template may require new mapping to be correctly
+// interpreted from the MyST configrations files.
+// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Some general notes:
+// - `project.*` values are preferred and `doc.*` values are used as fallbacks.
 // - some MyST values are mapped twice in different shapes for the title page
 // - if an argument is omitted here, src/main.typ supplies the default
+//
+// String-mapping note:
+// Some branches use `replace("\\", "\\\\")`, `replace("\"", "\\\"")`,
+// and `replace("\n", "\\n")` before emitting a quoted Typst string literal.
+// That noisy-looking pattern is intentional: it keeps free-form metadata safe
+// when MyST injects it into `"..."`
+//
+// In the current state of the template, the 'title' and 'subtitle' are passed as plain text, 
+// as per MyST definition - rich text, math or special characters are not possible right now. 
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// This file is organized in the same high-level order as `src/main.typ`: 
+// shared metadata first, then part content, then layout options.
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#import "src/main.typ": thesis_template
 
 #show: thesis_template.with(
-  // Shared document metadata
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Shared document metadata.
+  //
   // These values are reused across the cover, title page, and front matter.
+  //////////////////////////////////////////////////////////////////////////////////////////////////
 [# if project.title #]
   title: "[-project.title-]",
 [# elif doc.title #]
@@ -40,10 +72,6 @@
   ),
 [# endif #]
 
-[# if options.isbn is defined and options.isbn != none and options.isbn != "" #]
-  isbn: "[-options.isbn | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
-[# endif #]
-
 [# if project.doi #]
   doi: "[-project.doi | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# elif doc.doi #]
@@ -64,8 +92,17 @@
   document_license: "[-doc.license.content.name | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
 
-  // Keep contributor ids so the title page can group entries such as
-  // supervisor-1 and committee-1.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// People and affiliations.
+//
+// Contributors keep stable ids for grouping in the title-page layouts.
+// Affiliations are mapped twice: once as an id/name catalog, and once as a
+// flat printable list for simpler layouts.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Keep contributor ids so the title page can group entries such as
+// supervisor-1 and committee-1.
+
 [# if project.contributors or doc.contributors #]
   contributors: (
 [# if project.contributors #]
@@ -100,9 +137,10 @@
   ),
 [# endif #]
 
-  // The same affiliation source is mapped in two forms:
-  // - `affiliation_catalog` keeps ids for contributor lookup
-  // - `affiliations` keeps printable names for simpler title-page rendering
+// The same affiliation source is mapped in two forms:
+// - `affiliation_catalog` keeps ids for contributor lookup
+// - `affiliations` keeps printable names for simpler title-page rendering
+
 [# if project.affiliations or doc.affiliations #]
   affiliation_catalog: (
 [# if project.affiliations #]
@@ -137,7 +175,8 @@
   ),
 [# endif #]
 
-  // MyST dates are structured values, so this mapping flattens them into a simple string.
+// MyST dates are structured values, so this mapping flattens them into a simple string.
+
 [# if project.date #]
   date: "[-project.date.day-]-[-project.date.month-]-[-project.date.year-]",
 [# elif doc.date #]
@@ -158,29 +197,63 @@
   ),
 [# endif #]
 
-  // Thesis-specific metadata
-  // Use these fields for the academic labels shown on the detailed title-page layouts.
-[# if options.thesis_degree #]
-  thesis_degree: "[-options.thesis_degree-]",
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Template-specific semantic fields.
+//
+// These are custom `project.options` values that extend the template beyond
+// stock MyST metadata. Export `options.*` aliases remain as fallbacks.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+[# if project.options is defined and project.options.thesis_degree is defined and project.options.thesis_degree != none and project.options.thesis_degree != "" #]
+  thesis_degree: "[-project.options.thesis_degree | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.thesis_degree #]
+  thesis_degree: "[-options.thesis_degree | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
-[# if options.thesis_program #]
-  thesis_program: "[-options.thesis_program-]",
+[# if project.options is defined and project.options.thesis_program is defined and project.options.thesis_program != none and project.options.thesis_program != "" #]
+  thesis_program: "[-project.options.thesis_program | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.thesis_program #]
+  thesis_program: "[-options.thesis_program | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
-[# if options.thesis_track #]
-  thesis_track: "[-options.thesis_track-]",
+[# if project.options is defined and project.options.thesis_track is defined and project.options.thesis_track != none and project.options.thesis_track != "" #]
+  thesis_track: "[-project.options.thesis_track | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.thesis_track #]
+  thesis_track: "[-options.thesis_track | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
-[# if options.thesis_faculty #]
-  thesis_faculty: "[-options.thesis_faculty-]",
+[# if project.options is defined and project.options.thesis_faculty is defined and project.options.thesis_faculty != none and project.options.thesis_faculty != "" #]
+  thesis_faculty: "[-project.options.thesis_faculty | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.thesis_faculty #]
+  thesis_faculty: "[-options.thesis_faculty | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
-[# if options.thesis_institution #]
-  thesis_institution: "[-options.thesis_institution-]",
+[# if project.options is defined and project.options.thesis_institution is defined and project.options.thesis_institution != none and project.options.thesis_institution != "" #]
+  thesis_institution: "[-project.options.thesis_institution | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.thesis_institution #]
+  thesis_institution: "[-options.thesis_institution | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
-[# if options.thesis_defense_date #]
-  thesis_defense_date: "[-options.thesis_defense_date-]",
+[# if project.options is defined and project.options.thesis_defense_date is defined and project.options.thesis_defense_date != none and project.options.thesis_defense_date != "" #]
+  thesis_defense_date: "[-project.options.thesis_defense_date | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.thesis_defense_date #]
+  thesis_defense_date: "[-options.thesis_defense_date | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
 
-  // Optional front-matter part files
-  // These come from separate MyST part files and are rendered before the main chapters.
+// `isbn` is the canonical example of a custom `project.options` field that
+// extends the template. Export `options.isbn` remains as a fallback.
+// You may use it to explore how custom options are mapped and wired into the layout.
+// The same pattern is applied to the thesis-specific options and the colophon options above.
+
+[# if project.options is defined and project.options.isbn is defined and project.options.isbn != none and project.options.isbn != "" #]
+  isbn: "[-project.options.isbn | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# elif options.isbn is defined and options.isbn != none and options.isbn != "" #]
+  isbn: "[-options.isbn | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
+[# endif #]
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Optional front-matter part files.
+//
+// These come from separate MyST part files and are rendered before the main
+// chapters.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if parts.abstract #]
   abstract: [
 [-parts.abstract-]
@@ -207,7 +280,10 @@
   ],
 [# endif #]
 
-  // Document structure and front matter
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Document structure and front matter.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if options.show_cover_full is defined #]
   show_cover_full: [-options.show_cover_full-],
 [# endif #]
@@ -247,7 +323,10 @@
   verso_blank_page_statement: "[-options.verso_blank_page_statement-]",
 [# endif #]
 
-  // Page layout
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Page layout.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if options.paper_size is defined and options.paper_size != none and options.paper_size != "" #]
   paper_size: "[-options.paper_size-]",
 [# endif #]
@@ -264,11 +343,18 @@
   margin_right_cm: [-options.margin_right_cm-]cm,
 [# endif #]
 
-  // Typography
-  // Font family options are only passed when they are set explicitly.
-  // Otherwise src/main.typ keeps the template's built-in fallback families.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Typography.
+//
+// Font family options are only passed when they are set explicitly.
+// Otherwise `src/main.typ` keeps the template's built-in fallback families.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if options.font_body #]
   font_body: "[-options.font_body-]",
+[# endif #]
+[# if options.font_theme #]
+  font_theme: "[-options.font_theme-]",
 [# endif #]
 [# if options.font_mono #]
   font_mono: "[-options.font_mono-]",
@@ -283,9 +369,13 @@
   line_spacing_em: [-options.line_spacing_em-]em,
 [# endif #]
 
-  // Bibliography
-  // The bibliography file comes from MyST itself, while the remaining settings
-  // come from the PDF export options.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Bibliography.
+//
+// The bibliography file comes from MyST itself, while the remaining settings
+// come from the PDF export options.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if doc.bibtex #]
   bibliography_file: "[-doc.bibtex-]",
 [# endif #]
@@ -302,13 +392,21 @@
   bibliography_numbered_heading: [-options.bibliography_numbered_heading-],
 [# endif #]
 
-  // Shared assets and branding
-  // If no custom files are provided, src/main.typ falls back to the bundled template assets.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Shared assets and branding.
+//
+// If no custom files are provided, `src/main.typ` falls back to the bundled
+// template assets.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if options.logo #]
   logo: "[-options.logo-]",
 [# endif #]
 
-  // Cover-page options
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Cover-page options.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if options.cover_page_variant #]
   cover_page_variant: "[-options.cover_page_variant-]",
 [# endif #]
@@ -375,7 +473,10 @@
   cover_bottom_block_dy_cm: [-options.cover_bottom_block_dy_cm-]cm,
 [# endif #]
 
-  // Title-page options
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Title-page options.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if options.title_page_variant #]
   title_page_variant: "[-options.title_page_variant-]",
 [# endif #]
@@ -392,7 +493,13 @@
   title_page_formal_statement: "[-options.title_page_formal_statement | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n")-]",
 [# endif #]
 
-  // Colophon options
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Colophon options.
+//
+// Legacy title-page aliases are resolved here so `src/main.typ` and the
+// layout modules only need to care about the colophon-facing names.
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 [# if options.show_colophon_publication_info is defined #]
   show_colophon_publication_info: [-options.show_colophon_publication_info-],
 [# endif #]
@@ -435,6 +542,10 @@
   show_colophon_watermark: [-options.show_colophon_watermark-],
 [# endif #]
 )
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// MyST-provided imports and ordered content.
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // MyST adds helper imports here.
 [-IMPORTS-]
