@@ -1,0 +1,38 @@
+###########################################################################################################
+###########################################################################################################
+# This file defines the people involved in the project, such as authors, contributors, and their affiliations.
+# The categories:
+# `project.authors`,
+# `project.contributors`, 
+# and `project.affiliations` in MyST configuration are designed for this purpose.
+# Fields defined here can be used in both the MyST and the export templates.
+###########################################################################################################
+###########################################################################################################
+
+version: 1
+project:
+  authors:
+    - id: student
+      name: Student Name
+      affiliations:
+        - tud
+
+  contributors:
+    - id: supervisor-1
+      name: Supervisor Name
+      affiliations:
+        - tud
+    - id: committee-1
+      name: Prof. Dr. C. Examiner
+      affiliations:
+        - tud
+    - id: committee-2
+      name: Dr. D. Examiner
+      affiliations:
+        - tud
+
+  affiliations:
+    - id: tud
+      institution: Delft University of Technology
+      #city: Delft
+      #country: Netherlands

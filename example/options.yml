@@ -1,0 +1,36 @@
+#########################################################################################################
+#########################################################################################################
+# This file defines the options for the Typst template that are not available in the MyST.
+#
+# The category project.options in MyST configuration is designed for this purpose.
+#
+# Fields defined here can be used in the Typst template and are not expected to be used in MyST directly.
+#
+# If you introduce new fields here, remember to also add them to the Typst template; template.typ 
+# which serves as a mapping between MyST configuration and Typst configuration, 
+# and in template.yml, and possibly in main.typ or its dependencies
+# depending on how your modification is structured.
+#
+#########################################################################################################
+#########################################################################################################
+
+version: 1
+project:
+  options:
+
+    # These fields are specific to the Typst template and are not expected to be used in MyST directly.
+    # They are used by the template's front matter rendering only, particularly in the titlepage.typ, 
+    # so they won't be visible in the MyST website by default.
+
+    thesis_degree: Master of Science
+    thesis_program: Applied Physics
+    thesis_track: Physics for Instrumentation
+    thesis_faculty: Faculty of Applied Sciences
+    thesis_institution: Delft University of Technology
+    thesis_defense_date: Friday June 19, 2026 at 10:00
+
+    # You may use the further example of the 'isbn' field to explore how to add new fields to the template 
+    # and make them available in the Typst template. 
+    # Look into template.typ to see how the mapping works and how the field is passed to the layout modules.
+    # ISBN is inserted in the colophon, so you can find the relevant code in the `src/colophon.typ` module.
+    # isbn: 000-00-0000-000-0
