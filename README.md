@@ -1,4 +1,4 @@
-# **MyST to Typst** Template 
+# **MyST to Typst** Thesis Template 
 [![Template version](https://img.shields.io/badge/template-v0.2.3-blue)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -82,10 +82,10 @@ project:
 |   |-- layout/
 |   |   |-- cover.typ             # Cover page variants
 |   |   |-- titlepage.typ         # Title page variants
-|   |   |-- frontmatter.typ       # Abstract, preface, contents, lists
+|   |   |-- frontmatter.typ       # Shared frontmatter helpers for abstract, preface, etc.
 |   |   |-- colophon.typ          # Publication and colophon page
 |   |   `-- bibliography.typ      # Bibliography rendering
-|   `-- assets/                   # Default images, logos, and optional fonts
+|   `-- assets/                   # Default images, logos, and an asset helper
 `-- example/
     |-- myst.yml                  # Example MyST project configuration
     |-- options.yml               # Thesis-specific project options
